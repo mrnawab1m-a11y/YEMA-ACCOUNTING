@@ -73,7 +73,7 @@ function fifoCosting(b){
   if(!batches[id])batches[id]=[];
   if(ev.kind==='purchase'||ev.kind==='opening'){
    const p=b.products.find(z=>z.id===id),factor=p?(p.unit==='کیلوگرام'?1000:num(p.retailPerTon)):0;
-   const qty=num(x.tons)*factor,total=num(x.totalAfn);
+   const qty=ev.kind==='opening'?num(x.qty):num(x.tons)*factor,total=num(x.totalAfn);
    if(qty>0&&total>=0)batches[id].push({remaining:qty,unitCost:total/qty});
   }else{
    let need=num(x.qty),cost=0;
