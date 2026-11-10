@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172b4d"><title>ورود | حسابداری یما</title>
+<style>
+:root{--navy:#172b4d;--gold:#d6a84b}*{box-sizing:border-box}body{margin:0;background:#f3f5f8;color:#263449;font-family:Tahoma,Arial,sans-serif}.card{max-width:430px;margin:8vh auto;padding:24px;background:white;border-radius:18px;box-shadow:0 8px 30px #172b4d18}h1{color:var(--navy);font-size:22px;margin:0 0 8px}p{line-height:1.8;color:#64748b;font-size:14px}label{display:block;margin:14px 0 6px;font-size:14px}input{width:100%;padding:13px;border:1px solid #ccd3dd;border-radius:10px;font:inherit}button{width:100%;padding:13px;margin-top:12px;border:0;border-radius:10px;background:var(--gold);font:inherit;font-weight:bold;color:var(--navy)}button.secondary{background:#edf1f6}#message{padding:10px;border-radius:8px;background:#f6f7f9;min-height:42px;margin-top:14px;font-size:13px;line-height:1.7}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tabs button{margin:0}.active{outline:2px solid var(--navy)}small{color:#64748b}
+</style></head>
+<body><main class="card">
+<h1>حسابداری یما</h1><p>نمایندگی تیل‌فروشی حاجی نواب پروانی<br>برای دسترسی امن به حساب خود وارد شوید یا حساب بسازید.</p>
+<div class="tabs"><button id="loginTab" class="active" type="button">ورود</button><button id="signupTab" class="secondary" type="button">ثبت‌نام</button></div>
+<form id="authForm">
+<div id="nameWrap" hidden><label for="name">نام</label><input id="name" autocomplete="name"></div>
+<label for="email">ایمیل</label><input id="email" type="email" autocomplete="email" required>
+<label for="password">رمز عبور</label><input id="password" type="password" autocomplete="current-password" minlength="8" required>
+<button id="submit" type="submit">ورود</button>
+</form><div id="message" role="status">برای ورود ایمیل و رمز عبور خود را وارد کنید.</div>
+<p><small>رمز عبور فقط به سرویس امن ورود Neon فرستاده می‌شود و در این صفحه ذخیره نمی‌گردد.</small></p>
+</main><script type="module" src="./auth.js"></script></body></html>
