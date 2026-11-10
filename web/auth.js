@@ -1,5 +1,9 @@
-import { createAuthClient } from "https://esm.sh/@neondatabase/neon-js/auth";
-const auth = createAuthClient("https://ep-young-cherry-b3x184tp.neonauth.c-4.ap-southeast-1.aws.neon.tech/yema_accounting/auth");
+import { createClient } from "https://esm.sh/@neondatabase/neon-js";
+const client = createClient({
+  auth: { url: "https://ep-young-cherry-b3x184tp.neonauth.c-4.ap-southeast-1.aws.neon.tech/yema_accounting/auth" },
+  dataApi: { url: "https://ep-young-cherry-b3x184tp.apirest.c-4.ap-southeast-1.aws.neon.tech/yema_accounting/rest/v1" }
+});
+const auth = client.auth;
 const $ = (id) => document.getElementById(id);
 let mode = "login";
 function setMode(next) {
@@ -9,7 +13,7 @@ function setMode(next) {
   $("submit").textContent = mode === "signup" ? "ساخت حساب" : "ورود";
   $("loginTab").className = mode === "login" ? "active" : "secondary";
   $("signupTab").className = mode === "signup" ? "active" : "secondary";
-  $("message").textContent = mode === "signup" ? "ایمیل و رمز عبور قوی وارد کنید. ممکن است تأیید ایمیل لازم باشد." : "برای ورود ایمیل و رمز عبور خود را وارد کنید.";
+  $("message").textContent = mode === "signup" ? "ایمیل و رمز عبور قوی وارد کنید. تأیید ایمیل لازم است." : "برای ورود ایمیل و رمز عبور خود را وارد کنید.";
 }
 $("loginTab").addEventListener("click", () => setMode("login"));
 $("signupTab").addEventListener("click", () => setMode("signup"));
@@ -22,15 +26,15 @@ $("authForm").addEventListener("submit", async (event) => {
   $("message").textContent = "در حال ارتباط امن...";
   try {
     const result = mode === "signup"
-      ? await auth.auth.signUp.email({ name, email, password })
-      : await auth.auth.signIn.email({ email, password });
-    if (result?.error) throw new Error(result.error.message || "ورود انجام نشد");
-    $("message").textContent = mode === "signup"
-      ? "درخواست ثبت‌نام ارسال شد. اگر پیام تأیید ایمیل دریافت کردید، آن را تکمیل کنید؛ سپس وارد شوید."
-      : "ورود موفق بود. نشست شما ایجاد شد. بخش همگام‌سازی حسابداری هنوز در حال تکمیل است.";
-    if (mode === "login") {
-      const session = await auth.auth.getSession();
-      if (!session?.data?.session) $("message").textContent = "پاسخ ورود دریافت شد، اما نشست قابل تأیید نیست. دوباره تلاش کنید.";
+      ? await auth.signUp.email({ name, email, password })
+      : await auth.signIn.email({ email, password });
+    if (result?.error) throw new Error(result.error.message || "عملیات ورود ناموفق بود");
+    if (mode === "signup") {
+      $("message").textContent = "درخواست ثبت‌نام ارسال شد. ایمیل خود را برای کد تأیید بررسی کنید؛ سپس وارد شوید.";
+    } else {
+      const session = await auth.getSession();
+      if (!session?.data?.session) throw new Error("نشست ورود تأیید نشد. دوباره تلاش کنید.");
+      $("message").textContent = "ورود موفق شد. اکنون نشست امن برقرار است؛ همگام‌سازی اطلاعات حسابداری هنوز در حال تکمیل است.";
     }
   } catch (error) {
     $("message").textContent = "خطا: " + (error?.message || "ارتباط برقرار نشد");
@@ -39,6 +43,6 @@ $("authForm").addEventListener("submit", async (event) => {
   }
 });
 try {
-  const current = await auth.auth.getSession();
-  if (current?.data?.session) $("message").textContent = "نشست ورود موجود است. اتصال ثبت و همگام‌سازی داده‌ها هنوز تکمیل نشده است.";
+  const current = await auth.getSession();
+  if (current?.data?.session) $("message").textContent = "نشست ورود موجود است. همگام‌سازی اطلاعات حسابداری هنوز تکمیل نشده است.";
 } catch {}
