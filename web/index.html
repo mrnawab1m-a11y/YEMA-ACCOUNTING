@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172b4d"><meta name="description" content="حسابداری یما - مدیریت فروش، خرید، مشتریان و مصارف">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>حسابداری یما</title>
+<style>
+:root{color-scheme:light;--navy:#172b4d;--gold:#d6a84b;--bg:#f3f5f8;--ink:#263449}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}header{background:var(--navy);color:white;padding:18px 16px;position:sticky;top:0;z-index:2}header h1{font-size:20px;margin:0 0 5px}header small{color:#f2d99e}.wrap{max-width:960px;margin:auto;padding:14px}.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile,.panel{background:white;border-radius:14px;padding:14px;box-shadow:0 2px 10px #172b4d12}.tile b{display:block;color:var(--navy);font-size:19px;margin-top:8px}.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin:14px 0}.products button,.nav button,button.primary{border:0;border-radius:12px;padding:14px;background:white;color:var(--navy);font:inherit;font-weight:bold;box-shadow:0 2px 8px #172b4d12;cursor:pointer}.products button:active,.nav button:active{background:#f8edcf}.nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.panel{margin-top:12px}label{display:block;font-size:14px;margin:12px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd3dd;border-radius:9px;font:inherit;background:white}button.primary{background:var(--gold);margin-top:15px;width:100%}.muted{color:#64748b;font-size:13px}.hidden{display:none}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.listitem{padding:10px 0;border-bottom:1px solid #e7ebf0}@media(min-width:650px){.summary{grid-template-columns:repeat(4,minmax(0,1fr))}.nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style></head>
+<body><header><h1>حسابداری یما</h1><small>نمایندگی تیل‌فروشی حاجی نواب پروانی</small></header>
+<main class="wrap"><section id="home">
+<div class="summary"><div class="tile">فروش ثبت‌شده<b id="salesCount">۰</b></div><div class="tile">مجموع فروش<b id="salesTotal">۰</b></div><div class="tile">مصارف<b id="expenseTotal">۰</b></div><div class="tile">باقی مشتریان<b id="balanceTotal">۰</b></div></div>
+<h3>پنج محصول</h3><div class="products" id="productButtons"></div>
+<div class="nav"><button data-page="sale">ثبت فروش</button><button data-page="purchase">خرید عمده</button><button data-page="customers">مشتریان</button><button data-page="inventory">موجودی</button><button data-page="expenses">مصارف</button><button data-page="reports">گزارش‌ها</button><button data-page="settings">تنظیمات</button></div>
+<p class="muted">این برنامه روی گوشی و لپ‌تاپ با مرورگر اجرا می‌شود و پس از نصب، مانند برنامه باز می‌گردد.</p></section>
+<section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
+<script src="./app.js"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+</body></html>
