@@ -1,19 +1,36 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#172b4d"><meta name="description" content="حسابداری یما - مدیریت فروش، خرید، مشتریان و مصارف">
-<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14233d">
+<meta name="description" content="حسابداری یما پطرولیم؛ مدیریت مستقل فروش، خرید، مشتریان، مصارف و صندوق">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>حسابداری یما</title>
 <style>
-:root{color-scheme:light;--navy:#172b4d;--gold:#d6a84b;--bg:#f3f5f8;--ink:#263449}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}header{background:var(--navy);color:white;padding:18px 16px;position:sticky;top:0;z-index:2}header h1{font-size:20px;margin:0 0 5px}header small{color:#f2d99e}.wrap{max-width:960px;margin:auto;padding:14px}.summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile,.panel{background:white;border-radius:14px;padding:14px;box-shadow:0 2px 10px #172b4d12}.tile b{display:block;color:var(--navy);font-size:19px;margin-top:8px}.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin:14px 0}.products button,.nav button,button.primary{border:0;border-radius:12px;padding:14px;background:white;color:var(--navy);font:inherit;font-weight:bold;box-shadow:0 2px 8px #172b4d12;cursor:pointer}.products button:active,.nav button:active{background:#f8edcf}.nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.panel{margin-top:12px}label{display:block;font-size:14px;margin:12px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd3dd;border-radius:9px;font:inherit;background:white}button.primary{background:var(--gold);margin-top:15px;width:100%}.muted{color:#64748b;font-size:13px}.hidden{display:none}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.listitem{padding:10px 0;border-bottom:1px solid #e7ebf0}@media(min-width:650px){.summary{grid-template-columns:repeat(4,minmax(0,1fr))}.nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+:root{--navy:#14233d;--navy2:#203653;--gold:#c9a04b;--gold2:#f0dfb5;--bg:#f3f5f8;--paper:#fff;--ink:#1d2939;--muted:#667085;--line:#e3e8ef;--green:#16845b;--red:#c43d4d;--shadow:0 8px 24px #14233d0d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--ink);line-height:1.65}button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:16px max(16px,calc((100% - 1080px)/2));position:sticky;top:0;z-index:10;box-shadow:0 4px 16px #101d3230}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand h1{font-size:19px;margin:0}.brand small{color:var(--gold2);font-size:12px}.head-actions{display:flex;gap:8px}.iconbtn{background:#ffffff16;border:1px solid #ffffff35;color:white;border-radius:11px;padding:9px 12px}
+.wrap{max-width:1080px;margin:auto;padding:16px}.clockbox{background:linear-gradient(135deg,#172b49,#263e5c);color:white;border-radius:20px;padding:18px;text-align:center;box-shadow:var(--shadow);margin-bottom:14px}.clock{font-size:clamp(32px,7vw,48px);font-weight:bold;letter-spacing:1px;color:#f5dfad;line-height:1.3}.clockdate{color:#e4e9f0;font-size:13px}.ratebar{display:flex;justify-content:center;gap:8px;align-items:center;margin-top:8px;color:#f3dfb2;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stats{margin:12px 0}.stat,.card,.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}.stat small,.muted{color:var(--muted)}.stat b{display:block;font-size:21px;color:var(--navy);margin-top:5px}.section-title{font-size:16px;margin:18px 0 10px;color:var(--navy)}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{border:1px solid #e6d8b7;background:#fffdf8;border-radius:14px;padding:15px 10px;text-align:center;font-weight:bold;color:var(--navy);min-height:72px}
+.primary,.secondary,.danger,.ghost{border:0;border-radius:11px;padding:12px 14px;font-weight:bold}.primary{background:var(--gold);color:#1e2b40}.secondary{background:var(--navy);color:white}.danger{background:#fff0f1;color:var(--red);border:1px solid #f2c9ce}.ghost{background:white;color:var(--navy);border:1px solid var(--line)}.full{width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions>*{flex:1}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.menu button{background:white;border:1px solid var(--line);border-radius:13px;padding:13px;text-align:right;color:var(--navy);font-weight:bold;box-shadow:var(--shadow)}.menu button span{display:block;color:var(--muted);font-weight:normal;font-size:11px}
+label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}input,select,textarea{width:100%;border:1px solid #ccd4df;border-radius:10px;padding:11px 12px;background:white;color:var(--ink);min-height:44px}textarea{min-height:80px;resize:vertical}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formgrid .wide{grid-column:1/-1}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}table{width:100%;border-collapse:collapse;min-width:540px;background:white}th,td{padding:10px;text-align:right;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}th{background:#f6f7f9;color:var(--navy)}tr:last-child td{border-bottom:0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.row h2,.row h3{margin:0}.badge{display:inline-block;border-radius:20px;padding:3px 9px;background:#f1f3f6;color:#465467;font-size:11px}.good{color:var(--green)}.bad{color:var(--red)}.business-card{border:1px solid var(--line);background:white;border-radius:15px;padding:14px;margin:9px 0}.empty{text-align:center;padding:25px;color:var(--muted)}.hidden{display:none!important}.subnav{display:flex;gap:7px;overflow:auto;padding:4px 0 10px}.subnav button{white-space:nowrap}.footer{text-align:center;color:var(--muted);font-size:11px;padding:22px 0}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.products{grid-template-columns:repeat(5,minmax(0,1fr))}.menu{grid-template-columns:repeat(3,minmax(0,1fr))}.formgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:430px){.wrap{padding:11px}.stat,.card,.panel{padding:12px}.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}}
+@media print{header,.no-print,.actions,button{display:none!important}body{background:white}.wrap{max-width:none;padding:0}.panel,.card,.stat{box-shadow:none;border:0}}
 </style></head>
-<body><header><h1>حسابداری یما</h1><small>نمایندگی تیل‌فروشی حاجی نواب پروانی</small></header>
-<main class="wrap"><section id="home">
-<div class="summary"><div class="tile">فروش ثبت‌شده<b id="salesCount">۰</b></div><div class="tile">مجموع فروش<b id="salesTotal">۰</b></div><div class="tile">مصارف<b id="expenseTotal">۰</b></div><div class="tile">باقی مشتریان<b id="balanceTotal">۰</b></div></div>
-<h3>پنج محصول</h3><div class="products" id="productButtons"></div>
-<div class="nav"><button data-page="sale">ثبت فروش</button><button data-page="purchase">خرید عمده</button><button data-page="customers">مشتریان</button><button data-page="history">بل‌های فروش</button><button data-page="inventory">موجودی</button><button data-page="expenses">مصارف</button><button data-page="reports">گزارش‌ها</button><button data-page="settings">تنظیمات</button></div>
-<p class="muted">این برنامه روی گوشی و لپ‌تاپ با مرورگر اجرا می‌شود و پس از نصب، مانند برنامه باز می‌گردد.</p></section>
-<section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
-<script src="./app.js"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<body>
+<header><div class="top"><div class="brand"><h1>حسابداری یما</h1><small>یما پطرولیم | نمایندگی تیل‌فروشی حاجی نواب پروانی</small></div><div class="head-actions"><button class="iconbtn" id="businessTop">تجارت‌ها</button><button class="iconbtn" id="menuTop">☰</button></div></div></header>
+<main class="wrap">
+<div id="app"></div>
+<div class="footer">حسابداری یما · زمان افغانستان · اطلاعات هر تجارت جداگانه نگهداری می‌شود</div>
+</main>
+<script src="./app.js"></script>
+<script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 </body></html>
