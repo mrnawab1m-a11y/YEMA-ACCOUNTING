@@ -1,7 +1,22 @@
 const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز'];
 const KEY='yema_v2_';
 const read=k=>{try{return JSON.parse(localStorage.getItem(KEY+k)||'[]')}catch{return []}};
-const write=(k,v)=>{const now=new Date().toISOString();const rows=(Array.isArray(v)?v:[]).map(row=>row._yemaUpdatedAt?row:{...row,_yemaUpdatedAt:now});localStorage.setItem(KEY+k,JSON.stringify(rows));window.dispatchEvent(new CustomEvent('yema-local-change',{detail:{type:k}}));};
+const write=(k,v)=>{
+  const previous=(()=>{try{return JSON.parse(localStorage.getItem(KEY+k)||'[]')}catch{return []}})();
+  const keyOf=row=>String(row._yemaId||row.id||'');
+  const oldMap=new Map(previous.map(row=>[keyOf(row),row]));
+  const now=new Date().toISOString();
+  const clean=row=>{const copy={...row};delete copy._yemaUpdatedAt;return JSON.stringify(copy)};
+  const rows=(Array.isArray(v)?v:[]).map(row=>{
+    const key=keyOf(row);
+    const old=oldMap.get(key);
+    const id=row._yemaId||String(row.id||crypto.randomUUID());
+    const changed=old&&clean(old)!==clean(row);
+    return {...row,_yemaId:id,_yemaUpdatedAt:changed?now:(row._yemaUpdatedAt||old?._yemaUpdatedAt||now)};
+  });
+  localStorage.setItem(KEY+k,JSON.stringify(rows));
+  window.dispatchEvent(new CustomEvent('yema-local-change',{detail:{type:k}}));
+};
 const el=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('fa-IR',{maximumFractionDigits:2});
 const unit=p=>p==='گاز'?'کیلوگرام':'لیتر';
