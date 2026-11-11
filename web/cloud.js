@@ -56,8 +56,8 @@
   };
   $('authPinSubmit').onclick=async()=>{
     if(!activeUser){setStatus('ابتدا ایمیل تأییدشده را وارد کنید.');return;}
-    const pin=$('authPin').value.trim();
-    if(!/^\d{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
+    const pin=$('authPin').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+    if(!/^[0-9]{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
     const key=pinKey(activeUser),saved=localStorage.getItem(key),digest=await hash(pin);
     if(!saved){localStorage.setItem(key,digest);$('authPin').value='';setStatus('کد امنیتی ثبت شد.');unlock();return;}
     if(digest!==saved){setStatus('کد امنیتی نادرست است.');return;}
