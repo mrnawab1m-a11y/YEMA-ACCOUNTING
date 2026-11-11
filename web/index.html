@@ -721,6 +721,62 @@ header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:
   }
 }
 
+
+/* Compact five product tiles with visible fuel/gas illustrations */
+@media(max-width:649px){
+ #productButtons.products{
+  width:min(100%,360px)!important;
+  max-width:360px!important;
+  gap:9px!important;
+  margin:12px auto 108px!important;
+ }
+ #productButtons.products button,
+ #productButtons.products button:last-child{
+  aspect-ratio:1/1!important;
+  min-height:0!important;
+  padding:8px 5px!important;
+  gap:7px!important;
+  border-radius:17px!important;
+ }
+ #productButtons.products button:last-child{
+  grid-column:1/-1!important;
+  width:calc(50% - 4.5px)!important;
+  justify-self:center!important;
+ }
+ #productButtons.products button .product-symbol{
+  display:grid!important;
+  place-items:center!important;
+  width:43px!important;
+  height:43px!important;
+  flex:0 0 43px!important;
+  border:1px solid #e5c77e!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#f2d99b30,#d8ad5812)!important;
+  color:#ffe6a6!important;
+  font-size:25px!important;
+ }
+ #productButtons.products button .product-symbol svg{
+  display:block!important;
+  width:31px!important;
+  height:31px!important;
+ }
+ #productButtons.products button .product-name{
+  display:block!important;
+  color:#fff1cc!important;
+  font-size:11px!important;
+  font-weight:900!important;
+  text-align:center!important;
+  white-space:normal!important;
+  line-height:1.4!important;
+ }
+}
+@media(max-width:360px){
+ #productButtons.products{width:min(100%,330px)!important;gap:8px!important}
+ #productButtons.products button .product-symbol{width:39px!important;height:39px!important;flex-basis:39px!important}
+ #productButtons.products button .product-symbol svg{width:28px!important;height:28px!important}
+ #productButtons.products button .product-name{font-size:10px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
