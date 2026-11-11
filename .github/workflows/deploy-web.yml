@@ -29,3 +29,5 @@ jobs:
           path: web
       - id: deployment
         uses: actions/deploy-pages@v4
+
+# Retry deployment trigger after the previous queued run stalled.
