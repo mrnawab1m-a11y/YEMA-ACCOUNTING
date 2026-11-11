@@ -78,7 +78,7 @@ function salesView(b){
  '<td><input id="manualRemaining" value="۰" readonly aria-label="باقی"></td>'+
  '<td><input name="note" type="text" placeholder="توضیحات"></td>'+
  '</tr></tbody></table></div>'+
- '<div class="formgrid" style="margin-top:12px">'+field('پرداخت فعلی (افغانی)','paid','number','۰')+
+ '<div class="formgrid" style="margin-top:12px"><div><label>پرداخت فعلی (افغانی)</label><input id="manualPaid" name="paid" type="number" min="0" step="any" value="0"></div>'+
  select('دریافت به حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+
  '<div><label>تاریخ فروش (هجری شمسی)</label><input data-sale-shamsi type="text" value="'+esc(shamsiDate(dateNow()))+'" readonly></div>'+
  '<div><label>تاریخ عیسوی</label><input name="saleDate" type="date" value="'+dateNow()+'" required></div>'+
