@@ -21,6 +21,7 @@ function shell(html){$('#app').innerHTML=html;bindCommon()}
 function header(title,back=true){return '<div class="row"><h2>'+esc(title)+'</h2>'+(back?'<button class="ghost no-print" data-go="home">بازگشت</button>':'')+'</div>'}
 function field(label,name,type='text',placeholder='',required=false){return '<label>'+esc(label)+(required?' *':'')+'</label><input name="'+esc(name)+'" type="'+type+'" placeholder="'+esc(placeholder)+'" '+(required?'required':'')+(type==='number'?' min="0" step="any"':'')+'>'}
 function select(label,name,options){return '<label>'+esc(label)+'</label><select name="'+name+'">'+options.map(o=>'<option value="'+esc(o.value)+'">'+esc(o.label)+'</option>').join('')+'</select>'}
+function productOptions(b){return (b.products||[]).map(p=>({value:p.id,label:p.name}));}
 function form(title,fields,button='ثبت'){return '<section class="panel">'+header(title)+'<form id="entryForm">'+fields+'<div class="actions"><button class="primary full" type="submit">'+esc(button)+'</button></div></form></section>'}
 function rowsTable(head,rows){return '<div class="tablewrap"><table><thead><tr>'+head.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+(rows.length?rows.join(''):'<tr><td colspan="'+head.length+'" class="empty">هنوز موردی ثبت نشده است</td></tr>')+'</tbody></table></div>'}
 function emptyCard(t){return '<div class="empty">'+esc(t)+'</div>'}
