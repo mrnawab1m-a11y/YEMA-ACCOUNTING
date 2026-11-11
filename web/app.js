@@ -42,9 +42,12 @@ function render(){
 }
 function homeView(b){
  const today=now();
+ const preferred=DEFAULT_PRODUCTS.map(n=>b.products.find(p=>p.name===n)).filter(Boolean),products=preferred.length===5?preferred:b.products.slice(0,5);
  return '<div class="clockbox"><div class="clock" id="clock">'+timeNow()+'</div><div class="clockdate" id="clockdate">'+today.toLocaleDateString('fa-AF',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div><div class="ratebar">نرخ دالر: '+fmt(b.usdRate)+' افغانی <button class="iconbtn" data-go="settings">تغییر نرخ</button></div></div>'+
  '<div class="row"><h2>'+esc(b.name)+'</h2><span class="badge">'+esc(b.type)+'</span></div>'+
- '<section class="panel"><h3 class="section-title">صفحه اصلی</h3><button class="primary full" data-go="sales">ثبت فروش</button><button class="secondary full" data-go="menu" style="margin-top:8px">سایر بخش‌های حسابداری</button></section>';
+ '<section class="panel"><h3 class="section-title">پنج محصول</h3><div class="products">'+(products.length?products.map(p=>'<button type="button" class="product" data-home-product="'+p.id+'"><b>'+esc(p.name)+'</b></button>').join(''):emptyCard('پنج محصول در مدیریت محصولات ثبت نشده است'))+'</div>'+
+ '<section class="cart-dock" id="cartDock"><button type="button" class="cart-toggle full" id="cartToggle" hidden>سبد فروش <span id="cartCount">۰</span> <span id="cartToggleTotal">۰ افغانی</span></button><form id="saleForm" class="formgrid" hidden><div class="wide"><div id="saleCart"></div></div><div class="wide stat"><small>مجموع کل سبد (افغانی)</small><b data-sale-total>۰</b></div>'+field('نام مشتری','customer','text','نام مشتری',true)+field('پرداخت فعلی (افغانی)','paid','number','۰')+select('دریافت به حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+'<label>تاریخ هجری شمسی</label><input data-sale-shamsi type="text" value="'+esc(shamsiDate(dateNow()))+'" readonly><label>انتخاب تاریخ (عیسوی)</label><input name="saleDate" type="date" value="'+dateNow()+'" required>'+field('توضیحات / آدرس','note')+'<div class="wide"><button class="primary full" type="submit">ثبت فروش و چاپ رسید</button><button type="button" class="ghost full" id="cartClose" style="margin-top:7px">بستن سبد</button></div></form></section></section>'+
+ '<section class="panel"><button class="secondary full" data-go="menu">سایر بخش‌های حسابداری</button></section>';
 }
 function salesView(b){
  const preferred=DEFAULT_PRODUCTS.map(n=>b.products.find(p=>p.name===n)).filter(Boolean),products=preferred.length===5?preferred:b.products.slice(0,5);
