@@ -35,6 +35,6 @@ body.auth-locked header,body.auth-locked .wrap{display:none!important}.auth-gate
 </div>
 </section>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./app.js"></script><script src="./cloud.js"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
-<script>window.addEventListener("load",()=>{const s=document.getElementById("brandSplash");if(s)setTimeout(()=>{s.classList.add("done");setTimeout(()=>s.remove(),400)},1300)});</script></body></html>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="./app.js"></script><script defer src="./cloud.js"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
