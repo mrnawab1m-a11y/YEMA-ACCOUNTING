@@ -40,13 +40,11 @@ function render(){
  bindPage(b);
 }
 function homeView(b){
- const sales=b.sales,expenses=b.expenses;
- const fifo=fifoCosting(b);
- return '<div class="clockbox"><div class="clock" id="clock">'+timeNow()+'</div><div class="clockdate" id="clockdate">'+now().toLocaleDateString('fa-AF',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div><div class="ratebar">نرخ دالر: '+fmt(b.usdRate)+' افغانی <button class="iconbtn" data-go="settings">تغییر</button></div></div>'+
+ const today=now();
+ return '<div class="clockbox"><div class="clock" id="clock">'+timeNow()+'</div><div class="clockdate" id="clockdate">'+today.toLocaleDateString('fa-AF',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div><div class="ratebar">نرخ دالر: '+fmt(b.usdRate)+' افغانی <button class="iconbtn" data-go="settings">تغییر نرخ</button></div></div>'+
  '<div class="row"><h2>'+esc(b.name)+'</h2><span class="badge">'+esc(b.type)+'</span></div>'+
- '<div class="grid stats"><div class="stat"><small>فروش امروز</small><b>'+fmt(sales.filter(x=>x.date===dateNow()).reduce((s,x)=>s+x.total,0))+'</b></div><div class="stat"><small>مفاد ناخالص (FIFO)</small><b>'+(fifo.grossProfit===null?'نامشخص':fmt(fifo.grossProfit))+'</b></div><div class="stat"><small>مصارف امروز</small><b>'+fmt(expenses.filter(x=>x.date===dateNow()).reduce((s,x)=>s+x.amount,0))+'</b></div><div class="stat"><small>قرض مشتریان</small><b>'+fmt(b.customers.reduce((s,c)=>s+num(c.debt),0))+'</b></div></div>'+
- '<h3 class="section-title">محصولات این تجارت</h3><div class="products">'+(b.products.length?b.products.map(p=>'<button class="product" data-product="'+p.id+'">'+esc(p.name)+'</button>').join(''):emptyCard('هنوز محصولی اضافه نشده است'))+'</div>'+
- '<div class="actions"><button class="primary full" data-go="sales">＋ ثبت فروش جدید</button></div><h3 class="section-title">دسترسی سریع</h3>'+menuGrid();
+ '<h3 class="section-title">پنج نوع محصول</h3><div class="products">'+(b.products.length?b.products.map(p=>'<button class="product" data-product="'+p.id+'">'+esc(p.name)+'</button>').join(''):emptyCard('هنوز محصولی اضافه نشده است'))+'</div>'+
+ '<section class="panel" style="margin-top:14px"><h3 class="section-title" style="margin-top:0">ثبت فروش</h3><p class="muted">برای ثبت فروش، دکمه زیر را بزنید یا یکی از محصولات را انتخاب کنید.</p><button class="primary full" data-go="sales">＋ ثبت فروش جدید</button></section>';
 }
 function menuGrid(){return '<div class="menu">'+[['sales','ثبت فروش','بل جدید'],['purchases','خریدها','ثبت خرید جداگانه'],['inventory','موجودی محصولات','مقدار و حد هشدار'],['customers','مشتریان','قرض و پیش‌پرداخت'],['suppliers','فروشندگان','بدهی و پرداخت خرید'],['expenses','مصارف','هزینه‌های تجارت'],['cash','صندوق و بانک','دریافت و پرداخت'],['reports','گزارش‌ها','خرید، فروش و مفاد'],['archive','آرشیف معاملات','جست‌وجوی بل‌ها و پرداخت‌ها'],['productSetup','مدیریت محصولات','تعریف محصول و واحد'],['businesses','مدیریت تجارت‌ها','حساب‌های مستقل'],['settings','تنظیمات','نرخ دالر و پشتیبان']].map(x=>'<button data-go="'+x[0]+'">'+x[1]+'<span>'+x[2]+'</span></button>').join('')+'</div>'}
 function menuView(){return '<section class="panel">'+header('منوی اصلی')+menuGrid()+'</section>'}
