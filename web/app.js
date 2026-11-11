@@ -156,7 +156,7 @@ function initClock(){setInterval(()=>{const c=$('#clock'),d=$('#clockdate');if(c
 async function refreshUsdRate(b,showMessage){try{const response=await fetch('/api/usd-rate',{cache:'no-store'});if(!response.ok)throw new Error('rate unavailable');const data=await response.json();if(!data||!Number.isFinite(Number(data.rate))||Number(data.rate)<=0)throw new Error('invalid rate');b.usdRate=Number(data.rate);b.usdRateUpdatedAt=data.updatedAt||new Date().toISOString();b.usdRateSource=data.source||'Sarai Shahzada';save();const input=$('#settingsForm input[name="rate"]');if(input)input.value=String(b.usdRate);if(showMessage)alert('نرخ آنلاین دریافت و ذخیره شد: '+fmt(b.usdRate)+' افغانی');if(page==='home')go('home')}catch(err){if(showMessage)alert('دریافت نرخ آنلاین ممکن نشد. نرخ قبلی حفظ شد؛ نرخ را دستی از تنظیمات وارد کنید.')}}
 function start(){ensure();$('#menuTop').onclick=()=>go('menu');$('#businessTop').onclick=()=>go('businesses');go('home');initClock()}
 function bindInitial(){
- document.addEventListener('click',e=>{const p=e.target.closest('[data-product]');if(p){go('sales');const s=$('select[name=product]');if(s)s.value=p.dataset.product}});
+ document.addEventListener('click',e=>{const p=e.target.closest('[data-product]');if(p){const id=p.dataset.product;go('sales');const add=document.querySelector('[data-add-cart="'+CSS.escape(id)+'"]');if(add)add.click()}});
 }
 function showLedgerPage(){ }
 function startup(){
