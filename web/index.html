@@ -354,6 +354,80 @@ header{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
  .products button .product-symbol{width:51px;height:51px}
 }
 
+
+/* YEMA visual refresh v2: final overrides to remove conflicting legacy styles */
+:root{--navy:#0a1c35;--navy2:#17385f;--gold:#d9b66d;--paper:#f3f6fa;--ink:#172b45;--muted:#748297;--line:#e4eaf2;--shadow:0 12px 30px rgba(12,32,58,.09)}
+body{background:linear-gradient(180deg,#e9eef5 0,#f5f7fa 240px);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+header{min-height:94px;padding:10px 12px 10px 90px;background:linear-gradient(120deg,#07172e,#102b4e 58%,#183b62);border-bottom:1px solid #d9b66d;box-shadow:0 8px 24px #081a3026}
+header:before{left:10px;top:10px;width:70px;height:72px;background-size:42px 42px;font-size:10px}
+.header-info{gap:5px;padding:0 34px 0 0}
+.header-info #kabulClock{gap:4px}
+.header-info #kabulClock span,.header-info>#usdRateTop{border-radius:9px;background:#ffffff10;border-color:#d9b66d99;padding:5px 10px;font-size:11px;color:#ffedc6}
+#openMenu{top:12px;right:9px;width:34px;height:34px;border:1px solid #d9b66d;border-radius:11px;background:#ffffff12}
+.wrap{max-width:1080px;padding:20px 16px 132px}
+#home{padding-top:4px}
+.products{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px!important;max-width:650px!important;margin:16px auto 120px!important}
+.products button,.products button:last-child{grid-column:span 2!important;width:auto!important;justify-self:stretch!important;min-height:112px!important;padding:12px 7px!important;gap:9px!important;border:1px solid #caa65d!important;border-radius:19px!important;background:linear-gradient(145deg,#1a3b65,#102849 62%,#091a32)!important;color:#fff1d0!important;box-shadow:0 9px 22px #071a3030,inset 0 1px #ffffff25!important}
+.products button:nth-child(4){grid-column:2/span 2!important}
+.products button:nth-child(5){grid-column:4/span 2!important}
+.products button:before{inset:5px!important;border:1px solid #e8cb8a55!important;border-radius:14px!important}
+.products button .product-symbol{display:grid!important;place-items:center;width:48px!important;height:48px!important;border:1px solid #e6c77f99!important;border-radius:15px!important;background:#e8ca8420!important}
+.products button .product-symbol svg{display:block!important;width:30px!important;height:30px!important;fill:none!important;stroke:#f4d991!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.products button .product-name{display:block!important;color:#fff1d0!important;font-size:13px!important;font-weight:900!important;white-space:nowrap!important}
+.products button:active,.products button.selected{transform:translateY(-2px) scale(.985)!important;border-color:#ffe6a8!important}
+#homeCartBar{min-height:78px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(115deg,#07172e,#112d50 70%,#0a1d38);border-top:1px solid #d9b66d;box-shadow:0 -8px 25px #071a3028}
+#homeCartSummary{color:#fff0cd;font-size:13px;font-weight:800}
+#openHomeCart,#clearHomeCart{min-height:44px;border-radius:13px;padding:10px 15px;font-size:13px;font-weight:900}
+#openHomeCart{background:linear-gradient(135deg,#f3dda7,#d7ad5b);border:1px solid #f8e4b5;color:#142b49}
+#clearHomeCart{background:#fff;color:#a33138;border:1px solid #e8b9b9}
+#page{margin:16px auto 30px;border:1px solid #e2e8f0;border-radius:22px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+#page>.row{padding:20px 22px;background:linear-gradient(115deg,#0a1c35,#17385f);border-bottom:2px solid var(--gold)}
+#pageTitle{font-size:19px;color:#ffedc7;font-weight:900}
+#back{min-height:40px;border:1px solid #d9b66d;border-radius:12px;background:#ffffff12;color:#fff0ce;font-weight:800}
+#pageBody{padding:22px}
+#pageBody h3,#pageBody h4{color:#112b4c;font-weight:900}
+#pageBody h4{margin:25px 0 12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+#pageBody p{line-height:1.9}
+#pageBody label{margin:16px 0 7px;color:#334a65;font-size:13px;font-weight:800}
+#pageBody input:not([type=file]),#pageBody select,#pageBody textarea{min-height:49px;padding:12px 14px;border:1px solid #dce4ee;border-radius:13px;background:#fbfcfe;color:#172b45;font:inherit;font-size:14px;box-shadow:inset 0 1px 2px #10294c08}
+#pageBody input:focus,#pageBody select:focus,#pageBody textarea:focus{outline:none;border-color:#c7a052;box-shadow:0 0 0 4px #d9b66d2b;background:#fff}
+#pageBody button{min-height:43px;padding:10px 15px;border:1px solid #dfe6ef;border-radius:12px;background:#fff;color:#173657;font:inherit;font-size:13px;font-weight:800;box-shadow:0 4px 12px #0d27450c}
+#pageBody button.primary{min-height:51px;border:1px solid #e8ca88;border-radius:14px;background:linear-gradient(120deg,#f2d99b,#d4aa58);color:#122a49;font-weight:900;box-shadow:0 8px 18px #a77d3026}
+#pageBody .menu-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#pageBody .menu-link{position:relative;min-height:72px;padding:15px 17px;border:1px solid #e3e9f1;border-radius:16px;background:linear-gradient(145deg,#fff,#f7f9fc);color:#173657;font-size:13px;font-weight:900;box-shadow:0 7px 18px #10294c0d}
+#pageBody .menu-link:before{right:0;width:4px;background:linear-gradient(#e7c981,#c69a49)}
+#pageBody .listitem{margin:10px 0;padding:15px 16px;border:1px solid #e5ebf2;border-radius:15px;background:linear-gradient(145deg,#fff,#fafbfd);box-shadow:0 5px 14px #10294c09;line-height:1.9}
+#pageBody .listitem:before{background:linear-gradient(#e7c981,#c69a49)}
+#pageBody .listitem b{color:#132e50;font-weight:900}
+.cloud-panel{border:1px solid #e2e9f1;border-radius:18px;background:#fff;box-shadow:var(--shadow)}
+.auth-gate{background:radial-gradient(circle at 50% 0,#294d76,#07172e 72%)}
+.auth-card{border:1px solid #d9b66d;border-radius:24px;box-shadow:0 24px 70px #0005}
+@media(max-width:520px){
+ header{min-height:90px;padding:8px 8px 9px 82px}
+ header:before{left:7px;top:9px;width:66px;height:70px;background-size:39px 39px}
+ .header-info{padding-right:34px;gap:4px}
+ .header-info #kabulClock span,.header-info>#usdRateTop{font-size:10px;padding:4px 8px}
+ .wrap{padding:14px 10px 126px}
+ .products{gap:8px!important;margin-top:12px!important}
+ .products button,.products button:last-child{min-height:96px!important;border-radius:16px!important;gap:6px!important}
+ .products button .product-symbol{width:40px!important;height:40px!important;border-radius:13px!important}
+ .products button .product-symbol svg{width:26px!important;height:26px!important}
+ .products button .product-name{font-size:11px!important}
+ #homeCartBar{gap:6px;padding-left:9px;padding-right:9px}
+ #homeCartSummary{font-size:11px}
+ #openHomeCart,#clearHomeCart{padding:9px 9px;font-size:11px}
+ #page{border-radius:18px}
+ #page>.row{padding:15px 14px}
+ #pageTitle{font-size:16px}
+ #pageBody{padding:14px}
+ #pageBody .menu-grid{gap:9px}
+ #pageBody .menu-link{min-height:65px;padding:12px 13px;font-size:12px}
+}
+@media(min-width:650px){
+ .products{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:13px!important}
+ .products button,.products button:nth-child(4),.products button:nth-child(5),.products button:last-child{grid-column:auto!important;min-height:116px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
