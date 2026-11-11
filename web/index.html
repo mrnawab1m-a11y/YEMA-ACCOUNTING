@@ -797,6 +797,66 @@ header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:
   #productButtons.products button .product-name{font-size:12px!important}
 }
 
+
+/* Compact equal-size product tiles — final */
+@media(max-width:649px){
+ #productButtons.products{
+  display:grid!important;
+  grid-template-columns:repeat(2,78px)!important;
+  justify-content:center!important;
+  justify-items:center!important;
+  gap:9px!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:10px auto 108px!important;
+ }
+ #productButtons.products button,
+ #productButtons.products button:last-child{
+  display:flex!important;
+  width:78px!important;
+  height:78px!important;
+  min-height:78px!important;
+  aspect-ratio:1/1!important;
+  grid-column:auto!important;
+  justify-self:center!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:5px!important;
+  gap:0!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#18365f 0%,#10294c 58%,#081a34 100%)!important;
+  border:1px solid #d8b46a!important;
+  box-shadow:0 4px 10px #07172f20!important;
+ }
+ #productButtons.products button:last-child{
+  grid-column:1/-1!important;
+  width:78px!important;
+ }
+ #productButtons.products button:before{inset:4px!important;border-radius:9px!important}
+ #productButtons.products button:after{display:none!important}
+ #productButtons.products button .product-symbol{display:none!important}
+ #productButtons.products button .product-name{
+  display:block!important;color:#e6c477!important;
+  font-size:11px!important;font-weight:900!important;
+  text-align:center!important;white-space:normal!important;line-height:1.35!important;
+ }
+}
+@media(min-width:650px){
+ #productButtons.products{
+  grid-template-columns:repeat(5,88px)!important;
+  justify-content:center!important;gap:12px!important;
+  max-width:100%!important;margin:14px auto 108px!important;
+ }
+ #productButtons.products button,
+ #productButtons.products button:last-child{
+  width:88px!important;height:88px!important;min-height:88px!important;
+  aspect-ratio:1/1!important;grid-column:auto!important;
+  padding:6px!important;border-radius:14px!important;
+ }
+ #productButtons.products button .product-symbol{display:none!important}
+ #productButtons.products button .product-name{color:#e6c477!important;font-size:12px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
