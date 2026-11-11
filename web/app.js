@@ -1,7 +1,7 @@
 const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز'];
 const KEY='yema_v2_';
 const read=k=>{try{return JSON.parse(localStorage.getItem(KEY+k)||'[]')}catch{return []}};
-const write=(k,v)=>localStorage.setItem(KEY+k,JSON.stringify(v));
+const write=(k,v)=>{const now=new Date().toISOString();const rows=(Array.isArray(v)?v:[]).map(row=>({...row,_yemaUpdatedAt:now}));localStorage.setItem(KEY+k,JSON.stringify(rows));window.dispatchEvent(new CustomEvent('yema-local-change',{detail:{type:k}}));};
 const el=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('fa-IR',{maximumFractionDigits:2});
 const unit=p=>p==='گاز'?'کیلوگرام':'لیتر';
