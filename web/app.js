@@ -7,9 +7,9 @@ const el=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('fa-IR',{maximumFractionDigits:2});
 const unit=p=>p==='گاز'?'کیلوگرام':'لیتر';
 const sum=(a,k)=>a.reduce((s,x)=>s+Number(x[k]||0),0);
-function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',dateStyle:'medium'}).format(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);node.textContent=date+' | '+time;}catch{node.textContent=new Intl.DateTimeFormat('fa-IR',{timeZone:'Asia/Kabul',dateStyle:'short',timeStyle:'short'}).format(now);}}
+function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',year:'numeric',month:'long',day:'numeric'}).format(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);node.textContent='تاریخ: '+date+' | ساعت پروان: '+time;}catch{node.textContent=new Intl.DateTimeFormat('fa-AF-u-ca-persian',{timeZone:'Asia/Kabul',dateStyle:'long',timeStyle:'short'}).format(now);}}
 setInterval(updateKabulClock,30000);
-function updateHomeCart(){const node=el('homeCartSummary');if(!node)return;node.textContent=homeCart.length?'محصول انتخاب‌شده: '+homeCart[0]:'سبد فروش خالی است';}
+function updateHomeCart(){const node=el('homeCartSummary');if(!node)return;node.textContent=homeCart.length?'محصول انتخاب‌شده: '+homeCart[0]:'سبد فروش خالی است';const clear=el('clearHomeCart');if(clear)clear.disabled=homeCart.length===0;document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.classList.toggle('selected',homeCart[0]===b.dataset.product));}
 async function updateTopRate(){const node=el('usdRateTop');if(!node)return;try{const rate=await fetchKabulRate();node.textContent='دالر: '+fmt(rate.sell)+' افغانی';}catch{node.textContent='نرخ دالر: ناموجود';}}
 
 function refresh(){
