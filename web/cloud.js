@@ -71,5 +71,82 @@
     if(error){setStatus('بررسی حساب ناموفق: '+error.message);return;}
     verifiedSession(data.session);
   });
+
+  const cloudStatus=$('cloudStatus'),cloudDetail=$('cloudDetail');
+  const cloudLogin=$('cloudLogin'),cloudSignedIn=$('cloudSignedIn');
+  const cloudAccount=$('cloudAccount');
+  const cloudSignIn=$('cloudSignIn'),cloudSignOut=$('cloudSignOut');
+  const cloudEmail=$('cloudEmail'),cloudPassword=$('cloudPassword');
+  const cloudState=(ok,title,detail)=>{
+    cloudStatus.textContent=title;
+    cloudStatus.classList.toggle('ok',!!ok);
+    cloudStatus.classList.toggle('bad',!ok);
+    cloudDetail.textContent=detail||'';
+  };
+  const showCloudUser=user=>{
+    cloudLogin.classList.add('hidden');
+    cloudSignedIn.classList.remove('hidden');
+    cloudAccount.textContent='حساب متصل: '+(user.email||'ایمیل تأییدشده');
+    cloudState(true,'اتصال ابری برقرار است','ورود به حساب ابری موفق شد. اطلاعات ابری با همین حساب قابل دسترسی است.');
+  };
+  async function testCloudConnection(){
+    cloudState(false,'در حال آزمایش اتصال...','در حال ارتباط با سرور حساب ابری.');
+    const {data,error}=await client.auth.getUser();
+    if(error)throw error;
+    if(!data?.user)throw new Error('نشست معتبر پیدا نشد؛ ابتدا از بخش ورود امن برنامه وارد شوید.');
+    if(!data.user.email_confirmed_at)throw new Error('ایمیل حساب هنوز تأیید نشده است.');
+    showCloudUser(data.user);
+  }
+  cloudSignIn?.addEventListener('click',async()=>{
+    if(cloudSignIn.disabled)return;
+    cloudSignIn.disabled=true;
+    cloudSignIn.textContent='در حال اتصال...';
+    try{
+      const {data:sessionData,error:sessionError}=await client.auth.getSession();
+      if(sessionError)throw sessionError;
+      if(sessionData?.session){
+        await testCloudConnection();
+      }else{
+        const email=cloudEmail.value.trim(),password=cloudPassword.value;
+        if(!email||!password)throw new Error('ایمیل و رمز عبور را وارد کنید.');
+        const {data,error}=await client.auth.signInWithPassword({email,password});
+        if(error)throw error;
+        if(!data?.session)throw new Error('ورود انجام شد اما نشست حساب دریافت نشد.');
+        cloudPassword.value='';
+        await verifiedSession(data.session);
+        await testCloudConnection();
+      }
+    }catch(error){
+      cloudState(false,'اتصال ابری تأیید نشد',error?.message||'خطای ناشناخته در اتصال.');
+    }finally{
+      cloudSignIn.disabled=false;
+      cloudSignIn.textContent='ورود و آزمایش اتصال';
+    }
+  });
+  cloudSignOut?.addEventListener('click',async()=>{
+    cloudSignOut.disabled=true;
+    try{
+      const {error}=await client.auth.signOut();
+      if(error)throw error;
+      cloudLogin.classList.remove('hidden');
+      cloudSignedIn.classList.add('hidden');
+      cloudAccount.textContent='';
+      cloudState(false,'از حساب ابری خارج شدید','برای استفاده دوباره، از ورود امن برنامه وارد شوید.');
+      await verifiedSession(null);
+    }catch(error){
+      cloudState(false,'خروج ناموفق بود',error?.message||'خطای ناشناخته');
+    }finally{cloudSignOut.disabled=false;}
+  });
+  (async()=>{
+    try{
+      const {data,error}=await client.auth.getSession();
+      if(error)throw error;
+      if(data?.session)await testCloudConnection();
+      else cloudState(false,'هنوز به حساب ابری وصل نیستید','ایمیل و رمز حساب ابری را وارد کنید.');
+    }catch(error){
+      cloudState(false,'بررسی اتصال ناموفق شد',error?.message||'سرور پاسخ نداد.');
+    }
+  })();
+
   lock();
 })();
