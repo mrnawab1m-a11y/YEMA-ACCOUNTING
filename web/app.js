@@ -126,7 +126,7 @@ function suppliersView(b){const payable=b.suppliers.reduce((s,x)=>s+num(x.debt),
 function expensesView(b){return '<section class="panel">'+header('مصارف و هزینه‌ها')+'<form id="expenseForm" class="formgrid">'+field('عنوان مصرف','title','text','مثلاً کرایه',true)+select('دسته‌بندی','category',['کرایه محل','معاش کارمندان','برق و آب','ترانسپورت','تعمیرات','سایر مصارف'].map(x=>({value:x,label:x})))+field('مبلغ','amount','number','مبلغ',true)+select('واحد پول','currency',[{value:'AFN',label:'افغانی'},{value:'USD',label:'دالر'}])+select('پرداخت از حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+field('توضیحات','note')+'<div class="wide"><button class="primary full" type="submit">ثبت مصرف</button></div></form></section><section class="panel"><h3>آخرین مصارف</h3>'+rowsTable(['تاریخ','عنوان','دسته‌بندی','مبلغ','ارز'],b.expenses.slice().reverse().map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.category)+'</td><td>'+fmt(x.amount)+'</td><td>'+x.currency+'</td></tr>'))+'</section>'}
 function reportsView(b){
  const sum=(arr,k)=>arr.reduce((s,x)=>s+num(x[k]),0);
- const sales=sum(b.sales,'total'),paid=sum(b.sales,'paid'),receiptPattern=/^(دریافت نقدی فروش|دریافت از مشتری |پیش‌پرداخت )/;
+ const sales=sum(b.sales,'total'),paid=sum(b.sales,'paid'),receiptPattern=/^(دریافت نقدی فروش|دریافت فروش مشتری |دریافت از مشتری |پیش‌پرداخت )/;
  const cashReceived=(b.cash||[]).filter(x=>x.kind==='in'&&receiptPattern.test(x.title||'')).reduce((s,x)=>s+num(x.amount),0);
  const bankReceived=(b.banks||[]).filter(x=>x.kind==='in'&&receiptPattern.test(x.title||'')).reduce((s,x)=>s+num(x.amount),0);
  const totalCustomerReceipts=cashReceived+bankReceived;
