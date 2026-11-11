@@ -1,21 +1,20 @@
 const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز'];
 const KEY='yema_v2_';
+let homeCart=[];
 const read=k=>{try{return JSON.parse(localStorage.getItem(KEY+k)||'[]')}catch{return []}};
 const write=(k,v)=>localStorage.setItem(KEY+k,JSON.stringify(v));
 const el=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('fa-IR',{maximumFractionDigits:2});
 const unit=p=>p==='گاز'?'کیلوگرام':'لیتر';
 const sum=(a,k)=>a.reduce((s,x)=>s+Number(x[k]||0),0);
-function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',dateStyle:'full'}).format(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(now);node.textContent=date+' | ساعت افغانستان: '+time;}catch{node.textContent=new Intl.DateTimeFormat('fa-IR',{timeZone:'Asia/Kabul',dateStyle:'full',timeStyle:'short'}).format(now);}}
-setInterval(updateKabulClock,1000);
+function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',dateStyle:'medium'}).format(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);node.textContent=date+' | '+time;}catch{node.textContent=new Intl.DateTimeFormat('fa-IR',{timeZone:'Asia/Kabul',dateStyle:'short',timeStyle:'short'}).format(now);}}
+setInterval(updateKabulClock,30000);
+function updateHomeCart(){const node=el('homeCartSummary');if(!node)return;node.textContent=homeCart.length?'سبد فروش: '+fmt(homeCart.length)+' محصول انتخاب‌شده':'سبد فروش خالی است';}
+async function updateTopRate(){const node=el('usdRateTop');if(!node)return;try{const rate=await fetchKabulRate();node.textContent='دالر: '+fmt(rate.sell)+' افغانی';}catch{node.textContent='نرخ دالر: ناموجود';}}
+
 function refresh(){
- updateKabulClock();
- const sales=read('sales'),expenses=read('expenses');
- el('salesCount').textContent=fmt(sales.length);
- el('salesTotal').textContent=fmt(sum(sales,'total'))+' افغانی';
- el('expenseTotal').textContent=fmt(sum(expenses,'amount'))+' افغانی';
- el('balanceTotal').textContent=fmt(sales.reduce((s,x)=>s+x.total-x.paid,0))+' افغانی';
- document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.onclick=()=>show('sale',b.dataset.product));
+ updateKabulClock();updateHomeCart();updateTopRate();
+ document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.onclick=()=>{if(!homeCart.includes(b.dataset.product))homeCart.push(b.dataset.product);updateHomeCart();});
 }
 async function fetchKabulRate(){const response=await fetch('https://pxjsplptibleojdhhjil.supabase.co/functions/v1/usd-rate',{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});const data=await response.json();if(!response.ok||!Number.isFinite(Number(data.buy))||!Number.isFinite(Number(data.sell)))throw new Error(data.error||'نرخ معتبر از کانال دریافت نشد');return data;}
 function jalaliDateToGregorianISO(input){const raw=String(input||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();const m=raw.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);if(!m)return null;let jy=+m[1],jm=+m[2],jd=+m[3];if(jm<1||jm>12||jd<1||jd>(jm<=6?31:jm<=11?30:30))return null;jy+=1595;let days=-355668+365*jy+Math.floor(jy/33)*8+Math.floor((jy%33+3)/4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186);let gy=400*Math.floor(days/146097);days%=146097;if(days>36524){gy+=100*Math.floor(--days/36524);days%=36524;if(days>=365)days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>365){gy+=Math.floor((days-1)/365);days=(days-1)%365;}let gd=days+1;const leap=(gy%4===0&&gy%100!==0)||gy%400===0;const months=[0,31,leap?29:28,31,30,31,30,31,31,30,31,30,31];let gm=1;while(gm<=12&&gd>months[gm]){gd-=months[gm];gm++;}return String(gy).padStart(4,'0')+'-'+String(gm).padStart(2,'0')+'-'+String(gd).padStart(2,'0')}
@@ -23,13 +22,13 @@ function field(label,name,type='text',hint=''){return '<label>'+label+'</label><
 function selectProduct(){return '<label>نوع محصول</label><select name="product">'+PRODUCTS.map(p=>'<option value="'+p+'">'+p+'</option>').join('')+'</select>'}
 function values(body){return Object.fromEntries([...body.querySelectorAll('input,select,textarea')].map(x=>[x.name,x.value]))}
 async function fetchAllRows(query){let rows=[],from=0;while(true){const {data,error}=await query.range(from,from+999);if(error)return {data:null,error};rows=rows.concat(data||[]);if(!data||data.length<1000)break;from+=1000;}return {data:rows,error:null};}
-function page(name,title,html,handler){const host=el('cloudPanelHost');if(host&&el('cloudPanel')&&!host.contains(el('cloudPanel')))host.appendChild(el('cloudPanel'));el('home').classList.add('hidden');el('page').classList.remove('hidden');el('pageTitle').textContent=title;el('pageBody').innerHTML=html;if(handler)handler(el('pageBody'))}
+function page(name,title,html,handler){el('homeCartBar')?.classList.add('hidden');const host=el('cloudPanelHost');if(host&&el('cloudPanel')&&!host.contains(el('cloudPanel')))host.appendChild(el('cloudPanel'));el('home').classList.add('hidden');el('page').classList.remove('hidden');el('pageTitle').textContent=title;el('pageBody').innerHTML=html;if(handler)handler(el('pageBody'))}
 function show(name,selectedProduct){
  if(name==='sale')page(name,'ثبت فروش چندمحصولی','<div class="muted">شماره بل خودکار از ۱۰۰ به بعد</div>'+field('نام مشتری','customer')+selectProduct()+field('مقدار ('+'لیتر برای تیل، کیلوگرام برای گاز'+')','qty','number')+field('قیمت فی لیتر','price','number')+'<button type="button" id="addItem">افزودن به سبد</button><div id="saleCart" class="listitem">سبد فروش خالی است</div>'+field('پرداخت‌شده (افغانی)','paid','number')+'<label>واریز به حساب</label><select name="cashAccountId"><option value="">در حال دریافت حساب‌ها...</option></select>'+field('تاریخ فروش هجری شمسی','saleDate','text','۱۴۰۵/۰۸/۲۰')+field('توضیحات و آدرس مشتری','address')+'<button class="primary" id="save">ثبت بل فروش</button>',body=>{
- const cart=[];const product=body.querySelector('[name=product]'),qty=body.querySelector('[name=qty]'),price=body.querySelector('[name=price]');
+ const cart=(Array.isArray(selectedProduct)?selectedProduct:[]).map(p=>({product:p,quantity:0,unit_price:0,unit:unit(p)}));const product=body.querySelector('[name=product]'),qty=body.querySelector('[name=qty]'),price=body.querySelector('[name=price]');
  const updateUnit=()=>{qty.placeholder='مقدار به '+unit(product.value);price.previousElementSibling.textContent=product.value==='گاز'?'قیمت فی کیلوگرام':'قیمت فی لیتر';};
  product.onchange=updateUnit;if(selectedProduct){product.value=selectedProduct;updateUnit();}else updateUnit();
- const drawCart=()=>{const target=body.querySelector('#saleCart');if(!cart.length){target.textContent='سبد فروش خالی است';return;}target.innerHTML=cart.map((x,i)=>'<div class="listitem"><b>'+escapeHtml(x.product)+'</b><div>'+fmt(x.quantity)+' '+escapeHtml(x.unit)+' × '+fmt(x.unit_price)+' = '+fmt(x.quantity*x.unit_price)+' افغانی <button type="button" data-remove="'+i+'">حذف</button></div></div>').join('')+'<b>جمع کل: '+fmt(cart.reduce((n,x)=>n+x.quantity*x.unit_price,0))+' افغانی</b>';};
+ const drawCart=()=>{const target=body.querySelector('#saleCart');const active=cart.filter(x=>x.quantity>0);if(!active.length){target.textContent=cart.length?'محصولات انتخاب‌شده: '+cart.map(x=>escapeHtml(x.product)).join('، ')+' — مقدار و قیمت را وارد کنید':'سبد فروش خالی است';return;}target.innerHTML=active.map((x,i)=>'<div class="listitem"><b>'+escapeHtml(x.product)+'</b><div>'+fmt(x.quantity)+' '+escapeHtml(x.unit)+' × '+fmt(x.unit_price)+' = '+fmt(x.quantity*x.unit_price)+' افغانی <button type="button" data-remove="'+i+'">حذف</button></div></div>').join('')+'<b>جمع کل: '+fmt(cart.reduce((n,x)=>n+x.quantity*x.unit_price,0))+' افغانی</b>';};
  body.querySelector('#addItem').onclick=()=>{const q=Number(qty.value),p=Number(price.value);if(!Number.isFinite(q)||q<=0||qty.value===''||!Number.isFinite(p)||p<0||price.value==='')return alert('مقدار و قیمت محصول را درست وارد کنید');const existing=cart.find(x=>x.product===product.value&&x.unit_price===p);if(existing)existing.quantity+=q;else cart.push({product:product.value,quantity:q,unit_price:p,unit:unit(product.value)});qty.value='';price.value='';drawCart();};
  body.querySelector('#saleCart').onclick=e=>{const b=e.target.closest('[data-remove]');if(b){cart.splice(Number(b.dataset.remove),1);drawCart();}};
  const accountSelect=body.querySelector('[name=cashAccountId]');(async()=>{const cloud=window.yemaCloud?.client;if(!cloud){accountSelect.innerHTML='<option value="">اتصال ابری موجود نیست</option>';return;}const {data:accounts,error}=await cloud.from('cash_accounts').select('id,name,currency,account_type').eq('active',true).eq('currency','AFN').order('account_type').order('name');if(error){accountSelect.innerHTML='<option value="">خطا در دریافت حساب‌ها</option>';return;}accountSelect.innerHTML='<option value="">انتخاب صندوق یا بانک</option>'+(accounts||[]).map(a=>'<option value="'+a.id+'">'+escapeHtml(a.name)+'</option>').join('');})();
@@ -66,9 +65,10 @@ function printReceipt(bill){
  w.document.write('<!doctype html><html lang="fa" dir="rtl"><meta charset="utf-8"><title>رسید فروش</title><style>body{font-family:Tahoma,Arial;padding:24px;max-width:600px;margin:auto;color:#172b4d}h2{text-align:center}hr{border:0;border-top:1px solid #aaa}p{padding:6px 0}table{width:100%;border-collapse:collapse}th,td{border:1px solid #bbb;padding:8px;text-align:right}th{background:#eee}</style><h2>نمایندگی تیل فروشی حاجی نواب پروانی</h2><h3>رسید فروش شماره '+escapeHtml(fmt(x.bill))+'</h3><hr><p>مشتری: '+customer+'</p><table><thead><tr><th>محصول</th><th>مقدار</th><th>قیمت فی واحد</th><th>مجموع</th></tr></thead><tbody>'+rows+'</tbody></table><p>مجموع بل: '+escapeHtml(fmt(x.total))+' افغانی</p><p>پرداخت‌شده: '+escapeHtml(fmt(x.paid))+' افغانی</p><p>باقی‌مانده: '+escapeHtml(fmt(x.total-x.paid))+' افغانی</p><p>تاریخ شمسی: '+escapeHtml(jalaliDate)+'</p><p>تاریخ میلادی: '+date+'</p><p>آدرس/توضیحات: '+address+'</p><hr><center>با تشکر از خرید شما</center><script>window.onload=()=>window.print()<\\/script></html>');
  w.document.close();
 }
-function home(){const host=el('cloudPanelHost');if(host&&el('cloudPanel')&&!host.contains(el('cloudPanel')))host.appendChild(el('cloudPanel'));el('page').classList.add('hidden');el('home').classList.remove('hidden');refresh()}
+function home(){const host=el('cloudPanelHost');if(host&&el('cloudPanel')&&!host.contains(el('cloudPanel')))host.appendChild(el('cloudPanel'));el('page').classList.add('hidden');el('home').classList.remove('hidden');el('homeCartBar').classList.remove('hidden');refresh()}
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));
-el('openMenu').onclick=()=>show('menu');
-el('quickSale').onclick=()=>show('sale');
+el('openMenu')?.addEventListener('click',()=>show('menu'));
+el('quickSale')?.addEventListener('click',()=>show('sale'));
+el('openHomeCart').onclick=()=>{const selected=[...homeCart];homeCart=[];updateHomeCart();show('sale',selected.length?selected:undefined);};
 el('back').onclick=home;
 refresh();
