@@ -677,6 +677,50 @@ header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:
  .products button .product-symbol{width:54px!important;height:54px!important;font-size:30px!important}
 }
 
+
+/* FINAL MOBILE PRODUCT TILES — equal square navy & gold */
+@media(max-width:649px){
+  #productButtons.products{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:min(100%,440px)!important;
+    max-width:440px!important;
+    gap:10px!important;
+    margin:14px auto 118px!important;
+  }
+  #productButtons.products button,
+  #productButtons.products button:last-child{
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    aspect-ratio:1 / 1!important;
+    grid-column:auto!important;
+    justify-self:stretch!important;
+    border:1px solid #e2c477!important;
+    border-radius:20px!important;
+    background:linear-gradient(145deg,#18365f 0%,#10294c 58%,#081a34 100%)!important;
+    box-shadow:0 9px 20px #07172f2b,inset 0 1px #ffffff24!important;
+    gap:9px!important;
+  }
+  #productButtons.products button:last-child{
+    grid-column:1 / -1!important;
+    width:calc(50% - 5px)!important;
+    justify-self:center!important;
+  }
+  #productButtons.products button .product-symbol{
+    width:52px!important;height:52px!important;
+    border:1px solid #e5c77e99!important;
+    border-radius:16px!important;
+    background:linear-gradient(145deg,#f2d99b30,#d8ad5812)!important;
+    font-size:29px!important;
+  }
+  #productButtons.products button .product-name{
+    color:#fff1cc!important;font-size:13px!important;
+    font-weight:900!important;text-align:center!important;
+    white-space:normal!important;line-height:1.5!important;
+  }
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
