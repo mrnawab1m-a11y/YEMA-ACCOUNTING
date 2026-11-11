@@ -7,10 +7,10 @@
 <title>حسابداری یما</title>
 <style>
 :root{color-scheme:light;--navy:#0d2144;--gold:#d8ad58;--bg:#f3f5f9;--ink:#203047;--muted:#718096;--line:#e6eaf0}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}
-header{background:#0b1e3d;color:#f4dfb2;padding:12px 12px;position:sticky;top:0;z-index:5;min-height:58px}
+header{background:#0b1e3d;color:#f4dfb2;padding:9px 12px;position:sticky;top:0;z-index:5;min-height:58px}
 header h1,header small{display:none}header #kabulClock{font-size:15px;color:#f4dfb2;margin:0;line-height:1.6;text-align:center}
-.header-info{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:nowrap;font-size:15px;font-weight:700;color:#f4dfb2;line-height:1.6;padding-right:42px}
-.header-info span{white-space:nowrap}
+.header-info{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-wrap:nowrap;font-size:12px;font-weight:700;color:#f4dfb2;line-height:1.4;padding-right:38px}
+.header-info span{white-space:nowrap;display:block;width:max-content;max-width:calc(100vw - 82px);padding:3px 10px;border:1px solid #d8ad5880;border-radius:7px;background:#ffffff0a;text-align:center;font-size:12px;line-height:1.45}
 #openMenu{position:absolute;right:7px;top:9px;width:32px;height:32px;border:0;background:transparent;padding:5px 4px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;cursor:pointer;flex:0 0 32px}
 #openMenu span{display:block;width:22px;height:2.5px;border-radius:2px;background:#f4dfb2}
 .wrap{max-width:980px;margin:auto;padding:16px 14px 30px}.home-intro,.summary{display:none!important}
@@ -28,7 +28,7 @@ header h1,header small{display:none}header #kabulClock{font-size:15px;color:#f4d
 #openHomeCart,#clearHomeCart{border:0;border-radius:11px;padding:11px 13px;font:inherit;font-weight:bold;white-space:nowrap}
 #openHomeCart{background:#d8ad58;color:#102447}
 #clearHomeCart{background:#fff;color:#9c2f2f;border:1px solid #e7b8b8}#clearHomeCart:disabled{opacity:.42;cursor:not-allowed}
-@media(max-width:390px){header{padding:10px 8px;min-height:54px}.header-info{font-size:12px;gap:7px;padding-right:38px}.header-info #kabulClock{font-size:12px}.products{gap:8px;margin-top:12px}.products button{min-height:74px;font-size:14px;border-radius:14px;padding:8px 5px}#homeCartSummary{font-size:12px}#openHomeCart,#clearHomeCart{padding:10px 9px;font-size:12px}}
+@media(max-width:390px){header{padding:7px 8px;min-height:54px}.header-info{font-size:11px;gap:4px;padding-right:38px}.header-info span{font-size:11px;padding:2px 8px}.products{gap:8px;margin-top:12px}.products button{min-height:74px;font-size:14px;border-radius:14px;padding:8px 5px}#homeCartSummary{font-size:12px}#openHomeCart,#clearHomeCart{padding:10px 9px;font-size:12px}}
 .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}.home-actions button,.menu-link{border:1px solid var(--line);border-radius:13px;padding:15px 10px;background:white;color:var(--navy);font:inherit;font-weight:bold;box-shadow:0 3px 12px #172b4d10;cursor:pointer}.home-actions button.primary,button.primary{background:linear-gradient(135deg,#e6c477,#d3a64d);color:#172b4d;border:0}
 .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.menu-link{width:100%;min-height:58px}.panel,.cloud-panel{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 3px 14px #172b4d08}.panel{margin-top:12px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
 label{display:block;font-size:14px;margin:12px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd3dd;border-radius:9px;font:inherit;background:white}button.primary{margin-top:15px;width:100%;padding:13px;border-radius:11px;font-weight:bold}.muted{color:var(--muted);font-size:13px}.hidden{display:none}.listitem{padding:10px 0;border-bottom:1px solid var(--line)}
