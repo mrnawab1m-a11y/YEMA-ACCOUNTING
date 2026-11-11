@@ -305,6 +305,55 @@ header{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
  #pageBody .listitem{padding:13px 14px;font-size:12px}
 }
 
+
+/* Refined five-product selector: bespoke line icons, balanced 3+2 layout */
+.products{
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;max-width:620px;margin:15px auto 118px;
+}
+.products button{
+  grid-column:span 2;min-height:102px;padding:11px 5px 10px;
+  border:1px solid #caa75f;border-radius:17px;
+  background:linear-gradient(155deg,#18365b 0%,#102747 58%,#091a32 100%);
+  box-shadow:0 7px 17px rgba(8,25,49,.16),inset 0 1px 0 #ffffff24;
+}
+.products button:nth-child(4){grid-column:2/span 2}
+.products button:nth-child(5){grid-column:4/span 2}
+.products button:before{inset:5px;border:1px solid #e8ca8b45;border-radius:12px}
+.products button:after{width:100px;height:100px;top:-43px;right:-30px;left:auto;background:radial-gradient(circle,#e7c47738,transparent 70%)}
+.products button .product-symbol{
+  width:47px;height:47px;border-radius:15px;
+  display:grid!important;place-items:center;
+  border:1px solid #e4c47d8c;
+  background:linear-gradient(145deg,#f5dfad25,#d8ad580b);
+  box-shadow:inset 0 1px 0 #ffffff20,0 5px 12px #0002;
+}
+.products button .product-symbol svg{
+  display:block;width:29px;height:29px;fill:none;stroke:#f5d995;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.products button:nth-child(2) .product-symbol{border-color:#b9d6e7a0;background:#c6e7f018}
+.products button:nth-child(2) .product-symbol svg{stroke:#c9e7f5}
+.products button:nth-child(3) .product-symbol{border-color:#d9c5a0a0;background:#e6d1a018}
+.products button:nth-child(3) .product-symbol svg{stroke:#e8d5ac}
+.products button:nth-child(4) .product-symbol{border-color:#a9c8b2a0;background:#b9e2c018}
+.products button:nth-child(4) .product-symbol svg{stroke:#c5e6ce}
+.products button:nth-child(5) .product-symbol{border-color:#e6a879a0;background:#f2b27a18}
+.products button:nth-child(5) .product-symbol svg{stroke:#ffc18e}
+.products button .product-name{font-size:12px;letter-spacing:0;color:#fff1cf}
+@media(max-width:390px){
+ .products{gap:8px;margin-top:12px}
+ .products button{min-height:91px;border-radius:15px}
+ .products button .product-symbol{width:41px;height:41px;border-radius:13px}
+ .products button .product-symbol svg{width:26px;height:26px}
+ .products button .product-name{font-size:11px}
+}
+@media(min-width:650px){
+ .products{grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+ .products button,.products button:nth-child(4),.products button:nth-child(5){grid-column:auto;min-height:116px}
+ .products button .product-symbol{width:51px;height:51px}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -324,7 +373,7 @@ header{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
  <p id="cloudDetail" class="cloud-note">ورود ابری هنوز اطلاعات محلی را انتقال نمی‌دهد؛ تا تکمیل انتقال امن، داده‌های قبلی در همین مرورگر محفوظ می‌مانند.</p>
 </section></div>
 <section id="home">
-<div class="products" id="productButtons"><button type="button" data-product="پطرول ۹۲"><span class="product-symbol" aria-hidden="true">⛽</span><span class="product-name">پطرول ۹۲</span></button><button type="button" data-product="پطرول ۸۰"><span class="product-symbol" aria-hidden="true">🛢️</span><span class="product-name">پطرول ۸۰</span></button><button type="button" data-product="دیزل شیشه‌ای"><span class="product-symbol" aria-hidden="true">🚚</span><span class="product-name">دیزل شیشه‌ای</span></button><button type="button" data-product="دیزل ۰۱"><span class="product-symbol" aria-hidden="true">🚛</span><span class="product-name">دیزل ۰۱</span></button><button type="button" data-product="گاز"><span class="product-symbol" aria-hidden="true">🔥</span><span class="product-name">گاز</span></button></div>
+<div class="products" id="productButtons"><button type="button" data-product="پطرول ۹۲"><span class="product-symbol"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M13 39V12a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v27M10 39h24M17 15h10v9H17zM31 16h3l4 5v12a3 3 0 0 0 6 0V20l-4-4" /><path d="M20 29h4" /></svg></span><span class="product-name">پطرول ۹۲</span></button><button type="button" data-product="پطرول ۸۰"><span class="product-symbol"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M14 10h20l3 7v21H11V17zM14 10l-3 7h26l-3-7M17 24h14M17 30h14" /></svg></span><span class="product-name">پطرول ۸۰</span></button><button type="button" data-product="دیزل شیشه‌ای"><span class="product-symbol"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M6 29h36l-4-11H11zM10 29v7h28v-7M14 36a3 3 0 1 0 6 0M29 36a3 3 0 1 0 6 0M13 18h22" /></svg></span><span class="product-name">دیزل شیشه‌ای</span></button><button type="button" data-product="دیزل ۰۱"><span class="product-symbol"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M5 30h38V18H25l-5-6H8zM5 30v7h38v-7M13 37a3 3 0 1 0 6 0M31 37a3 3 0 1 0 6 0M26 18v12" /></svg></span><span class="product-name">دیزل ۰۱</span></button><button type="button" data-product="گاز"><span class="product-symbol"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M25 6c2 8-7 10-7 18a7 7 0 0 0 14 0c0-4-2-7-7-18zM18 29c0 5 4 8 8 8" /></svg></span><span class="product-name">گاز</span></button></div>
 </section>
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button">پاک کردن محصول</button><button id="openHomeCart" type="button">فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
