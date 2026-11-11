@@ -445,6 +445,73 @@ header:before{left:10px;top:10px;width:70px;height:72px;background-size:42px 42p
 .products button:active,.products button.selected{transform:translateY(-3px) scale(.98)!important;border-color:#ffe5a5!important;box-shadow:0 15px 28px #071a3040,0 0 0 3px #d8b46a30!important}
 @media(max-width:520px){.products{gap:9px!important;margin-top:14px!important}.products button,.products button:last-child{min-height:112px!important;padding:10px 4px!important;gap:7px!important;border-radius:17px!important}.products button .product-symbol{width:54px!important;height:54px!important;border-radius:15px!important}.products button .product-symbol svg{width:44px!important;height:44px!important}.products button .product-name{font-size:11px!important}}
 @media(min-width:650px){.products{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:14px!important}.products button,.products button:nth-child(4),.products button:nth-child(5),.products button:last-child{grid-column:auto!important;min-height:145px!important}.products button .product-symbol{width:76px!important;height:76px!important}.products button .product-symbol svg{width:62px!important;height:62px!important}.products button .product-name{font-size:13px!important}}
+
+/* Colorful signature palette for the five product cards */
+.products button{
+  border:1px solid #ffffff80!important;
+  box-shadow:0 13px 26px #0a1c3530,inset 0 1px 0 #ffffff55!important;
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease!important;
+}
+.products button:nth-child(1){
+  background:radial-gradient(circle at 18% 12%,#ffcf70 0,transparent 38%),linear-gradient(145deg,#c56b19 0%,#9d3f13 58%,#64270f 100%)!important;
+  border-color:#ffd18a!important;
+}
+.products button:nth-child(2){
+  background:radial-gradient(circle at 18% 12%,#8be0ff 0,transparent 40%),linear-gradient(145deg,#1689bd 0%,#12618f 58%,#103b68 100%)!important;
+  border-color:#a8eaff!important;
+}
+.products button:nth-child(3){
+  background:radial-gradient(circle at 18% 12%,#a8f0cf 0,transparent 40%),linear-gradient(145deg,#278b70 0%,#17634f 58%,#104235 100%)!important;
+  border-color:#b8f1d6!important;
+}
+.products button:nth-child(4){
+  background:radial-gradient(circle at 18% 12%,#ffd0a1 0,transparent 40%),linear-gradient(145deg,#b96a36 0%,#854324 58%,#512b20 100%)!important;
+  border-color:#ffd1ad!important;
+}
+.products button:nth-child(5){
+  background:radial-gradient(circle at 18% 12%,#ffb6a0 0,transparent 40%),linear-gradient(145deg,#c34f56 0%,#8e344b 58%,#55233e 100%)!important;
+  border-color:#ffc4b2!important;
+}
+.products button:before{
+  border:1px solid #ffffff55!important;
+  background:linear-gradient(135deg,#ffffff0c,transparent 55%)!important;
+}
+.products button:after{
+  right:-25px!important;top:-43px!important;width:125px!important;height:125px!important;
+  background:radial-gradient(circle,#ffffff32 0,transparent 70%)!important;
+}
+.products button .product-symbol{
+  width:68px!important;height:68px!important;border-radius:21px!important;
+  background:linear-gradient(145deg,#ffffff42,#ffffff12)!important;
+  border:1px solid #ffffffb0!important;
+  box-shadow:inset 0 2px 0 #ffffff75,0 8px 18px #06182c40!important;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.products button .product-symbol svg{
+  width:53px!important;height:53px!important;
+  filter:drop-shadow(0 3px 4px #06182c55)!important;
+}
+.products button:nth-child(1) .product-symbol svg{filter:drop-shadow(0 2px 5px #ffcb66)!important}
+.products button:nth-child(2) .product-symbol svg{filter:drop-shadow(0 2px 5px #7bdcff)!important}
+.products button:nth-child(3) .product-symbol svg{filter:drop-shadow(0 2px 5px #91e5bd)!important}
+.products button:nth-child(4) .product-symbol svg{filter:drop-shadow(0 2px 5px #ffc18c)!important}
+.products button:nth-child(5) .product-symbol svg{filter:drop-shadow(0 2px 5px #ff9d91)!important}
+.products button .product-name{
+  color:#fff!important;font-size:14px!important;
+  text-shadow:0 2px 5px #07182c80!important;letter-spacing:.1px!important;
+}
+.products button:active,.products button.selected{
+  filter:brightness(1.16) saturate(1.12)!important;
+  transform:translateY(-3px) scale(.975)!important;
+  box-shadow:0 17px 30px #07182c45,0 0 0 3px #f5d99555!important;
+}
+@media(max-width:520px){
+ .products button,.products button:last-child{min-height:116px!important}
+ .products button .product-symbol{width:58px!important;height:58px!important;border-radius:18px!important}
+ .products button .product-symbol svg{width:46px!important;height:46px!important}
+ .products button .product-name{font-size:12px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
