@@ -66,8 +66,8 @@ function salesView(b){
  const rows=sales.length?sales.map(x=>'<tr><td>'+fmt(x.bill)+'</td><td>'+esc(x.customerName||'—')+'</td><td>'+esc(productName(b,x.productId))+'</td><td>'+fmt(x.qty)+' '+esc(x.unit||'')+'</td><td>'+fmt(x.price)+'</td><td>'+fmt(x.total)+'</td><td><button type="button" class="ghost" data-sale-receipt="'+esc(x.id)+'">چاپ رسید</button></td><td>'+fmt(Math.max(0,num(x.total)-num(x.paid)))+'</td><td>'+esc(x.note||'—')+'</td></tr>').join(''):'<tr><td colspan="9" class="muted">هنوز فروشی ثبت نشده است</td></tr>';
  return '<section class="panel">'+header('ثبت فروش')+
  '<div class="muted" style="margin:8px 0 14px">تاریخ هجری شمسی: <b>'+esc(shamsiDate(dateNow()))+'</b></div>'+
- '<h3 class="section-title">معلومات فروش — خانه‌های خالی را پر کنید</h3>'+
- '<form id="saleForm"><div class="tablewrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="min-width:1420px;table-layout:fixed"><thead><tr><th>نمبر بل</th><th>اسم مشتری</th><th>نوع جنس</th><th>مقدار جنس</th><th id="manualPriceHeading">قیمت فی لیتر / کیلوگرام</th><th>قیمت کل</th><th>رسید</th><th>پرداخت</th><th>باقی</th><th>توضیحات</th></tr></thead><tbody><tr>'+
+ '<h3 class="section-title">ثبت فروش</h3>'+
+ '<form id="saleForm"><div class="tablewrap sale-entry-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="sale-entry-table" style="min-width:1120px;table-layout:fixed"><thead><tr><th>نمبر بل</th><th>اسم مشتری</th><th>نوع جنس</th><th>مقدار جنس</th><th id="manualPriceHeading">قیمت فی لیتر</th><th>قیمت کل</th><th>رسید</th><th>باقی</th><th>توضیحات</th></tr></thead><tbody><tr>'+
  '<td><input id="manualBill" value="'+fmt(nextBill)+'" readonly aria-label="نمبر بل"></td>'+
  '<td><input name="customer" type="text" placeholder="اسم مشتری" required></td>'+
  '<td><select id="manualProduct" aria-label="نوع جنس" required><option value="">انتخاب جنس</option>'+options+'</select></td>'+
@@ -75,16 +75,16 @@ function salesView(b){
  '<td><input id="manualPrice" type="number" min="0.01" step="any" placeholder="قیمت فی واحد" required></td>'+
  '<td><input id="manualTotal" value="۰" readonly aria-label="قیمت کل"></td>'+
  '<td><span class="badge">چاپ پس از ثبت</span></td>'+
- '<td><input name="paid" id="manualPaid" type="number" min="0" step="any" value="0" placeholder="پرداخت"></td>'+
  '<td><input id="manualRemaining" value="۰" readonly aria-label="باقی"></td>'+
  '<td><input name="note" type="text" placeholder="توضیحات"></td>'+
  '</tr></tbody></table></div>'+
- '<div class="formgrid" style="margin-top:12px">'+select('دریافت به حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+
+ '<div class="formgrid" style="margin-top:12px">'+field('پرداخت فعلی (افغانی)','paid','number','۰')+
+ select('دریافت به حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+
  '<div><label>تاریخ فروش (هجری شمسی)</label><input data-sale-shamsi type="text" value="'+esc(shamsiDate(dateNow()))+'" readonly></div>'+
  '<div><label>تاریخ عیسوی</label><input name="saleDate" type="date" value="'+dateNow()+'" required></div>'+
  '<div class="wide"><button class="primary full" type="submit">ثبت فروش و چاپ رسید</button></div></div>'+
  '<div id="saleCart" hidden></div><div class="wide stat" style="margin-top:10px"><small>مجموع پول (افغانی)</small><b data-sale-total>۰</b></div></form></section>'+
- '<section class="panel"><h3 class="section-title">فروش‌های ثبت‌شده</h3><div class="tablewrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="min-width:1180px;white-space:nowrap"><thead><tr><th>نمبر بل</th><th>اسم مشتری</th><th>نوع جنس</th><th>مقدار جنس</th><th>قیمت فی واحد</th><th>قیمت کل</th><th>رسید</th><th>باقی</th><th>توضیحات</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+ '<section class="panel"><h3 class="section-title">فروش‌های ثبت‌شده</h3><div class="tablewrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="min-width:1120px;white-space:nowrap"><thead><tr><th>نمبر بل</th><th>اسم مشتری</th><th>نوع جنس</th><th>مقدار جنس</th><th>قیمت فی واحد</th><th>قیمت کل</th><th>رسید</th><th>باقی</th><th>توضیحات</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 function purchasesView(b){return '<section class="panel">'+header('ثبت خرید عمده')+'<form id="purchaseForm" class="formgrid">'+field('نام فروشنده','supplier','text','نام فروشنده',true)+select('محصول','product',productOptions(b))+field('مقدار خرید (تن)','tons','number','تن',true)+field('قیمت هر تن (دالر)','usd','number','قیمت دالری',true)+field('نرخ دالر (افغانی)','rate','number',String(b.usdRate),true)+field('پرداخت فعلی (افغانی)','paid','number','۰')+select('پرداخت از حساب','account',[{value:'cash',label:'صندوق نقدی'},{value:'bank',label:'حساب بانکی'}])+field('شماره سند / توضیح','note')+'<div class="wide muted">خرید عمده فقط به تن ثبت می‌شود. پس از خرید، مقدار قابل فروش را جداگانه و به‌صورت دستی در صفحه موجودی به لیتر یا کیلوگرام اضافه کنید؛ هیچ تبدیل خودکاری انجام نمی‌شود.</div><div class="wide"><button class="primary full" type="submit">ثبت خرید</button></div></form></section><section class="panel"><h3>جدول خریدها</h3>'+rowsTable(['تاریخ','فروشنده','محصول','مقدار (تن)','مبلغ (AFN)'],b.purchases.slice().reverse().map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.supplier)+'</td><td>'+esc(productName(b,x.productId))+'</td><td>'+fmt(x.tons)+'</td><td>'+fmt(x.totalAfn)+'</td></tr>'))+'</section>'}
 function productName(b,id){return b.products.find(p=>p.id===id)?.name||'محصول حذف‌شده'}
