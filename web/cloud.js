@@ -45,7 +45,8 @@
       return;
     }
     setStatus('اتصال ابری موفق است', 'ok');
-    detail.textContent = 'دیتابیس پاسخ داد؛ ' + data.length + ' محصول در حساب ابری دیده شد. انتقال فروش‌ها و خریدهای قبلی هنوز انجام نشده است.';
+    detail.textContent = 'دیتابیس پاسخ داد؛ ' + data.length + ' محصول در حساب ابری دیده شد. همگام‌سازی سوابق آغاز می‌شود.';
+    window.dispatchEvent(new CustomEvent('yema-cloud-session', { detail: { client, session } }));
   }
 
   signIn.addEventListener('click', async () => {

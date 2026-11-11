@@ -1,5 +1,5 @@
-const CACHE='yema-pwa-v2';
-const FILES=['./','./index.html','./app.js','./cloud.js','./manifest.webmanifest','./icon.svg'];
+const CACHE='yema-pwa-v3';
+const FILES=['./','./index.html','./app.js','./cloud.js','./cloud-sync.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
 });
