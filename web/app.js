@@ -67,5 +67,7 @@ function printReceipt(bill){
 }
 function home(){el('page').classList.add('hidden');el('home').classList.remove('hidden');refresh()}
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));
+el('openMenu').onclick=()=>show('menu');
+el('quickSale').onclick=()=>show('sale');
 el('back').onclick=home;
 refresh();
