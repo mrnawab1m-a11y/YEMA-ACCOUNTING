@@ -613,6 +613,70 @@ header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:
 @media(max-width:390px){header{min-height:72px!important}.header-info{padding-right:43px!important}.header-info #kabulClock span,.header-info>#usdRateTop{font-size:9px!important;padding:3px 8px!important}.products{gap:8px!important;margin-top:10px!important}.products button,.products button:last-child{min-height:78px!important;padding:10px 5px!important;border-radius:14px!important}.products button .product-name{font-size:12px!important}#homeCartBar{min-height:64px!important;padding-left:8px!important;padding-right:8px!important}#homeCartSummary{font-size:11px!important}#openHomeCart,#clearHomeCart{font-size:11px!important;padding:8px 9px!important}}
 @media(min-width:650px){.products{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important}.products button,.products button:last-child{grid-column:auto!important;width:auto!important;min-height:112px!important}.products button .product-name{font-size:13px!important}}
 
+
+/* YEMA luxury square product tiles */
+.products{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+  width:min(100%,520px)!important;
+  margin:16px auto 118px!important;
+}
+.products button,.products button:last-child{
+  grid-column:auto!important;
+  width:100%!important;
+  justify-self:stretch!important;
+  aspect-ratio:1/1!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:12px 8px!important;
+  gap:10px!important;
+  border:1px solid #d9b96f!important;
+  border-radius:22px!important;
+  background:
+    radial-gradient(circle at 50% 18%,#d8b46a24 0 23%,transparent 24%),
+    linear-gradient(145deg,#18375f 0%,#10294b 54%,#081a34 100%)!important;
+  color:#fff0c9!important;
+  box-shadow:0 10px 24px #07172f24,inset 0 1px #ffffff25!important;
+}
+.products button:before{
+  inset:7px!important;border:1px solid #e7cb8a66!important;
+  border-radius:16px!important;
+}
+.products button:after{
+  top:auto!important;right:-34px!important;left:auto!important;bottom:-38px!important;
+  width:112px!important;height:112px!important;
+  background:radial-gradient(circle,#e1bd6d30,transparent 70%)!important;
+}
+.products button .product-symbol{
+  width:58px!important;height:58px!important;border-radius:18px!important;
+  border:1px solid #e6c77e!important;
+  background:linear-gradient(145deg,#f5dfaa30,#d8ad5810)!important;
+  color:#ffe6a6!important;font-size:32px!important;
+  box-shadow:0 5px 13px #0003,inset 0 1px #fff3!important;
+}
+.products button .product-name{
+  color:#fff1cc!important;font-size:14px!important;font-weight:900!important;
+  white-space:normal!important;text-align:center!important;line-height:1.55!important;
+}
+.products button:active,.products button.selected{
+  transform:translateY(-2px) scale(.98)!important;
+  border-color:#ffe6a2!important;
+  background:linear-gradient(145deg,#294d78,#142e52 65%,#0b1e39)!important;
+  box-shadow:0 12px 25px #07172f38,0 0 0 3px #d8b46a30!important;
+}
+@media(max-width:390px){
+ .products{gap:9px!important;width:min(100%,430px)!important;margin-top:12px!important}
+ .products button,.products button:last-child{border-radius:19px!important;padding:8px 5px!important;gap:8px!important}
+ .products button .product-symbol{width:49px!important;height:49px!important;font-size:28px!important;border-radius:15px!important}
+ .products button .product-name{font-size:12px!important}
+}
+@media(min-width:650px){
+ .products{grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;max-width:900px!important;gap:14px!important}
+ .products button,.products button:last-child{aspect-ratio:1/1!important}
+ .products button .product-symbol{width:54px!important;height:54px!important;font-size:30px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
