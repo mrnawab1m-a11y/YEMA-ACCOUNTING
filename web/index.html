@@ -574,6 +574,45 @@ header:before{content:"";position:absolute;left:13px;top:13px;width:46px;height:
  .products button .product-name{font-size:12px!important}
 }
 
+
+/* Restore the original bright, decorated Yema visual identity while preserving the current Afghan workflow. */
+:root{--navy:#15345c;--gold:#d6a84b;--bg:#f1f4f8;--ink:#23364f;--muted:#718096;--line:#e4e9f0}
+body{background:radial-gradient(ellipse at 12% 0%,#e6edf8 0,transparent 36%),#f2f5f9!important;color:#23364f!important;font-family:Tahoma,Arial,sans-serif!important}
+header{background:linear-gradient(125deg,#10294c 0%,#1c4774 58%,#12345b 100%)!important;border-bottom:2px solid #d6ad5c!important;box-shadow:0 7px 22px #17365a25!important;min-height:78px!important}
+header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:46px;background:url("./icon.svg") center/contain no-repeat}
+.header-info{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:3px 48px 3px 8px!important;min-height:62px!important}
+.header-info #kabulClock{display:flex!important;flex-direction:column!important;gap:3px!important;align-items:center!important;margin:0!important}
+.header-info #kabulClock span,.header-info>#usdRateTop{display:block!important;width:max-content!important;max-width:100%!important;padding:3px 10px!important;border:1px solid #e4c77e99!important;border-radius:8px!important;background:#ffffff12!important;color:#fff0c9!important;font-size:10px!important;line-height:1.35!important;font-weight:700!important}
+#openMenu{right:9px!important;top:20px!important;border:1px solid #e3c477!important;border-radius:10px!important;background:#ffffff12!important}
+#openMenu span{background:#ffedc6!important}
+.wrap{max-width:900px!important;padding:15px 13px 100px!important}
+#home{padding-top:5px!important}
+.products{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;max-width:620px!important;margin:12px auto 100px!important}
+.products button,.products button:last-child{position:relative!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:91px!important;padding:14px 8px!important;border:1px solid #ffffff!important;border-radius:17px!important;color:#173252!important;font-size:15px!important;font-weight:900!important;box-shadow:0 6px 17px #1b385719,inset 0 1px 0 #ffffff!important;transition:transform .15s,box-shadow .15s!important}
+.products button:nth-child(1){background:linear-gradient(140deg,#fff9e9 0%,#f6e5bd 100%)!important;border-color:#e7c77d!important}
+.products button:nth-child(2){background:linear-gradient(140deg,#f1f9ff 0%,#d9eafa 100%)!important;border-color:#b8d3eb!important}
+.products button:nth-child(3){background:linear-gradient(140deg,#f0faf5 0%,#d7eee2 100%)!important;border-color:#b6d9c5!important}
+.products button:nth-child(4){background:linear-gradient(140deg,#f4f6fa 0%,#dce3ed 100%)!important;border-color:#c4cedc!important}
+.products button:nth-child(5){background:linear-gradient(140deg,#fff4e9 0%,#f6d9bd 100%)!important;border-color:#e9bd91!important}
+.products button:before{content:""!important;position:absolute!important;inset:6px!important;border:1px solid #ffffffb8!important;border-radius:12px!important;pointer-events:none!important;background:none!important}
+.products button:after{content:""!important;position:absolute!important;width:86px!important;height:86px!important;left:-27px!important;top:-39px!important;border-radius:50%!important;background:#ffffff70!important;pointer-events:none!important}
+.products button .product-symbol{display:none!important}
+.products button .product-name{display:block!important;position:relative!important;z-index:1!important;font-size:15px!important;line-height:1.5!important;color:#173252!important;text-shadow:0 1px #ffffffa8!important}
+.products button:nth-child(5){grid-column:1/-1!important;width:calc(50% - 6px)!important;justify-self:center!important}
+.products button:active,.products button.selected{transform:translateY(-2px) scale(.98)!important;box-shadow:0 0 0 2px #d5ad5c70,0 9px 20px #17365a24!important}
+#homeCartBar{background:linear-gradient(115deg,#10294c,#1b426d 72%,#15345c)!important;border-top:2px solid #d6ad5c!important;box-shadow:0 -7px 22px #17365a25!important;min-height:70px!important;padding:10px 13px calc(10px + env(safe-area-inset-bottom))!important}
+#homeCartSummary{color:#fff0c9!important;font-size:13px!important;font-weight:800!important}
+#openHomeCart{background:linear-gradient(135deg,#f2d58f,#d6aa50)!important;color:#173252!important;border:1px solid #ffe8ae!important;border-radius:11px!important;font-weight:900!important}
+#clearHomeCart{background:#fff!important;color:#a23c42!important;border:1px solid #edc4c4!important;border-radius:11px!important}
+#page{border:1px solid #e4e9f0!important;border-radius:18px!important;background:#fff!important;box-shadow:0 7px 22px #17365a12!important}
+#page>.row{background:linear-gradient(110deg,#f7f9fc,#fffaf0)!important;border-bottom:1px solid #e7dfcc!important;border-radius:18px 18px 0 0!important;padding:14px!important}
+#pageTitle{color:#15345c!important;font-weight:900!important}
+#pageBody{padding:15px!important}
+#pageBody input:not([type=file]),#pageBody select,#pageBody textarea{border:1px solid #d6deea!important;border-radius:11px!important;background:#fbfcfe!important}
+#pageBody button.primary{background:linear-gradient(135deg,#f0d28b,#d4a64b)!important;color:#173252!important}
+@media(max-width:390px){header{min-height:72px!important}.header-info{padding-right:43px!important}.header-info #kabulClock span,.header-info>#usdRateTop{font-size:9px!important;padding:3px 8px!important}.products{gap:8px!important;margin-top:10px!important}.products button,.products button:last-child{min-height:78px!important;padding:10px 5px!important;border-radius:14px!important}.products button .product-name{font-size:12px!important}#homeCartBar{min-height:64px!important;padding-left:8px!important;padding-right:8px!important}#homeCartSummary{font-size:11px!important}#openHomeCart,#clearHomeCart{font-size:11px!important;padding:8px 9px!important}}
+@media(min-width:650px){.products{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important}.products button,.products button:last-child{grid-column:auto!important;width:auto!important;min-height:112px!important}.products button .product-name{font-size:13px!important}}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
