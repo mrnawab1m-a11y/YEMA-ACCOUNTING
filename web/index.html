@@ -20,7 +20,7 @@ body.auth-locked header,body.auth-locked .wrap{display:none!important}.auth-gate
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><h1>حسابداری یما</h1><small>نمایندگی تیل‌فروشی حاجی نواب پروانی</small><div id="kabulClock" aria-live="off">در حال دریافت تاریخ و ساعت افغانستان…</div></header>
 <main class="wrap">
-<section class="cloud-panel" id="cloudPanel">
+<div id="cloudPanelHost" class="hidden"><section class="cloud-panel" id="cloudPanel">
  <div class="cloud-title"><b>اتصال حساب ابری</b><span id="cloudStatus" class="cloud-status">در حال بررسی اتصال…</span></div>
  <div id="cloudLogin">
   <div class="cloud-fields">
@@ -34,17 +34,11 @@ body.auth-locked header,body.auth-locked .wrap{display:none!important}.auth-gate
   <div class="cloud-actions"><button id="cloudSignOut">خروج از حساب ابری</button></div>
  </div>
  <p id="cloudDetail" class="cloud-note">ورود ابری هنوز اطلاعات محلی را انتقال نمی‌دهد؛ تا تکمیل انتقال امن، داده‌های قبلی در همین مرورگر محفوظ می‌مانند.</p>
-</section>
+</section></div>
 <section id="home">
 <div class="home-intro"><div><h2>داشبورد یما</h2><p>مدیریت سریع فروش و حسابداری روزانه</p></div></div>
-<div class="summary" aria-label="خلاصه حسابداری">
-<div class="tile"><span>تعداد بل‌های ثبت‌شده</span><b id="salesCount">۰</b></div>
-<div class="tile"><span>مجموع فروش</span><b id="salesTotal">۰ افغانی</b></div>
-<div class="tile"><span>مجموع مصارف</span><b id="expenseTotal">۰ افغانی</b></div>
-<div class="tile"><span>باقی مشتریان</span><b id="balanceTotal">۰ افغانی</b></div>
-</div>
 <div class="home-intro"><div><h2>انتخاب محصول</h2><p>برای شروع فروش، یکی از پنج محصول را انتخاب کنید.</p></div></div>
-<div class="products" id="productButtons"></div>
+<div class="products" id="productButtons"><button type="button" data-product="پطرول ۹۲"><span>⛽</span><br>پطرول ۹۲<br><small>لیتر</small></button><button type="button" data-product="پطرول ۸۰"><span>🛢️</span><br>پطرول ۸۰<br><small>لیتر</small></button><button type="button" data-product="دیزل شیشه‌ای"><span>⛽</span><br>دیزل شیشه‌ای<br><small>لیتر</small></button><button type="button" data-product="دیزل ۰۱"><span>🛢️</span><br>دیزل ۰۱<br><small>لیتر</small></button><button type="button" data-product="گاز"><span>🔥</span><br>گاز<br><small>کیلوگرام</small></button></div>
 <div class="home-actions"><button class="primary" id="quickSale">＋ ثبت فروش جدید</button><button id="openMenu">☷ تمام بخش‌های برنامه</button></div>
 </section>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
