@@ -1,7 +1,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const client = window.supabase.createClient(
-    'https://pxjsplptibleojdhhjqrqm.supabase.co',
+    'https://pxjsplptibleojdhhjil.supabase.co',
     'sb_publishable_g938wz8aF2mVHDGhXdT24A_AJXRzSVH',
     {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}
   );
