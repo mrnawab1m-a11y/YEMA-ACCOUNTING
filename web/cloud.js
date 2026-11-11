@@ -9,7 +9,7 @@
   const gate=$('authGate'),emailBox=$('authEmailBox'),pinBox=$('authPinBox');
   const status=$('authStatus'),message=$('authMessage');
   const setStatus=t=>{status.textContent=t;};
-  const lock=()=>{document.body.classList.add('auth-locked');gate.style.display='';};
+  const lock=()=>{document.body.classList.add('auth-locked');gate.style.display='';if($('authPin'))$('authPin').value='';};
   const unlock=()=>{document.body.classList.remove('auth-locked');gate.style.display='none';};
   const pinKey=user=>'yema_security_pin_'+user.id;
   const hash=async pin=>{
@@ -64,7 +64,9 @@
     $('authPin').value='';unlock();
   };
   $('authLogout').onclick=async()=>{await client.auth.signOut();await verifiedSession(null);};
-  client.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>verifiedSession(session),0);});
+  client.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION'||event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>verifiedSession(session),0);});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&activeUser)lock();});
+  window.addEventListener('pagehide',()=>{if(activeUser)lock();});
   client.auth.getSession().then(({data,error})=>{
     if(error){setStatus('بررسی حساب ناموفق: '+error.message);return;}
     verifiedSession(data.session);
