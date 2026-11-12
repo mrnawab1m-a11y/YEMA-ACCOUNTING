@@ -62,24 +62,37 @@
     setStatus(error?'ارسال ایمیل ناموفق: '+error.message:'درخواست ارسال ایمیل تأیید شد. صندوق ورودی و پوشه Spam را بررسی کنید.');
   };
   $('authPinSubmit').onclick=async()=>{
-    if(!activeUser){setStatus('ابتدا ایمیل تأییدشده را وارد کنید.');return;}
-    const pin=$('authPin').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
-    if(!/^[0-9]{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
-    const key=pinKey(activeUser),saved=localStorage.getItem(key),digest=await hash(pin);
-    if(!saved&&!pinNeedsConfirmation){
-      firstPinHash=digest;pinNeedsConfirmation=true;
-      $('authPin').value='';$('authPin').placeholder='همان کد را دوباره وارد کنید';
-      $('authPinSubmit').textContent='تأیید کد امنیتی';
-      message.textContent='کد انتخاب شد. برای ثبت نهایی، همان کد شش‌رقمی را دوباره وارد کنید.';
-      setStatus('کد تا زمان تأیید دوباره ذخیره نمی‌شود.');return;
+    const submit=$('authPinSubmit');
+    submit.disabled=true;
+    setStatus('در حال بررسی کد امنیتی...');
+    try{
+      if(!activeUser){setStatus('ابتدا ایمیل تأییدشده را وارد کنید.');return;}
+      const pin=$('authPin').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+      if(!/^[0-9]{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
+      const key=pinKey(activeUser);
+      const saved=localStorage.getItem(key);
+      const digest=await hash(pin);
+      if(!saved&&!pinNeedsConfirmation){
+        firstPinHash=digest;pinNeedsConfirmation=true;
+        $('authPin').value='';$('authPin').placeholder='همان کد را دوباره وارد کنید';
+        submit.textContent='تأیید کد امنیتی';
+        message.textContent='کد انتخاب شد. برای ثبت نهایی، همان کد شش‌رقمی را دوباره وارد کنید.';
+        setStatus('کد را یک بار دیگر وارد کنید تا ثبت شود.');return;
+      }
+      if(!saved&&pinNeedsConfirmation&&firstPinHash){
+        if(digest!==firstPinHash){$('authPin').value='';setStatus('کدها یکسان نیستند؛ همان کد قبلی را دوباره وارد کنید.');return;}
+        localStorage.setItem(key,digest);
+        if(localStorage.getItem(key)!==digest)throw new Error('ذخیره کد در این مرورگر تأیید نشد.');
+        pinNeedsConfirmation=false;firstPinHash=null;$('authPin').value='';unlock();return;
+      }
+      if(digest!==saved){$('authPin').value='';setStatus('کد امنیتی نادرست است.');return;}
+      $('authPin').value='';unlock();
+    }catch(error){
+      console.error('YEMA PIN verification failed:',error);
+      setStatus('خطا در بررسی یا ذخیره کد: '+(error?.message||'لطفاً دوباره تلاش کنید.'));
+    }finally{
+      submit.disabled=false;
     }
-    if(!saved&&pinNeedsConfirmation&&firstPinHash){
-      if(digest!==firstPinHash){$('authPin').value='';setStatus('کدها یکسان نیستند؛ همان کد قبلی را دوباره وارد کنید.');return;}
-      localStorage.setItem(key,digest);
-      pinNeedsConfirmation=false;firstPinHash=null;$('authPin').value='';unlock();return;
-    }
-    if(digest!==saved){$('authPin').value='';setStatus('کد امنیتی نادرست است.');return;}
-    $('authPin').value='';unlock();
   };
   $('authLogout').onclick=async()=>{await client.auth.signOut();await verifiedSession(null);};
   client.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION'||event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>verifiedSession(session),0);});
