@@ -18,6 +18,8 @@
     return Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
   };
   let activeUser=null;
+  let firstPinHash=null;
+  let pinNeedsConfirmation=false;
   async function verifiedSession(session){
     lock();
     if(!session?.user){activeUser=null;emailBox.classList.remove('hidden');pinBox.classList.add('hidden');message.textContent='برای باز کردن برنامه، ابتدا با ایمیل تأییدشده وارد شوید.';return;}
@@ -28,14 +30,16 @@
     pinBox.classList.remove('hidden');
     const saved=localStorage.getItem(pinKey(user));
     if(!saved){
-      message.textContent='ایمیل تأیید شد. اکنون یک کد امنیتی ۶ رقمی بسازید.';
+      firstPinHash=null;pinNeedsConfirmation=true;
+      message.textContent='ایمیل تأیید شد. یک کد امنیتی ۶ رقمی بسازید؛ سپس همان کد را دوباره وارد کنید تا تأیید شود.';
       $('authPin').placeholder='کد جدید ۶ رقمی';
-      $('authPinSubmit').textContent='ثبت کد امنیتی';
+      $('authPinSubmit').textContent='ثبت کد و ادامه';
       setStatus('کد را فقط خودتان انتخاب کنید و به کسی ندهید.');
     }else{
-      message.textContent='ایمیل تأییدشده است. برای باز کردن برنامه کد امنیتی را وارد کنید.';
+      firstPinHash=null;pinNeedsConfirmation=false;
+      message.textContent='ایمیل تأییدشده است. برای باز کردن برنامه کد امنیتی ۶ رقمی را وارد کنید.';
       $('authPin').placeholder='کد امنیتی ۶ رقمی';
-      $('authPinSubmit').textContent='تأیید کد و باز کردن برنامه';
+      $('authPinSubmit').textContent='تأیید کد و ورود به برنامه';
       setStatus('حساب: '+(user.email||''));
     }
   }
@@ -59,8 +63,18 @@
     const pin=$('authPin').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
     if(!/^[0-9]{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
     const key=pinKey(activeUser),saved=localStorage.getItem(key),digest=await hash(pin);
-    if(!saved){localStorage.setItem(key,digest);$('authPin').value='';setStatus('کد امنیتی ثبت شد.');unlock();return;}
-    if(digest!==saved){setStatus('کد امنیتی نادرست است.');return;}
+    if(!saved){
+      localStorage.setItem(key,digest);firstPinHash=digest;pinNeedsConfirmation=true;
+      $('authPin').value='';$('authPin').placeholder='همان کد را دوباره وارد کنید';
+      $('authPinSubmit').textContent='تأیید کد امنیتی';
+      message.textContent='کد ثبت شد. برای ورود، همان کد شش‌رقمی را یک بار دیگر وارد کنید.';
+      setStatus('در انتظار تأیید دوبارهٔ کد امنیتی.');return;
+    }
+    if(pinNeedsConfirmation&&firstPinHash){
+      if(digest!==firstPinHash){$('authPin').value='';setStatus('کدها یکسان نیستند؛ همان کد قبلی را دوباره وارد کنید.');return;}
+      pinNeedsConfirmation=false;firstPinHash=null;$('authPin').value='';unlock();return;
+    }
+    if(digest!==saved){$('authPin').value='';setStatus('کد امنیتی نادرست است.');return;}
     $('authPin').value='';unlock();
   };
   $('authLogout').onclick=async()=>{await client.auth.signOut();await verifiedSession(null);};
