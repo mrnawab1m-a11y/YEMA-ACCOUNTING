@@ -50,7 +50,7 @@ header:before{content:"یما\A پطرولیم";white-space:pre;position:absolut
 .dash-home-note{display:flex;flex-direction:column;gap:5px;margin:18px 0;padding:16px;border:1px solid #a9874c;border-radius:16px;background:linear-gradient(145deg,#122d4e,#091a30)!important;box-shadow:0 7px 18px #0007}
 .dash-home-note>span{color:var(--gold2);font-size:22px}.dash-home-note b{color:var(--gold2)}.dash-home-note small{color:var(--muted);line-height:1.8}
 .dash-footer{display:flex;justify-content:space-between;gap:10px;margin:20px 4px;color:var(--muted);font-size:10px}.dash-footer span{color:var(--gold);font-weight:900}
-#homeCartBar{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:76px;padding:11px 12px calc(11px + env(safe-area-inset-bottom));border-top:1px solid var(--gold);background:linear-gradient(115deg,#020916,#10294a 65%,#061326)!important;box-shadow:0 -8px 26px #000a}
+#homeCartBar{position:relative;bottom:auto;left:auto;right:auto;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:76px;margin:16px 0 0;padding:11px 12px calc(11px + env(safe-area-inset-bottom));width:100%;border-top:1px solid var(--gold);background:linear-gradient(115deg,#020916,#10294a 65%,#061326)!important;box-shadow:0 -8px 26px #000a}
 #homeCartSummary{flex:1;min-width:0;color:var(--gold2);font-size:12px;font-weight:800;line-height:1.6}
 #openHomeCart,#clearHomeCart{min-height:44px;padding:10px 13px;border-radius:13px;font:inherit;font-size:12px;font-weight:900;white-space:nowrap}
 #openHomeCart{border:1px solid #fff0bd;background:linear-gradient(130deg,#ffe7a6,#d29a37)!important;color:#17243a}
@@ -158,6 +158,6 @@ header{padding-left:14px!important}
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=55"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=56"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
