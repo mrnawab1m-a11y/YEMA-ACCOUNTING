@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#020817"/><stop offset=".55" stop-color="#0b2340"/><stop offset="1" stop-color="#010711"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b5"/><stop offset=".25" stop-color="#d99c32"/><stop offset=".55" stop-color="#ffe8a0"/><stop offset="1" stop-color="#8c5718"/></linearGradient>
+ <radialGradient id="oil"><stop stop-color="#fff3bd"/><stop offset=".25" stop-color="#f7c75a"/><stop offset=".65" stop-color="#b7771e"/><stop offset="1" stop-color="#07162a"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<rect width="900" height="520" fill="url(#bg)"/>
+<path d="M0 0H900V210C760 165 660 215 540 265S240 350 0 250Z" fill="#020a18" opacity=".7"/>
+<path d="M0 285C170 395 350 335 515 260S760 180 900 245" fill="none" stroke="#f6c85f" stroke-width="22" opacity=".25" filter="url(#glow)"/>
+<path d="M0 270C180 380 350 320 520 245S760 170 900 225" fill="none" stroke="url(#gold)" stroke-width="10"/>
+<path d="M0 282C185 390 355 330 520 255S765 180 900 235" fill="none" stroke="#fff0b5" stroke-width="2"/>
+<g transform="translate(95 80)">
+ <circle r="77" fill="url(#gold)" stroke="#f6d987" stroke-width="5"/>
+ <circle r="66" fill="#f8d783" opacity=".25"/>
+ <path d="M-50 20L-30 30L-40-2L-20 9L-13-27L0-3L16-34L22 8L43-3L30 30L50 20L40 43H-40Z" fill="#07101e" stroke="#07101e" stroke-width="5" stroke-linejoin="round"/>
+ <path d="M-38 48Q0 34 38 48M-30 58Q0 48 30 58" fill="none" stroke="#07101e" stroke-width="6" stroke-linecap="round"/>
+</g>
+<text x="205" y="105" font-family="Arial,sans-serif" font-size="76" font-weight="900" fill="url(#gold)">YEMA</text>
+<text x="210" y="150" font-family="Arial,sans-serif" font-size="28" fill="#ead6aa">Petroleum Accounting</text>
+<g transform="translate(710 300)">
+ <ellipse cx="0" cy="75" rx="165" ry="48" fill="#d99525" opacity=".35" filter="url(#glow)"/>
+ <path d="M0-110C-30-55-82-2-82 55a82 82 0 0 0 164 0C82-2 30-55 0-110Z" fill="url(#oil)" stroke="url(#gold)" stroke-width="8"/>
+ <path d="M0-64C-18-28-48 6-48 48a48 48 0 0 0 96 0C48 6 18-28 0-64Z" fill="#f9d77d" opacity=".85" stroke="#fff0b5" stroke-width="4"/>
+</g>
+<g opacity=".42" fill="#08182b" stroke="#426084" stroke-width="3">
+ <path d="M0 430H900V520H0Z"/><path d="M60 430V365h60v65m20 0V385h65v45m28 0V370h54v60m50 0V395h70v35"/>
+ <path d="M500 430V365h65v65m24 0V390h75v40m28 0V370h65v60"/>
+</g>
+</svg>
