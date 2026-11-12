@@ -704,6 +704,36 @@ header:before,header:after{display:none!important;content:none!important}
 @media(max-width:360px){header{height:205px!important;min-height:205px!important;max-height:205px!important}.agency-brand{left:8px!important;right:58px!important;top:10px!important;gap:7px!important}.agency-crown{flex-basis:42px!important;width:42px!important;height:42px!important;font-size:26px!important}.agency-brand b{font-size:23px!important}.agency-brand strong{font-size:9px!important}.header-info{left:7px!important;right:7px!important;gap:4px!important}.header-info #kabulClock .home-info-card,.header-info>#usdRateTop .home-info-card{height:74px!important;min-height:74px!important}.header-info>#usdRateTop{height:74px!important}.header-info strong,.header-info em{font-size:9px!important}#home .products{grid-auto-rows:104px!important;gap:4px!important}#home .products button{height:104px!important;min-height:104px!important;border-radius:14px!important}#home .products button .product-symbol{width:37px!important;height:37px!important;flex-basis:37px!important}#home .products button .product-name{font-size:8px!important}}
 @media(min-width:650px){header{height:230px!important;min-height:230px!important;max-height:230px!important}.agency-brand{left:calc(50% - 290px)!important;right:80px!important}.header-info{max-width:560px!important;left:calc(50% - 280px)!important;right:calc(50% - 280px)!important}.wrap{max-width:620px!important}#home .products{grid-auto-rows:120px!important}#home .products button{height:120px!important;min-height:120px!important}#home .products button .product-symbol{width:48px!important;height:48px!important;flex-basis:48px!important}#home .products button .product-name{font-size:12px!important}}
 
+
+/* v72 — balanced five-product grid: three above, two centered below */
+#home .products{
+ display:grid!important;
+ direction:ltr!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-auto-rows:clamp(116px,31vw,142px)!important;
+ gap:10px 8px!important;
+ width:100%!important;
+ margin:12px 0 18px!important;
+}
+#home .products button{
+ grid-column:span 2!important;
+ grid-row:auto!important;
+ height:100%!important;
+ min-height:0!important;
+ width:100%!important;
+ padding:8px 3px!important;
+ border-radius:20px!important;
+}
+#home .products button:nth-child(4){grid-column:2/span 2!important}
+#home .products button:nth-child(5){grid-column:4/span 2!important}
+#home .products button .product-symbol{width:clamp(39px,11vw,54px)!important;height:clamp(39px,11vw,54px)!important;flex-basis:clamp(39px,11vw,54px)!important}
+#home .products button .product-name{font-size:clamp(10px,3vw,14px)!important;white-space:normal!important;text-align:center!important;line-height:1.35!important;overflow-wrap:anywhere!important}
+@media(max-width:360px){
+ #home .products{grid-auto-rows:108px!important;gap:8px 6px!important}
+ #home .products button{border-radius:16px!important}
+ #home .products button .product-name{font-size:9px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="agency-brand"><span class="agency-crown">♛</span><div><b>YEMA</b><small>Petroleum Accounting</small><strong>نمایندگی تیل‌فروشی حاجی نواب پروانی</strong></div></div><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
