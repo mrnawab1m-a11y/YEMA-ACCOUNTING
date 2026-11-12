@@ -945,35 +945,9 @@ body.auth-locked>#authGate .auth-card button{
 .header-info>#usdRateTop{display:block!important;grid-column:3!important;grid-row:1!important;visibility:visible!important;opacity:1!important}
 .header-info>#usdRateTop .home-info-card{display:flex!important;visibility:visible!important;opacity:1!important}
 
-/* v88: app pages open as a foreground overlay above the dashboard */
-#page:not(.hidden){
-  position:fixed!important;
-  inset:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom))!important;
-  z-index:9999!important;
-  display:flex!important;
-  flex-direction:column!important;
-  width:auto!important;
-  max-width:980px!important;
-  height:auto!important;
-  max-height:none!important;
-  margin:0 auto!important;
-  overflow:hidden!important;
-  isolation:isolate!important;
-  box-shadow:0 24px 70px #000e,0 0 0 9999px #0009!important;
-}
-#page:not(.hidden)>.row{flex:0 0 auto!important}
-#page:not(.hidden) #pageBody{
-  flex:1 1 auto!important;
-  min-height:0!important;
-  overflow-y:auto!important;
-  overscroll-behavior:contain!important;
-  -webkit-overflow-scrolling:touch!important;
-  padding-bottom:calc(22px + env(safe-area-inset-bottom))!important;
-}
-@media(min-width:650px){
-  #page:not(.hidden){left:50%!important;right:auto!important;width:min(980px,calc(100vw - 32px))!important;transform:translateX(-50%)!important}
-}
-
+/* v90: internal pages replace dashboard; Back restores dashboard */
+#page:not(.hidden){position:relative!important;inset:auto!important;z-index:1!important;display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;margin:0!important;overflow:visible!important;transform:none!important;box-shadow:none!important;isolation:auto!important}
+#page:not(.hidden) #pageBody{display:block!important;min-height:60vh!important;max-height:none!important;overflow:visible!important;overscroll-behavior:auto!important;-webkit-overflow-scrolling:auto!important;padding-bottom:24px!important}
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button><button id="authPinResetToggle" type="button">فراموشی کد؟ بازیابی با رمز ایمیل</button><div id="authPinResetBox" class="hidden"><label for="authPinResetPassword">رمز عبور ایمیل</label><input id="authPinResetPassword" type="password" autocomplete="current-password" placeholder="رمز عبور حساب"><button id="authPinResetConfirm" type="button" class="primary">تأیید رمز و ساخت کد تازه</button></div></div><p id="authStatus" role="status"></p></div></section><header><div class="agency-brand"><span class="agency-crown">♛</span><div><b>YEMA</b><small>Petroleum Accounting</small><strong>نمایندگی تیل‌فروشی حاجی نواب پروانی</strong></div></div><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -1018,6 +992,6 @@ body.auth-locked>#authGate .auth-card button{
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=78"></script><script defer src="./cloud.js?v=43"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=79"></script><script defer src="./cloud.js?v=43"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
