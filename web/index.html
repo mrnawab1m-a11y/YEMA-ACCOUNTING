@@ -38,13 +38,13 @@ header:before{content:"یما\A پطرولیم";white-space:pre;position:absolut
 .dash-stat small{display:block;color:var(--muted);font-size:11px}.dash-stat b{display:block;margin:7px 0 2px;color:var(--gold2);font-size:20px;font-weight:900;overflow-wrap:anywhere}.dash-stat em{color:#d9c79e;font-size:10px;font-style:normal}
 .dash-products-title{margin-top:27px}
 .dash-products-title>small{color:var(--muted);font-size:10px}
-.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:13px auto 20px;max-width:680px}
-.products button{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:112px;padding:12px 7px;border:1px solid var(--gold);border-radius:19px;background:linear-gradient(145deg,#1b3a62,#10294a 60%,#081a32)!important;color:var(--cream);font:inherit;font-size:14px;font-weight:900;box-shadow:0 8px 20px #0008,inset 0 1px #ffffff25;cursor:pointer}
+.products{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:13px;margin:13px auto 20px;width:100%;max-width:100%;direction:rtl}
+.products button{position:relative;isolation:isolate;overflow:hidden;display:flex;flex:0 1 calc((100% - 26px)/3);min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-height:clamp(112px,31vw,150px);padding:12px 4px;border:1px solid var(--gold);border-radius:19px;background:linear-gradient(145deg,#1b3a62,#10294a 60%,#081a32)!important;color:var(--cream);font:inherit;font-size:14px;font-weight:900;box-shadow:0 8px 20px #0008,inset 0 1px #ffffff25;cursor:pointer}
 .products button:before{content:"";position:absolute;inset:5px;z-index:-1;border:1px solid #e3c27b55;border-radius:14px;pointer-events:none}
 .products button:after{content:"";position:absolute;z-index:-1;top:-38px;right:-28px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,#e0b85c35,transparent 72%);pointer-events:none}
-.products button .product-symbol{display:grid!important;place-items:center;width:45px;height:45px;border:1px solid #e5c77e80;border-radius:14px;background:linear-gradient(145deg,#f2d99b28,#d8ad5810);color:var(--gold2);font-size:27px;line-height:1}
+.products button .product-symbol{display:grid!important;place-items:center;width:clamp(40px,13vw,58px);height:clamp(40px,13vw,58px);border:1px solid #e5c77e80;border-radius:14px;background:linear-gradient(145deg,#f2d99b28,#d8ad5810);color:var(--gold2);font-size:27px;line-height:1}
 .products button .product-symbol svg{width:100%;height:100%;padding:4px}
-.products button .product-name{display:block!important;color:#fff2d3;font-size:13px;font-weight:900;line-height:1.4;white-space:nowrap}
+.products button .product-name{display:block!important;color:#fff2d3;font-size:clamp(10px,3.1vw,14px);font-weight:900;line-height:1.4;white-space:normal;text-align:center;overflow-wrap:anywhere}
 .products button:active,.products button.selected{transform:translateY(-2px);border-color:#fff0bc;background:linear-gradient(145deg,#315783,#16365d)!important;box-shadow:0 0 0 2px #d8ad5840,0 10px 22px #0008}
 .products button:last-child{grid-column:auto;width:auto;justify-self:stretch}
 .dash-home-note{display:flex;flex-direction:column;gap:5px;margin:18px 0;padding:16px;border:1px solid #a9874c;border-radius:16px;background:linear-gradient(145deg,#122d4e,#091a30)!important;box-shadow:0 7px 18px #0007}
