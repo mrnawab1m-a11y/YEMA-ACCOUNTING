@@ -49,8 +49,9 @@ function show(name,selectedProduct){
  <section class="sale-section"><h4>مشخصات مشتری</h4>
  <label>نام مشتری</label><input name="customer" type="text" placeholder="نام کامل مشتری" autocomplete="off">
  <label for="salePhone">شماره تماس مشتری</label>
- <div class="sale-phone-row"><input id="salePhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="شماره تماس مشتری"><button type="button" id="pickCustomerContact" class="sale-contact-btn">＋ افزودن شماره از مخاطبین</button></div>
- <small class="sale-contact-hint">شماره تماس در حساب مشتری ذخیره می‌شود.</small>
+ <div class="sale-phone-row"><input id="salePhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="شماره تماس مشتری"><button type="button" id="pickCustomerContact" class="sale-contact-btn">＋ انتخاب مخاطب از فایل گوشی</button></div>
+ <input id="customerVcardFile" type="file" accept=".vcf,text/vcard" hidden>
+ <small class="sale-contact-hint">در مخاطبین گوشی: اشتراک‌گذاری مخاطب ← ذخیره در فایل‌ها؛ سپس فایل VCF را اینجا انتخاب کنید.</small>
  <label>تاریخ فروش هجری شمسی</label><input name="saleDate" type="text" placeholder="مثلاً ۱۴۰۵/۰۸/۲۰">
  <label>آدرس یا توضیحات</label><textarea name="address" placeholder="آدرس مشتری یا توضیحات (اختیاری)"></textarea>
  </section>
@@ -65,10 +66,29 @@ function show(name,selectedProduct){
  <p class="sale-footnote">شماره بل به‌صورت خودکار از سیستم دریافت می‌شود.</p>
  `,body=>{
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone');
- body.querySelector('#pickCustomerContact').onclick=async()=>{
-  if(!navigator.contacts||typeof navigator.contacts.select!=='function')return alert('این مرورگر دسترسی مستقیم به مخاطبین را پشتیبانی نمی‌کند. شماره را دستی وارد کنید؛ در مرورگر سازگار اندروید می‌توانید از مخاطبین انتخاب کنید.');
-  try{const picked=await navigator.contacts.select(['name','tel'],{multiple:false});const c=picked&&picked[0];if(!c)return;const tel=Array.isArray(c.tel)?c.tel[0]:'';if(tel)phoneField.value=tel;if(c.name&&c.name[0]&&!body.querySelector('[name=customer]').value.trim())body.querySelector('[name=customer]').value=c.name[0];}
-  catch(e){if(e.name!=='AbortError')alert('خواندن مخاطب انجام نشد. شماره را دستی وارد کنید.');}
+ const vcardInput=body.querySelector('#customerVcardFile');
+ body.querySelector('#pickCustomerContact').onclick=()=>vcardInput.click();
+ vcardInput.onchange=async()=>{
+  const file=vcardInput.files&&vcardInput.files[0];if(!file)return;
+  try{
+   let raw=await file.text();
+   raw=raw.replace(/\\r?\\n[ \\t]/g,'');
+   const cards=raw.split(/BEGIN:VCARD/i).filter(x=>/END:VCARD/i.test(x));
+   if(!cards.length)throw new Error('فایل مخاطب معتبر نیست');
+   const card=cards[0].split(/END:VCARD/i)[0];
+   const lines=card.split(/\\r?\\n/);
+   const getValue=prefix=>{const line=lines.find(x=>new RegExp('^'+prefix+'(?:;[^:]*)?:','i').test(x));return line?line.slice(line.indexOf(':')+1).trim().replace(/\\\\n/gi,' ').replace(/\\\\,/g,',').replace(/\\\\;/g,';').replace(/\\\\\\\\/g,'\\\\'):'';};
+   let contactName=getValue('FN');
+   if(!contactName){const n=getValue('N');if(n)contactName=n.split(';').filter(Boolean).reverse().join(' ');}
+   const telLine=lines.find(x=>/^(?:item\\d+\\.)?TEL(?:;[^:]*)?:/i.test(x));
+   const tel=telLine?telLine.slice(telLine.indexOf(':')+1).trim().replace(/[() .-]/g,''): '';
+   if(!tel)throw new Error('در فایل انتخاب‌شده شماره تلفن پیدا نشد');
+   phoneField.value=tel;
+   const nameField=body.querySelector('[name=customer]');
+   if(contactName&&!nameField.value.trim())nameField.value=contactName;
+   alert('مخاطب وارد شد'+(contactName?'： '+contactName:''));
+  }catch(e){alert(e.message||'خواندن فایل مخاطب ناموفق بود');}
+  finally{vcardInput.value='';}
  };
  const productOptions=PRODUCTS.map(p=>'<option value="'+p+'">'+p+'</option>').join('');
  let rowSeq=0;
