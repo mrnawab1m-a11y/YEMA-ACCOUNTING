@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mrnawab1m-a11y.github.io/YEMA-ACCOUNTING/sitemap.xml
