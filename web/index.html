@@ -211,6 +211,68 @@ header:after{content:""!important;display:block!important;position:absolute!impo
 #openHomeCart{grid-area:submit!important;min-height:64px!important;border:2px solid #ffe6a6!important;border-radius:24px!important;background:linear-gradient(120deg,#ffe7a6,#d5a348 62%,#9c6924)!important;color:#17243a!important;font-size:17px!important;font-weight:900!important;box-shadow:0 6px 16px #d8ad5844!important}
 @media(max-width:430px){header{height:300px!important;min-height:300px!important}.header-info{left:9px!important;right:9px!important;grid-template-rows:94px!important;gap:6px!important}.header-info #kabulClock span,.header-info>#usdRateTop{min-height:94px!important;font-size:11px!important;padding:6px 3px!important}header:before{top:25px!important;font-size:29px!important}header:after{width:215px!important;height:128px!important;top:110px!important}.header-info #openMenu{top:-238px!important;right:5px!important}.wrap{padding:18px 12px 24px!important}#home .products{gap:9px!important;margin-top:12px!important}#home .products button{min-height:136px!important;border-radius:25px!important}#home .products button .product-symbol{width:66px!important;height:66px!important}#home .products button .product-name{font-size:15px!important}#homeCartBar{min-height:164px!important;margin-top:20px!important;padding:13px!important;border-radius:26px!important}#homeCartSummary{font-size:14px!important}#clearHomeCart,#openHomeCart{min-height:58px!important;font-size:14px!important}}
 
+
+/* v63 — homepage reconstruction from user's reference */
+html,body{background:#020a17!important;color:#f8e7c5!important}
+body{background:radial-gradient(ellipse at 50% 40%,#102a49 0,transparent 62%),linear-gradient(160deg,#020914,#08182b 60%,#020914)!important}
+header{position:relative!important;top:auto!important;height:330px!important;min-height:330px!important;padding:0!important;overflow:hidden!important;border:0!important;border-bottom:3px solid #d7a647!important;border-radius:0 0 42px 42px!important;background:url("./header.svg") center top/100% 235px no-repeat,linear-gradient(180deg,#020817 0%,#071a30 78%,#10243b 100%)!important;box-shadow:0 12px 28px #000b!important}
+header:before,header:after{display:none!important;content:none!important}
+.header-info{position:absolute!important;left:14px!important;right:14px!important;bottom:13px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:104px!important;gap:9px!important;padding:0!important;direction:ltr!important;z-index:4!important}
+.header-info #openMenu{position:absolute!important;top:-278px!important;right:5px!important;left:auto!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important;width:46px!important;height:46px!important;padding:5px!important;border:0!important;background:transparent!important;z-index:5!important}
+.header-info #openMenu span{display:block!important;width:28px!important;height:3px!important;border-radius:3px!important;background:#f7d17d!important;box-shadow:0 0 8px #edbd58!important}
+.header-info #kabulClock{display:contents!important}
+.header-info #kabulClock .home-info-card,.header-info>#usdRateTop .home-info-card{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;width:100%!important;height:104px!important;min-width:0!important;padding:7px 3px!important;border:1.5px solid #d8ad58!important;border-bottom:5px solid #a9782d!important;border-radius:24px!important;background:linear-gradient(145deg,#102945,#061426)!important;color:#f7d17d!important;box-shadow:0 8px 17px #0009,inset 0 1px #fff2!important;text-align:center!important;line-height:1.3!important}
+.header-info #kabulClock .date-card{grid-column:1!important}
+.header-info #kabulClock .time-card{grid-column:2!important}
+.header-info>#usdRateTop{grid-column:3!important;display:block!important;width:100%!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.header-info #kabulClock .info-icon,.header-info>#usdRateTop .info-icon{font-family:Arial,sans-serif!important;font-size:28px!important;font-weight:900!important;line-height:1!important;color:#f4c568!important;text-shadow:0 0 10px #e3b24b88!important}
+.header-info #kabulClock strong,.header-info>#usdRateTop strong{font-size:15px!important;font-weight:900!important;color:#f6cb75!important}
+.header-info #kabulClock em,.header-info>#usdRateTop em{font-size:15px!important;font-style:normal!important;font-weight:900!important;color:#f5ead4!important;white-space:normal!important}
+.wrap{max-width:620px!important;margin:0 auto!important;padding:24px 16px 30px!important}
+#home{padding:0!important}
+#home .dash-welcome,#home .dash-date-strip,#home .dash-section-title:not(.dash-products-title),#home .dash-stats,#home .dash-home-note,#home .dash-footer{display:none!important}
+#home .dash-products-title{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;margin:9px 4px 18px!important}
+#home .dash-products-title>div{display:flex!important;align-items:center!important}
+#home .dash-products-title>div>span,#home .dash-products-title>small{display:none!important}
+#home .dash-products-title h3{margin:0!important;color:#f5c568!important;font-size:23px!important;font-weight:950!important}
+#home .dash-products-title:after{content:"";height:2px;flex:1;margin-right:8px;background:linear-gradient(90deg,#d8a64b,transparent)!important}
+#home .products{display:grid!important;direction:ltr!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:13px!important;margin:14px auto 22px!important;max-width:100%!important}
+#home .products button{grid-column:span 2!important;grid-row:auto!important;min-width:0!important;min-height:166px!important;padding:12px 4px!important;border:2px solid #bd8d39!important;border-radius:31px!important;background:linear-gradient(145deg,#18385e 0%,#102846 55%,#07182d 100%)!important;color:#f9e8c7!important;box-shadow:0 8px 20px #0009,0 0 16px #dca74330,inset 0 0 0 5px #0a1b30,inset 0 0 0 7px #c6a15d70,inset 0 -6px 0 #91642b!important}
+#home .products button:before{inset:9px!important;border:1.5px solid #f1d18a88!important;border-radius:23px!important}
+#home .products button:after{top:auto!important;bottom:-17px!important;left:9%!important;right:9%!important;width:82%!important;height:34px!important;background:radial-gradient(ellipse,#f4c65d99,transparent 70%)!important;filter:blur(7px)!important}
+#home .products button .product-symbol{width:80px!important;height:80px!important;border:0!important;border-radius:50%!important;background:radial-gradient(circle,#d7bd7540,#d7bd7500 72%)!important;color:#ffdc8d!important;font-size:50px!important;filter:drop-shadow(0 0 10px #e3b65099)!important}
+#home .products button .product-symbol svg{padding:0!important;filter:sepia(.7) saturate(1.5) drop-shadow(0 2px 6px #e4b450bb)!important}
+#home .products button .product-name{color:#f8e9cc!important;font-size:18px!important;font-weight:950!important;white-space:normal!important;text-align:center!important;line-height:1.4!important}
+#home .products button:nth-child(1){grid-column:5/span 2!important;grid-row:1!important}
+#home .products button:nth-child(2){grid-column:4/span 2!important;grid-row:2!important}
+#home .products button:nth-child(3){grid-column:3/span 2!important;grid-row:1!important}
+#home .products button:nth-child(4){grid-column:1/span 2!important;grid-row:1!important}
+#home .products button:nth-child(5){grid-column:2/span 2!important;grid-row:2!important}
+#homeCartBar{position:relative!important;inset:auto!important;z-index:1!important;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-areas:"summary summary" "submit clear"!important;gap:12px!important;min-height:185px!important;margin:24px 0 8px!important;padding:17px!important;border:2px solid #bd8a32!important;border-radius:34px!important;background:linear-gradient(145deg,#142f50,#06162b)!important;box-shadow:0 12px 26px #000b,inset 0 0 0 5px #0b1a2d,inset 0 0 0 7px #c6a15d66!important}
+#homeCartSummary{grid-area:summary!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:66px!important;padding:8px!important;color:#f7e3b8!important;font-size:18px!important;font-weight:900!important;text-align:center!important}
+#clearHomeCart{grid-area:clear!important;min-height:67px!important;border:2px solid #d4a144!important;border-radius:25px!important;background:linear-gradient(145deg,#10243c,#071426)!important;color:#f5dfb6!important}
+#openHomeCart{grid-area:submit!important;min-height:67px!important;border:2px solid #ffe6a6!important;border-radius:25px!important;background:linear-gradient(120deg,#ffe7a6,#d5a348 62%,#9c6924)!important;color:#17243a!important;font-size:18px!important;font-weight:950!important;box-shadow:0 6px 16px #d8ad5844!important}
+@media(max-width:430px){
+ header{height:320px!important;min-height:320px!important;background-size:100% 225px!important}
+ .header-info{left:10px!important;right:10px!important;bottom:11px!important;grid-template-rows:96px!important;gap:6px!important}
+ .header-info #kabulClock .home-info-card,.header-info>#usdRateTop .home-info-card{height:96px!important;border-radius:22px!important}
+ .header-info #openMenu{top:-270px!important;right:3px!important}
+ .header-info #kabulClock .info-icon,.header-info>#usdRateTop .info-icon{font-size:25px!important}
+ .header-info #kabulClock strong,.header-info>#usdRateTop strong{font-size:12px!important}
+ .header-info #kabulClock em,.header-info>#usdRateTop em{font-size:12px!important}
+ .wrap{padding:20px 13px 26px!important}
+ #home .dash-products-title{margin:8px 4px 14px!important}
+ #home .dash-products-title h3{font-size:20px!important}
+ #home .products{gap:9px!important;margin:12px auto 19px!important}
+ #home .products button{min-height:145px!important;border-radius:27px!important}
+ #home .products button .product-symbol{width:68px!important;height:68px!important}
+ #home .products button .product-name{font-size:15px!important}
+ #homeCartBar{min-height:170px!important;margin-top:20px!important;padding:13px!important;border-radius:28px!important;gap:10px!important}
+ #homeCartSummary{font-size:15px!important}
+ #clearHomeCart,#openHomeCart{min-height:59px!important;font-size:15px!important;border-radius:21px!important}
+}
+@media(min-width:650px){header{height:390px!important;background-size:100% 280px!important}.header-info{max-width:560px;left:calc(50% - 280px)!important;right:calc(50% - 280px)!important;grid-template-rows:110px!important}.header-info #kabulClock .home-info-card,.header-info>#usdRateTop .home-info-card{height:110px!important}.header-info #openMenu{top:-335px!important}}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -255,6 +317,6 @@ header:after{content:""!important;display:block!important;position:absolute!impo
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=62"></script><script defer src="./cloud.js?v=36"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=63"></script><script defer src="./cloud.js?v=37"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
