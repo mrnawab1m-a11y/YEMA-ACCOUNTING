@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1e3d"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="حسابداری یما"><link rel="apple-touch-icon" href="./icon.svg"><meta name="description" content="حسابداری یما - مدیریت فروش، خرید، مشتریان و مصارف">
+<meta name="theme-color" content="#07172f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="حسابداری یما"><link rel="apple-touch-icon" href="./icon.svg"><meta name="description" content="حسابداری یما - مدیریت فروش، خرید، مشتریان و مصارف">
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>حسابداری یما</title>
 <style>
@@ -1190,6 +1190,28 @@ header{
 @media(min-width:650px){#home.yema-dashboard{max-width:900px;margin:auto}.dash-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.dash-stat{min-height:125px}.dash-welcome{padding:28px 27px}.dash-welcome h2{font-size:24px}#home #productButtons.products{grid-template-columns:repeat(5,minmax(0,1fr))!important}.dash-action-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.dash-action{min-height:82px}.dash-brand-mark{width:62px;height:62px;flex-basis:62px;font-size:34px}}
 @media(max-width:370px){.dash-welcome{padding:18px 14px}.dash-welcome h2{font-size:17px}.dash-stat{padding:11px}.dash-stat b{font-size:19px}.dash-action{gap:6px;padding:8px!important}.dash-action i{flex-basis:30px;width:30px;height:30px}.dash-action small{font-size:8px}}
 
+
+/* HOME v34 — minimal navy-only home: clock, USD rate, five products, sale cart */
+body{background:#07172f!important;color:#f3dfad!important}
+.wrap{background:#07172f!important;min-height:calc(100vh - 76px)!important;padding-top:12px!important}
+header{background:linear-gradient(115deg,#050f20 0%,#0a1d38 60%,#10294a 100%)!important;border-bottom:1px solid #d8b66a!important;box-shadow:0 5px 18px #0005!important}
+#home{background:transparent!important;min-height:calc(100vh - 150px)!important;padding:4px 0 12px!important}
+#home .dash-welcome,#home .dash-date-strip,#home .dash-section-title,#home .dash-stats,
+#home .dash-home-note,#home .dash-footer,#home .home-brandline,#home .home-actions{display:none!important}
+#home #productButtons.products{margin:12px auto 24px!important;max-width:560px!important;gap:10px!important}
+#home #productButtons.products button,
+#home #productButtons.products button:last-child{
+ background:linear-gradient(145deg,#18365f 0%,#10294c 58%,#06152a 100%)!important;
+ border:1px solid #d8b66a!important;
+ box-shadow:0 7px 18px #0005,inset 0 1px #ffffff20!important;
+}
+#home #productButtons.products button .product-name{color:#e8c777!important;font-weight:900!important}
+#home #productButtons.products button .product-symbol{border-color:#d8b66a!important;background:#d8b66a18!important}
+#home #productButtons.products button .product-symbol svg{stroke:#f0d58d!important}
+#homeCartBar{background:linear-gradient(115deg,#050f20,#0b203c)!important;border-top:1px solid #d8b66a!important;box-shadow:0 -6px 20px #0006!important}
+#homeCartSummary{color:#f3dfad!important}
+@media(max-width:520px){.wrap{padding-top:9px!important}#home #productButtons.products{margin-top:9px!important}}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -1234,6 +1256,6 @@ header{
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ادامه فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=33"></script><script defer src="./cloud.js?v=33"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=34"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
