@@ -150,6 +150,13 @@
   const cloudAccount=$('cloudAccount');
   const cloudSignIn=$('cloudSignIn'),cloudSignOut=$('cloudSignOut');
   const cloudEmail=$('cloudEmail'),cloudPassword=$('cloudPassword');
+  window.addEventListener('yema:cloud-restored',event=>{
+    const d=event.detail||{};
+    cloudState(true,'همگام‌سازی اطلاعات انجام شد','سوابق ابری دریافت شد: '+(d.sales||0)+' فروش، '+(d.purchases||0)+' خرید و '+(d.expenses||0)+' مصرف. اطلاعات قبلی حفظ شد.');
+  });
+  window.addEventListener('yema:cloud-restore-error',event=>{
+    cloudState(false,'بازیابی خودکار کامل نشد',event.detail?.message||'خطا در دریافت اطلاعات ابری.');
+  });
   const cloudState=(ok,title,detail)=>{
     cloudStatus.textContent=title;
     cloudStatus.classList.toggle('ok',!!ok);
