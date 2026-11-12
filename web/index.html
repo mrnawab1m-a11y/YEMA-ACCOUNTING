@@ -102,6 +102,18 @@ header:before{content:"یما\A پطرولیم";white-space:pre;position:absolut
 .auth-card button.primary{background:linear-gradient(120deg,#ffe7a6,#d5a348)!important;color:#17243a!important}
 @media(max-width:390px){header{min-height:94px;padding:8px 8px 9px 82px}header:before{left:6px;top:9px;width:68px;height:72px;font-size:10px;background-size:39px 39px}.header-info{gap:4px;padding-right:33px}.header-info #kabulClock{gap:3px}.header-info span,.header-info #kabulClock span,.header-info>#usdRateTop{font-size:10px;padding:3px 7px}.dash-welcome{min-height:128px;padding:17px 14px}.dash-welcome h2{font-size:18px}.dash-brand-mark{width:62px;height:62px;flex-basis:62px;font-size:35px}.dash-stat{padding:11px}.dash-stat b{font-size:17px}.products{gap:9px;margin-top:10px}.products button{min-height:96px;border-radius:16px;gap:6px}.products button .product-symbol{width:39px;height:39px;font-size:24px}.products button .product-name{font-size:12px}#homeCartBar{gap:6px;padding-left:8px;padding-right:8px}#homeCartSummary{font-size:11px}#openHomeCart,#clearHomeCart{padding:9px 9px;font-size:11px}#pageBody{padding:13px}#pageTitle{font-size:16px}#pageBody .sale-fields{grid-template-columns:1fr 1fr}}
 @media(min-width:650px){.dash-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.products{grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}.products button{min-height:115px}.products button:last-child{grid-column:auto}.products button .product-symbol{width:47px;height:47px}.wrap{padding:22px 18px 130px}#pageBody{padding:22px}}
+
+/* صفحهٔ اصلی: فقط ساعت/تاریخ، نرخ دالر، پنج محصول و سبد فروش */
+header:before{display:none!important}
+header{padding-left:14px!important}
+.header-info{padding-left:0!important}
+#home .dash-welcome,
+#home .dash-date-strip,
+#home .dash-section-title,
+#home .dash-stats,
+#home .dash-home-note,
+#home .dash-footer{display:none!important}
+#home .products{margin-top:8px!important}
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -146,6 +158,6 @@ header:before{content:"یما\A پطرولیم";white-space:pre;position:absolut
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=54"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=55"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
