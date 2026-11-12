@@ -100,6 +100,36 @@
     }
   };
   $('authLogout').onclick=async()=>{await client.auth.signOut();await verifiedSession(null);};
+
+  $('authPinResetToggle').onclick=()=>{
+    $('authPinResetBox').classList.toggle('hidden');
+    $('authPinResetPassword').value='';
+    setStatus('برای بازیابی کد، رمز عبور همان ایمیل را وارد کنید.');
+  };
+  $('authPinResetConfirm').onclick=async()=>{
+    const button=$('authPinResetConfirm');
+    const password=$('authPinResetPassword').value;
+    if(!activeUser?.email){setStatus('ابتدا با ایمیل حساب وارد شوید.');return;}
+    if(!password){setStatus('رمز عبور ایمیل را وارد کنید.');return;}
+    button.disabled=true;setStatus('در حال تأیید رمز عبور ایمیل...');
+    try{
+      const {data,error}=await client.auth.signInWithPassword({email:activeUser.email,password});
+      if(error)throw error;
+      if(!data?.user?.id||data.user.id!==activeUser.id)throw new Error('حساب تأییدشده با حساب فعلی یکسان نیست.');
+      localStorage.removeItem(pinKey(activeUser));
+      firstPinHash=null;pinNeedsConfirmation=false;
+      $('authPinResetPassword').value='';
+      $('authPinResetBox').classList.add('hidden');
+      $('authPin').value='';
+      $('authPin').placeholder='کد جدید ۶ رقمی';
+      $('authPinSubmit').textContent='ثبت کد و ادامه';
+      message.textContent='رمز ایمیل تأیید شد. اکنون یک کد امنیتی ۶ رقمی جدید بسازید و همان را دوباره وارد کنید.';
+      setStatus('کد قبلی با تأیید رمز ایمیل پاک شد. کد تازه را دو بار وارد کنید.');
+    }catch(error){
+      setStatus('بازیابی انجام نشد: '+(error?.message||'رمز ایمیل تأیید نشد.'));
+    }finally{button.disabled=false;}
+  };
+
   client.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION'||event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(()=>verifiedSession(session),0);});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&activeUser)lock();});
   window.addEventListener('pagehide',()=>{if(activeUser)lock();});
