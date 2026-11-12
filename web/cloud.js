@@ -11,7 +11,7 @@
   const setStatus=t=>{status.textContent=t;};
   let appUnlocked=false;
   const lock=()=>{appUnlocked=false;document.body.classList.add('auth-locked');gate.style.display='';};
-  const unlock=()=>{appUnlocked=true;document.body.classList.remove('auth-locked');gate.style.display='none';};
+  const unlock=()=>{appUnlocked=true;document.body.classList.remove('auth-locked');gate.style.display='none';window.dispatchEvent(new CustomEvent('yema:app-unlocked'));};
   const pinKey=user=>'yema_security_pin_'+user.id;
   const pendingPinKey=user=>'yema_security_pin_pending_'+user.id;
   const normalizePin=value=>Array.from(String(value||'').normalize('NFKC'),ch=>{
