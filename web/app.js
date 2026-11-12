@@ -22,9 +22,19 @@ function updateHomeDashboard(){
  set('dashSalesToday',salesTotal);set('dashProfitToday',profitTotal);set('dashExpensesToday',expenseTotal);set('dashBillsToday',todays.length);
  const dateNode=el('dashToday');if(dateNode)dateNode.textContent=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',dateStyle:'full'}).format(new Date());
 }
+function triggerHomeShake(node){
+ if(!node)return;
+ node.classList.remove('yema-shake');
+ void node.offsetWidth;
+ node.classList.add('yema-shake');
+}
 function refresh(){
  updateKabulClock();updateHomeCart();updateTopRate();updateHomeDashboard();
- document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.onclick=()=>{homeCart=[b.dataset.product];updateHomeCart();});
+ document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.onclick=()=>{
+  homeCart=[b.dataset.product];updateHomeCart();
+  triggerHomeShake(b);
+  triggerHomeShake(el('homeCartBar'));
+ });
 }
 async function fetchKabulRate(){const response=await fetch('https://pxjsplptibleojdhhjqrqm.supabase.co/functions/v1/usd-rate',{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});const data=await response.json();if(!response.ok||!Number.isFinite(Number(data.buy))||!Number.isFinite(Number(data.sell)))throw new Error(data.error||'نرخ معتبر از کانال دریافت نشد');return data;}
 function jalaliDateToGregorianISO(input){const raw=String(input||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();const m=raw.match(/^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})$/);if(!m)return null;let jy=+m[1],jm=+m[2],jd=+m[3];if(jm<1||jm>12||jd<1||jd>(jm<=6?31:jm<=11?30:30))return null;jy+=1595;let days=-355668+365*jy+Math.floor(jy/33)*8+Math.floor((jy%33+3)/4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186);let gy=400*Math.floor(days/146097);days%=146097;if(days>36524){gy+=100*Math.floor(--days/36524);days%=36524;if(days>=365)days++;}gy+=4*Math.floor(days/1461);days%=1461;if(days>365){gy+=Math.floor((days-1)/365);days=(days-1)%365;}let gd=days+1;const leap=(gy%4===0&&gy%100!==0)||gy%400===0;const months=[0,31,leap?29:28,31,30,31,30,31,31,30,31,30,31];let gm=1;while(gm<=12&&gd>months[gm]){gd-=months[gm];gm++;}return String(gy).padStart(4,'0')+'-'+String(gm).padStart(2,'0')+'-'+String(gd).padStart(2,'0')}
@@ -124,6 +134,6 @@ document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset
 el('openMenu')?.addEventListener('click',()=>show('menu'));
 el('quickSale')?.addEventListener('click',()=>show('sale'));
 el('openHomeCart').onclick=()=>{const selected=homeCart[0]||null;show('sale',selected||undefined);};
-el('clearHomeCart')?.addEventListener('click',()=>{homeCart=[];updateHomeCart();});
+el('clearHomeCart')?.addEventListener('click',()=>{if(!homeCart.length)return;homeCart=[];updateHomeCart();triggerHomeShake(el('homeCartBar'));});
 el('back').onclick=home;
 refresh();
