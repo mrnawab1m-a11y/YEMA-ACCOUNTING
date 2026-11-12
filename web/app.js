@@ -195,6 +195,76 @@ const backupFile=body.querySelector('#backupFile');
 body.querySelector('#restore').onclick=()=>backupFile.click();
 backupFile.onchange=async()=>{const file=backupFile.files?.[0];if(!file)return;try{const parsed=JSON.parse(await file.text());if(parsed.app!=='YEMA_ACCOUNTING'||parsed.formatVersion!==1||!['browser-local','cloud-snapshot'].includes(parsed.backupType)||!parsed.localStorage||typeof parsed.localStorage!=='object'||Array.isArray(parsed.localStorage))throw new Error('ساختار فایل پشتیبان معتبر نیست');if(parsed.backupType==='cloud-snapshot'){const cloud=window.yemaCloud?.client;if(!cloud)throw new Error('برای بررسی مالک فایل، ابتدا به حساب ابری وارد شوید.');const {data:auth,error:authError}=await cloud.auth.getSession();if(authError||!auth.session?.user?.email)throw new Error('ابتدا با همان حساب ابری وارد شوید.');if(!parsed.account||String(parsed.account).toLowerCase()!==String(auth.session.user.email).toLowerCase())throw new Error('این فایل پشتیبان متعلق به حساب دیگری است؛ برای جلوگیری از مخلوط‌شدن اطلاعات، بازیابی انجام نشد.');}const entries=Object.entries(parsed.localStorage);if(!entries.length)throw new Error('فایل پشتیبان خالی است');for(const [key,value] of entries){if(!key.startsWith('yema_v2_')||typeof value!=='string')throw new Error('محتوای فایل پشتیبان معتبر نیست');JSON.parse(value);}const incomingCount=entries.reduce((n,[,v])=>{const x=JSON.parse(v);return n+(Array.isArray(x)?x.length:1);},0);if(!confirm('فایل پشتیبان مورخ '+(parsed.createdAt||'نامشخص')+' شناسایی شد. '+(parsed.backupType==='cloud-snapshot'?'این فایل متعلق به حساب ابری فعلی است؛ اطلاعات اصلی با ورود به همان حساب در سرور موجود است و این مرحله فقط حافظه محلی را ادغام می‌کند. ':'')+' تعداد بخش‌ها: '+fmt(entries.length)+'، تعداد تقریبی رکوردها: '+fmt(incomingCount)+'.\n\nبازیابی فقط اطلاعات موجود را حفظ و موارد تازه را اضافه می‌کند؛ چیزی حذف یا جایگزین نمی‌شود. ادامه می‌دهید؟'))return;let added=0,kept=0;for(const [key,raw] of entries){const incoming=JSON.parse(raw),existingRaw=localStorage.getItem(key);if(existingRaw===null){localStorage.setItem(key,raw);added++;continue;}let existing;try{existing=JSON.parse(existingRaw);}catch{kept++;continue;}if(Array.isArray(existing)&&Array.isArray(incoming)){const seen=new Set(existing.map(x=>x&&typeof x==='object'?(x.id?'id:'+x.id:(x.bill!==undefined?'bill:'+x.bill:'json:'+JSON.stringify(x))):'value:'+String(x)));for(const item of incoming){const identity=item&&typeof item==='object'?(item.id?'id:'+item.id:(item.bill!==undefined?'bill:'+item.bill:'json:'+JSON.stringify(item))):'value:'+String(item);if(!seen.has(identity)){existing.push(item);seen.add(identity);added++;}else kept++;}localStorage.setItem(key,JSON.stringify(existing));}else{kept++;}}alert('بازیابی محلی انجام شد. موارد افزوده‌شده: '+fmt(added)+' | موارد موجود و حفظ‌شده: '+fmt(kept)+'.\n\nبرای دیدن اطلاعات تازه، صفحه را یک‌بار تازه‌سازی کنید. این عملیات اطلاعات ابری را تغییر نداده است.');}catch(e){alert('بازیابی انجام نشد: '+e.message);}finally{backupFile.value='';}};});
 }
+
+let yemaRestoreRunning=false;
+async function restoreCloudDataToLocal(){
+ if(yemaRestoreRunning)return;
+ const cloud=window.yemaCloud?.client;
+ if(!cloud)return;
+ yemaRestoreRunning=true;
+ try{
+  const {data:sessionData,error:sessionError}=await cloud.auth.getSession();
+  if(sessionError)throw sessionError;
+  const user=sessionData?.session?.user;
+  if(!user?.id)throw new Error('حساب ابری وارد نشده است.');
+  const ownerKey=KEY+'sync_owner_id';
+  const previousOwner=localStorage.getItem(ownerKey);
+  if(previousOwner&&previousOwner!==user.id)throw new Error('این حافظه قبلاً با حساب دیگری استفاده شده است؛ برای جلوگیری از مخلوط‌شدن اطلاعات، هیچ داده‌ای تغییر نکرد.');
+  const queries=await Promise.all([
+   fetchAllRows(cloud.from('sales').select('id,bill_number,customer_id,customer_name,sale_date,total,paid,remaining,notes').order('sale_date',{ascending:false})),
+   fetchAllRows(cloud.from('sale_items').select('sale_id,product_id,quantity,unit,unit_price,line_total')),
+   fetchAllRows(cloud.from('products').select('id,name')),
+   fetchAllRows(cloud.from('customers').select('id,phone,address')),
+   fetchAllRows(cloud.from('inventory_movements').select('reference_id,quantity_out,unit_cost,movement_type').eq('movement_type','sale')),
+   fetchAllRows(cloud.from('purchases').select('id,supplier_name,supplier_phone,purchase_date,total,paid,remaining,total_usd,paid_usd,remaining_usd,exchange_rate,notes').order('purchase_date',{ascending:false})),
+   fetchAllRows(cloud.from('purchase_items').select('purchase_id,product_id,entered_quantity,entered_unit,stock_quantity,stock_unit,unit_cost,line_total')),
+   fetchAllRows(cloud.from('expenses').select('id,title,amount,currency,exchange_rate,amount_afn,cash_account_id,expense_date,notes').order('expense_date',{ascending:false}))
+  ]);
+  const failed=queries.find(x=>x.error);
+  if(failed)throw failed.error;
+  const [salesR,saleItemsR,productsR,customersR,movementsR,purchasesR,purchaseItemsR,expensesR]=queries;
+  const products=productsR.data||[],customers=customersR.data||[];
+  const saleItems=saleItemsR.data||[],movements=movementsR.data||[];
+  const dateKabul=value=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kabul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value));
+  const restoredSales=(salesR.data||[]).map(s=>{
+   const lines=saleItems.filter(it=>it.sale_id===s.id).map(it=>{
+    const product=products.find(p=>p.id===it.product_id)?.name||'محصول';
+    return {product,quantity:Number(it.quantity||0),qty:Number(it.quantity||0),unit:it.unit==='kg'?'کیلوگرام':'لیتر',price:Number(it.unit_price||0),unit_price:Number(it.unit_price||0),line_total:Number(it.line_total||0)};
+   });
+   const first=lines[0]||{};
+   const customer=customers.find(c=>c.id===s.customer_id)||{};
+   const cost=movements.filter(m=>m.reference_id===s.id).reduce((n,m)=>n+Number(m.quantity_out||0)*Number(m.unit_cost||0),0);
+   return {id:s.id,bill:Number(s.bill_number),customer:s.customer_name,phone:customer.phone||'',address:customer.address||s.notes||'',product:lines.length>1?'چند محصول':(first.product||'—'),items:lines,qty:lines.length===1?first.quantity:null,unit:lines.length===1?first.unit:'—',price:lines.length===1?first.unit_price:null,total:Number(s.total||0),paid:Number(s.paid||0),date:dateKabul(s.sale_date),cost,profit:Number(s.total||0)-cost,cloudSynced:true};
+  });
+  const restoredPurchases=(purchasesR.data||[]).map(p=>{
+   const lines=(purchaseItemsR.data||[]).filter(it=>it.purchase_id===p.id);
+   const first=lines[0]||{};
+   const product=products.find(x=>x.id===first.product_id)?.name||'محصول';
+   return {id:p.id,supplier:p.supplier_name,supplierPhone:p.supplier_phone||'',product,qty:Number(first.entered_quantity||0),enteredUnit:first.entered_unit==='ton'?'تن':(first.entered_unit||'تن'),stockQty:Number(first.stock_quantity||0),unit:first.stock_unit==='kg'?'کیلوگرام':'لیتر',conversionFactor:Number(first.entered_quantity?Number(first.stock_quantity||0)/Number(first.entered_quantity):0),usd:Number(p.total_usd||0)/(Number(first.entered_quantity)||1),totalUsd:Number(p.total_usd??p.total??0),paidUsd:Number(p.paid_usd??p.paid??0),remainingUsd:Number(p.remaining_usd??p.remaining??0),rate:Number(p.exchange_rate||0),total:Number(p.total||0),paid:Number(p.paid||0),date:dateKabul(p.purchase_date),cloudSynced:true};
+  });
+  const restoredExpenses=(expensesR.data||[]).map(x=>({id:x.id,title:x.title,amount:Number(x.amount||0),currency:x.currency,exchangeRate:x.exchange_rate==null?null:Number(x.exchange_rate),amountAFN:Number(x.amount_afn??(x.currency==='AFN'?x.amount:0)),cashAccountId:x.cash_account_id||null,date:dateKabul(x.expense_date),notes:x.notes||'',cloudSynced:true}));
+  const merge=(current,incoming,keyName)=>{
+   const map=new Map();
+   (Array.isArray(current)?current:[]).forEach(x=>{const key=x?.id!=null?'id:'+x.id:(x?.[keyName]!=null?keyName+':'+x[keyName]:'local:'+JSON.stringify(x));map.set(key,x);});
+   incoming.forEach(x=>{const key=x?.id!=null?'id:'+x.id:(x?.[keyName]!=null?keyName+':'+x[keyName]:'remote:'+JSON.stringify(x));map.set(key,{...(map.get(key)||{}),...x});});
+   return [...map.values()];
+  };
+  const merged={
+   sales:merge(read('sales'),restoredSales,'bill'),
+   purchases:merge(read('purchases'),restoredPurchases,'id'),
+   expenses:merge(read('expenses'),restoredExpenses,'id')
+  };
+  write('sales',merged.sales);write('purchases',merged.purchases);write('expenses',merged.expenses);
+  localStorage.setItem(ownerKey,user.id);
+  refresh();
+  window.dispatchEvent(new CustomEvent('yema:cloud-restored',{detail:{sales:restoredSales.length,purchases:restoredPurchases.length,expenses:restoredExpenses.length}}));
+ }catch(error){
+  console.error('YEMA cloud restore failed:',error);
+  window.dispatchEvent(new CustomEvent('yema:cloud-restore-error',{detail:{message:error?.message||'خطا در بازیابی اطلاعات ابری'}}));
+ }finally{yemaRestoreRunning=false;}
+}
+window.addEventListener('yema:app-unlocked',()=>{restoreCloudDataToLocal();});
+
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function printReceipt(bill){
  const x=read('sales').find(z=>z.bill===bill);if(!x)return;
