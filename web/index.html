@@ -875,6 +875,69 @@ body{min-width:0!important}
  #productButtons.products>button .product-name{font-size:13px!important}
 }
 
+
+/* v76: larger, readable secure login and six-digit PIN screen */
+body.auth-locked>#authGate{
+ padding:16px!important;
+}
+body.auth-locked>#authGate .auth-card{
+ width:min(94vw,520px)!important;
+ max-width:520px!important;
+ padding:clamp(26px,6vw,38px)!important;
+ border-radius:26px!important;
+ max-height:calc(100dvh - 32px)!important;
+}
+body.auth-locked>#authGate .auth-card h2{
+ font-size:clamp(22px,5.5vw,29px)!important;
+ line-height:1.5!important;
+ margin:0 0 14px!important;
+ text-align:center!important;
+}
+body.auth-locked>#authGate .auth-card p{
+ font-size:clamp(15px,4vw,18px)!important;
+ line-height:1.8!important;
+}
+body.auth-locked>#authGate .auth-card label{
+ display:block!important;
+ font-size:clamp(17px,4.5vw,20px)!important;
+ margin:18px 0 9px!important;
+}
+body.auth-locked>#authGate .auth-card input{
+ display:block!important;
+ width:100%!important;
+ min-height:64px!important;
+ height:64px!important;
+ box-sizing:border-box!important;
+ padding:12px 16px!important;
+ border-width:2px!important;
+ border-radius:16px!important;
+ font-size:clamp(21px,6vw,27px)!important;
+ text-align:center!important;
+}
+body.auth-locked>#authGate #authPin{
+ font-size:clamp(27px,8vw,34px)!important;
+ font-weight:800!important;
+ letter-spacing:.42em!important;
+ padding-left:calc(16px + .42em)!important;
+}
+body.auth-locked>#authGate .auth-card button{
+ width:100%!important;
+ min-height:58px!important;
+ padding:12px 14px!important;
+ margin-top:13px!important;
+ border-radius:16px!important;
+ font-size:clamp(16px,4.5vw,19px)!important;
+ font-weight:800!important;
+}
+@media(max-width:430px){
+ body.auth-locked>#authGate{padding:12px!important}
+ body.auth-locked>#authGate .auth-card{
+  width:100%!important;padding:25px 20px!important;
+  max-height:calc(100dvh - 24px)!important;
+ }
+ body.auth-locked>#authGate .auth-card input{min-height:62px!important;height:62px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="agency-brand"><span class="agency-crown">♛</span><div><b>YEMA</b><small>Petroleum Accounting</small><strong>نمایندگی تیل‌فروشی حاجی نواب پروانی</strong></div></div><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
