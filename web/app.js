@@ -46,6 +46,7 @@ function page(name,title,html,handler){el('homeCartBar')?.classList.add('hidden'
 function show(name,selectedProduct){
  if(name==='sale')page(name,'ثبت فروش و صدور بل',`
  <div class="sale-intro"><span class="sale-kicker">YEMA PETROLEUM</span><b>ثبت فروش جدید</b><small>اقلام را به سبد اضافه کنید؛ مجموع و باقی‌داری خودکار محاسبه می‌شود.</small></div>
+ <div class="sale-datetime" id="saleDateTime" aria-live="off"></div>
  <section class="sale-section"><h4>مشخصات مشتری</h4>
  <label>نام مشتری</label><input name="customer" type="text" placeholder="نام کامل مشتری" autocomplete="off">
  <label for="salePhone">شماره تماس مشتری</label>
@@ -59,17 +60,15 @@ function show(name,selectedProduct){
  <section class="sale-total-card"><div><span>مجموع کل</span><b id="saleGrandTotal">۰ افغانی</b></div>
  <label>مبلغ پرداخت‌شده (افغانی)</label><input name="paid" id="salePaid" type="number" inputmode="decimal" min="0" step="any" placeholder="۰">
  <div class="sale-balance"><span>باقی‌داری مشتری</span><b id="saleRemaining">۰ افغانی</b></div></section>
- <section class="sale-section"><h4>آدرس و توضیحات</h4>
- <label>آدرس مشتری</label><input name="address" type="text" placeholder="آدرس مشتری (اختیاری)">
- <label>توضیحات</label><textarea name="notes" placeholder="توضیحات اضافی (اختیاری)"></textarea>
- <label>تاریخ فروش هجری شمسی</label><input name="saleDate" type="text" placeholder="مثلاً ۱۴۰۵/۰۸/۲۰">
- </section>
- <section class="sale-section"><h4>حساب دریافت‌کننده</h4><label>صندوق یا حساب بانکی</label><select name="cashAccountId"><option value="">در حال دریافت حساب‌ها...</option></select></section>
+ <section class="sale-section"><h4>آدرس مشتری</h4><input name="address" type="text" placeholder="آدرس مشتری (اختیاری)"></section>
  <button class="primary sale-submit" id="save" type="button">ثبت بل فروش</button>
  <p class="sale-footnote">شماره بل به‌صورت خودکار از سیستم دریافت می‌شود.</p>
  <p class="sale-thanks">با تشکر و سپاس از خرید شما؛ به امید دیدار مجدد</p>
  `,body=>{
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone');
+ const saleDateTime=body.querySelector('#saleDateTime');
+ const updateSaleDateTime=()=>{const now=new Date();const d=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(now);const t=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);saleDateTime.textContent='تاریخ: '+d+'　 |　 ساعت: '+t;};
+ updateSaleDateTime();
  const vcardInput=body.querySelector('#customerVcardFile');
  body.querySelector('#pickCustomerContact').onclick=()=>vcardInput.click();
  vcardInput.onchange=async()=>{
@@ -107,28 +106,29 @@ function show(name,selectedProduct){
  };
  const updateTotals=()=>{let total=0,count=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);if(q>0&&p>=0){total+=q*p;count++;}});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.children.length)+' قلم';};
  addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();paidField.addEventListener('input',updateTotals);
- const accountSelect=body.querySelector('[name=cashAccountId]');
- (async()=>{const cloud=window.yemaCloud?.client;if(!cloud){accountSelect.innerHTML='<option value="">اتصال ابری موجود نیست</option>';return;}const {data:accounts,error}=await cloud.from('cash_accounts').select('id,name,currency,account_type').eq('active',true).eq('currency','AFN').order('account_type').order('name');if(error){accountSelect.innerHTML='<option value="">خطا در دریافت حساب‌ها</option>';return;}accountSelect.innerHTML='<option value="">انتخاب صندوق یا بانک</option>'+(accounts||[]).map(a=>'<option value="'+a.id+'">'+escapeHtml(a.name)+'</option>').join('');})();
+
  body.querySelector('#save').onclick=async()=>{
-  const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),cashAccountId=accountSelect.value,address=body.querySelector('[name=address]').value.trim(),notes=body.querySelector('[name=notes]').value.trim(),dateText=body.querySelector('[name=saleDate]').value.trim();
+  const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),address=body.querySelector('[name=address]').value.trim();
   const items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
   if(!customer)return alert('نام مشتری را وارد کنید');
   if(!items.length||items.some(x=>!Number.isFinite(x.quantity)||x.quantity<=0||!Number.isFinite(x.unit_price)||x.unit_price<0||cardValueMissing(x)))return alert('مقدار و قیمت هر محصول را بررسی کنید');
   const total=items.reduce((s,x)=>s+x.quantity*x.unit_price,0);
   if(!Number.isFinite(paid)||paid<0||paid>total)return alert('مبلغ پرداخت‌شده نباید از مجموع بل بیشتر باشد');
-  if(!cashAccountId)return alert('صندوق یا حساب بانکی دریافت پول را انتخاب کنید');
   const cloud=window.yemaCloud?.client;if(!cloud)return alert('اتصال ابری آماده نیست؛ فروش ثبت نشد');
   const {data:sessionData,error:sessionError}=await cloud.auth.getSession();if(sessionError||!sessionData.session)return alert('ابتدا وارد حساب ابری شوید؛ فروش ثبت نشد');
-  const saleGregorian=dateText?jalaliDateToGregorianISO(dateText):new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Kabul'});
-  if(!saleGregorian)return alert('تاریخ را به شکل سال/ماه/روز هجری شمسی وارد کنید؛ نمونه: ۱۴۰۵/۰۸/۲۰');
-  const saleDate=new Date(saleGregorian+'T12:00:00+04:30').toISOString();
+  const now=new Date();
+  const saleGregorian=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kabul',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+  const saleDate=now.toISOString();
+  const {data:cashAccounts,error:cashAccountsError}=await cloud.from('cash_accounts').select('id').eq('active',true).eq('currency','AFN').order('account_type').order('name').limit(1);
+  if(cashAccountsError||!cashAccounts?.length)return alert('برای ثبت فروش، حداقل یک حساب افغانی فعال در بخش حساب‌ها لازم است.');
+  const cashAccountId=cashAccounts[0].id;
   const saveButton=body.querySelector('#save');saveButton.disabled=true;saveButton.textContent='در حال ثبت بل...';
-  const {data:remote,error:remoteError}=await cloud.rpc('create_yema_multi_sale',{p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:[address,notes].filter(Boolean).join(' | ')||null,p_cash_account_id:cashAccountId});
+  const {data:remote,error:remoteError}=await cloud.rpc('create_yema_multi_sale',{p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId});
   if(remoteError){console.error(remoteError);saveButton.disabled=false;saveButton.textContent='ثبت بل فروش';return alert('ثبت ابری فروش ناموفق شد؛ بل ثبت نشد. خطا: '+remoteError.message);}
   let phoneSaveWarning='';
   if(phone){const {error:customerPhoneError}=await cloud.from('customers').update({phone}).eq('id',remote.customer_id);if(customerPhoneError){console.error(customerPhoneError);phoneSaveWarning='\nهشدار: بل ثبت شد، اما ذخیره شماره تماس در حساب مشتری ناموفق بود.';}}
   const a=read('sales'),localItems=items.map(x=>({...x,unit:unit(x.product),line_total:x.quantity*x.unit_price}));
-  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,notes,product:items.length===1?items[0].product:'چند محصول',items:remote.items||localItems,qty:items.length===1?items[0].quantity:null,unit:items.length===1?unit(items[0].product):'—',price:items.length===1?items[0].unit_price:null,paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
+  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,product:items.length===1?items[0].product:'چند محصول',items:remote.items||localItems,qty:items.length===1?items[0].quantity:null,unit:items.length===1?unit(items[0].product):'—',price:items.length===1?items[0].unit_price:null,paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
  };
  function cardValueMissing(item){return !Number.isFinite(item.quantity)||!Number.isFinite(item.unit_price)||item.quantity<=0;}
  });
