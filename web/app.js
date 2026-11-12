@@ -8,10 +8,10 @@ const el=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('fa-IR',{maximumFractionDigits:2});
 const unit=p=>p==='گاز'?'کیلوگرام':'لیتر';
 const sum=(a,k)=>a.reduce((s,x)=>s+Number(x[k]||0),0);
-function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=formatAfghanDate(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);node.innerHTML='<span>تاریخ: '+date+'</span><span>ساعت پروان: '+time+'</span>';}catch{node.textContent=new Intl.DateTimeFormat('fa-AF-u-ca-persian',{timeZone:'Asia/Kabul',dateStyle:'long',timeStyle:'short'}).format(now);}}
+function updateKabulClock(){const node=el('kabulClock');if(!node)return;const now=new Date();try{const date=formatAfghanDate(now);const time=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);node.innerHTML='<span class="home-info-card date-card"><b class="info-icon">▦</b><strong>تاریخ</strong><em>'+date+'</em></span><span class="home-info-card time-card"><b class="info-icon">◷</b><strong>ساعت</strong><em>'+time+'</em></span>';}catch{node.textContent=new Intl.DateTimeFormat('fa-AF-u-ca-persian',{timeZone:'Asia/Kabul',dateStyle:'long',timeStyle:'short'}).format(now);}}
 setInterval(updateKabulClock,30000);
 function updateHomeCart(){const node=el('homeCartSummary');if(!node)return;node.textContent=homeCart.length?'محصول انتخاب‌شده: '+homeCart[0]:'سبد فروش خالی است';const clear=el('clearHomeCart');if(clear)clear.disabled=homeCart.length===0;document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.classList.toggle('selected',homeCart[0]===b.dataset.product));}
-async function updateTopRate(){const node=el('usdRateTop');if(!node)return;try{const rate=await fetchKabulRate();node.textContent='دالر: '+fmt(rate.sell)+' افغانی';}catch{node.textContent='نرخ دالر: ناموجود';}}
+async function updateTopRate(){const node=el('usdRateTop');if(!node)return;try{const rate=await fetchKabulRate();node.innerHTML='<span class="home-info-card rate-card"><b class="info-icon">$</b><strong>نرخ دالر</strong><em>'+fmt(rate.sell)+' افغانی</em></span>';}catch{node.innerHTML='<span class="home-info-card rate-card"><b class="info-icon">$</b><strong>نرخ دالر</strong><em>ناموجود</em></span>';}}
 
 function updateHomeDashboard(){
  const sales=read('sales'),expenses=read('expenses');
