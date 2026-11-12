@@ -12,6 +12,11 @@
   const lock=()=>{document.body.classList.add('auth-locked');gate.style.display='';if($('authPin'))$('authPin').value='';};
   const unlock=()=>{document.body.classList.remove('auth-locked');gate.style.display='none';};
   const pinKey=user=>'yema_security_pin_'+user.id;
+  const normalizePin=value=>Array.from(String(value||'').normalize('NFKC'),ch=>{
+    const cp=ch.codePointAt(0);
+    for(const zero of [0x30,0x660,0x6f0])if(cp>=zero&&cp<=zero+9)return String(cp-zero);
+    return ch;
+  }).join('').replace(/\\s/g,'');
   const hash=async pin=>{
     const bytes=new TextEncoder().encode(pin);
     const digest=await crypto.subtle.digest('SHA-256',bytes);
@@ -67,8 +72,8 @@
     setStatus('در حال بررسی کد امنیتی...');
     try{
       if(!activeUser){setStatus('ابتدا ایمیل تأییدشده را وارد کنید.');return;}
-      const pin=$('authPin').value.trim().replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
-      if(!/^[0-9]{6}$/.test(pin)){setStatus('کد امنیتی باید دقیقاً ۶ رقم باشد.');return;}
+      const pin=normalizePin($('authPin').value);
+      if(!/^[0-9]{6}$/.test(pin)){setStatus('کد باید دقیقاً ۶ رقم باشد. رقم‌های دریافت‌شده: '+Array.from(pin).length+'؛ لطفاً فقط شش عدد وارد کنید.');return;}
       const key=pinKey(activeUser);
       const saved=localStorage.getItem(key);
       const digest=await hash(pin);
