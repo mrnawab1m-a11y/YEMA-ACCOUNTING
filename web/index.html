@@ -1132,6 +1132,39 @@ header{
 @media(min-width:650px){#home #productButtons.products{grid-template-columns:repeat(5,minmax(0,1fr))!important}#home #productButtons.products button,#home #productButtons.products button:last-child{grid-column:auto!important;width:auto!important;height:94px!important;min-height:94px!important}}
 @media(max-width:390px){#home #productButtons.products button{height:76px!important;min-height:76px!important}#home #productButtons.products button span.product-symbol{width:31px!important;height:31px!important;flex-basis:31px!important}#home #productButtons.products button span.product-name{font-size:11px!important}}
 
+
+/* YEMA sales screen: premium compact invoice and live cart */
+#pageBody .sale-intro{padding:16px 17px;margin:0 0 16px;border:1px solid #e5d2a7;border-radius:16px;background:linear-gradient(120deg,#fffdf8,#f5ecd9)}
+.sale-kicker{display:block;color:#a77b31;font-size:9px;font-weight:900;letter-spacing:2px;direction:ltr;text-align:right}
+#pageBody .sale-intro>b{display:block;margin-top:4px;color:#10294b;font-size:18px;font-weight:900}
+#pageBody .sale-intro small{margin:4px 0 0}
+#pageBody .sale-section{margin:13px 0;padding:14px;border:1px solid #e6ebf2;border-radius:15px;background:#fff}
+#pageBody .sale-section h4{margin:0 0 10px;padding:0 0 9px;border-bottom:1px solid #edf0f4;font-size:14px}
+#pageBody .sale-section label,#pageBody .sale-total-card label{margin:11px 0 5px;font-size:12px}
+#pageBody .sale-section input,#pageBody .sale-section select,#pageBody .sale-section textarea,#pageBody .sale-total-card input{min-height:44px;padding:10px 12px;border-radius:11px;font-size:13px}
+#pageBody .sale-section textarea{min-height:72px}
+#pageBody .sale-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#pageBody .sale-section-head h4{margin:0;flex:1}
+#pageBody .sale-count{padding:5px 9px;border-radius:20px;background:#f5ecd9;color:#886326;font-size:11px;font-weight:800}
+#pageBody .sale-item-card{margin:11px 0;padding:12px;border:1px solid #e6d6b6;border-radius:13px;background:linear-gradient(145deg,#fff,#fcfaf5)}
+#pageBody .sale-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#pageBody .sale-item-top>b{color:#173253;font-size:12px}
+#pageBody .sale-item-top .sale-remove{min-height:30px;padding:4px 10px;border-color:#f0d4d4;color:#a43a3a;font-size:11px}
+#pageBody .sale-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#pageBody .sale-fields label{line-height:1.7}
+#pageBody .sale-line-total{margin-top:9px;padding-top:8px;border-top:1px dashed #e3d6bd;color:#68768a;font-size:11px}
+#pageBody .sale-line-total b{color:#173253;font-size:12px}
+#pageBody .sale-add{width:100%;margin-top:5px;border:1px dashed #c5a15b!important;background:#fffaf0!important;color:#805d22!important}
+#pageBody .sale-total-card{margin:14px 0;padding:15px;border:1px solid #d8c18e;border-radius:15px;background:linear-gradient(145deg,#fdfaf3,#fff)}
+#pageBody .sale-total-card>div:first-child,#pageBody .sale-balance{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#pageBody .sale-total-card>div:first-child span,#pageBody .sale-balance span{color:#596a80;font-size:12px;font-weight:700}
+#pageBody .sale-total-card>div:first-child b{color:#173253;font-size:18px}
+#pageBody .sale-balance{margin-top:12px;padding-top:10px;border-top:1px solid #eadfc9}
+#pageBody .sale-balance b{color:#a06e22;font-size:15px}
+#pageBody .sale-submit{margin-top:12px!important}
+#pageBody .sale-footnote{text-align:center;color:#8a96a7;font-size:10px}
+@media(max-width:360px){#pageBody{padding:13px}#pageBody .sale-fields{gap:7px}#pageBody .sale-item-card{padding:10px}}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
