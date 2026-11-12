@@ -1272,6 +1272,51 @@ header{background:linear-gradient(115deg,#050f20 0%,#0a1d38 60%,#10294a 100%)!im
 #homeCartSummary{order:2!important;direction:rtl!important;text-align:center!important}
 #clearHomeCart{order:3!important;margin-left:auto!important}
 
+
+/* SALES / INNER PAGES v42 — dark navy background with light gold typography; homepage untouched */
+#page{
+  background:#07172f!important;
+  border:1px solid #d8b66a!important;
+  box-shadow:0 16px 42px #0006!important;
+}
+#page>.row{
+  background:linear-gradient(115deg,#050f20,#0b2140 72%,#10294a)!important;
+  border-bottom:2px solid #d8b66a!important;
+}
+#pageTitle,#pageBody,#pageBody h1,#pageBody h2,#pageBody h3,#pageBody h4,
+#pageBody p,#pageBody label,#pageBody small,#pageBody .muted,
+#pageBody strong,#pageBody b,#pageBody span,#pageBody div,
+#pageBody li,#pageBody td,#pageBody th{
+  color:#f4dfad!important;
+}
+#pageBody{background:#07172f!important}
+#pageBody h4{border-bottom-color:#806735!important}
+#pageBody input:not([type=file]),#pageBody select,#pageBody textarea{
+  background:#102746!important;color:#ffe9b8!important;
+  border:1px solid #9c7b3e!important;box-shadow:inset 0 1px 3px #0004!important;
+}
+#pageBody input::placeholder,#pageBody textarea::placeholder{color:#b9a477!important}
+#pageBody input:focus,#pageBody select:focus,#pageBody textarea:focus{
+  background:#142e50!important;border-color:#f0d28b!important;
+  box-shadow:0 0 0 3px #d8b66a30!important;
+}
+#pageBody input:disabled{background:#18283c!important;color:#b9a477!important}
+#pageBody button{
+  background:#102746!important;color:#f4dfad!important;
+  border:1px solid #b28c48!important;box-shadow:0 4px 12px #0004!important;
+}
+#pageBody button.primary{
+  background:linear-gradient(120deg,#17385e,#0b1d38)!important;
+  color:#ffe7ad!important;border:1px solid #e0bd70!important;
+}
+#pageBody .listitem,#pageBody .menu-link,#pageBody .panel,
+#pageBody .cloud-panel,#pageBody [id*="total"],#pageBody [class*="total"]{
+  background:#102746!important;color:#f4dfad!important;
+  border-color:#8e713e!important;box-shadow:0 5px 14px #0004!important;
+}
+#pageBody hr{background:#8e713e!important}
+#back{background:#102746!important;color:#ffe7ad!important;border-color:#d8b66a!important}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
