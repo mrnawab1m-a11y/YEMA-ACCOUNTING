@@ -30,11 +30,14 @@
     pinBox.classList.remove('hidden');
     const saved=localStorage.getItem(pinKey(user));
     if(!saved){
-      firstPinHash=null;pinNeedsConfirmation=true;
-      message.textContent='ایمیل تأیید شد. یک کد امنیتی ۶ رقمی بسازید؛ سپس همان کد را دوباره وارد کنید تا تأیید شود.';
-      $('authPin').placeholder='کد جدید ۶ رقمی';
-      $('authPinSubmit').textContent='ثبت کد و ادامه';
-      setStatus('کد را فقط خودتان انتخاب کنید و به کسی ندهید.');
+      // Keep the first PIN hash if auth state fires more than once during setup.
+      if(!pinNeedsConfirmation){firstPinHash=null;pinNeedsConfirmation=true;}
+      message.textContent=firstPinHash
+        ?'کد انتخاب شد. همان کد شش‌رقمی را دوباره وارد کنید تا تأیید شود.'
+        :'ایمیل تأیید شد. یک کد امنیتی ۶ رقمی بسازید؛ سپس همان کد را دوباره وارد کنید تا تأیید شود.';
+      $('authPin').placeholder=firstPinHash?'همان کد را دوباره وارد کنید':'کد جدید ۶ رقمی';
+      $('authPinSubmit').textContent=firstPinHash?'تأیید کد امنیتی':'ثبت کد و ادامه';
+      setStatus(firstPinHash?'کد اول نگهداری شده؛ همان شش رقم را وارد کنید.':'کد را فقط خودتان انتخاب کنید و به کسی ندهید.');
     }else{
       firstPinHash=null;pinNeedsConfirmation=false;
       message.textContent='ایمیل تأییدشده است. برای باز کردن برنامه کد امنیتی ۶ رقمی را وارد کنید.';
