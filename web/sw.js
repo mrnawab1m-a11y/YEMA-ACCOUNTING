@@ -1,4 +1,4 @@
-const CACHE='yema-pwa-v80';
+const CACHE='yema-pwa-v81';
 const FILES=['./','./index.html','./app.js','./cloud.js','./manifest.webmanifest','./icon.svg','./splash.svg','./header.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
@@ -16,6 +16,14 @@ self.addEventListener('fetch',event=>{
       caches.open(CACHE).then(cache=>cache.put('./index.html',copy));
       return response;
     }).catch(()=>caches.match('./index.html')));
+    return;
+  }
+  const isScript=/\\/(app|cloud)\\.js$/.test(url.pathname);
+  if(isScript){
+    event.respondWith(fetch(event.request).then(response=>{
+      if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}
+      return response;
+    }).catch(()=>caches.match(event.request)));
     return;
   }
   event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
