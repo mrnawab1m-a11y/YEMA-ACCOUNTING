@@ -28,18 +28,18 @@
   let firstPinHash=null;
   let pinNeedsConfirmation=false;
   async function verifiedSession(session){
-    lock();
-    if(!session?.user){activeUser=null;emailBox.classList.remove('hidden');pinBox.classList.add('hidden');message.textContent='برای باز کردن برنامه، ابتدا با ایمیل تأییدشده وارد شوید.';return;}
+    if(!session?.user){lock();activeUser=null;emailBox.classList.remove('hidden');pinBox.classList.add('hidden');message.textContent='برای باز کردن برنامه، ابتدا با ایمیل تأییدشده وارد شوید.';return;}
     const user=session.user;
+    if(activeUser?.id===user.id&&appUnlocked)return;
+    lock();
     if(!user.email_confirmed_at){await client.auth.signOut();emailBox.classList.remove('hidden');pinBox.classList.add('hidden');setStatus('ایمیل هنوز تأیید نشده است. ایمیل تأیید را باز کنید و لینک آن را بزنید.');return;}
     activeUser=user;
     emailBox.classList.add('hidden');
     pinBox.classList.remove('hidden');
-    if(activeUser?.id===user.id&&appUnlocked)return;
     const saved=localStorage.getItem(pinKey(user));
     if(!saved){
       firstPinHash=localStorage.getItem(pendingPinKey(user))||null;
-      pinNeedsConfirmation=true;
+      pinNeedsConfirmation=!!firstPinHash;
       message.textContent=firstPinHash
         ?'کد انتخاب شد. همان کد شش‌رقمی را دوباره وارد کنید تا تأیید شود.'
         :'ایمیل تأیید شد. یک کد امنیتی ۶ رقمی بسازید؛ سپس همان کد را دوباره وارد کنید تا تأیید شود.';
