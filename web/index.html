@@ -1163,6 +1163,11 @@ header{
 #pageBody .sale-balance b{color:#a06e22;font-size:15px}
 #pageBody .sale-submit{margin-top:12px!important}
 #pageBody .sale-footnote{text-align:center;color:#8a96a7;font-size:10px}
+#pageBody .sale-phone-row{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+#pageBody .sale-phone-row input{width:100%;min-width:0}
+#pageBody .sale-contact-btn{min-height:43px;border:1px solid #d8bc80!important;border-radius:11px!important;background:linear-gradient(120deg,#fffdf8,#f6ecd6)!important;color:#805d22!important;font-size:12px!important;font-weight:800!important}
+#pageBody .sale-contact-hint{display:block;margin-top:5px;color:#8995a5;font-size:10px}
+@media(min-width:480px){#pageBody .sale-phone-row{grid-template-columns:minmax(0,1fr) auto}#pageBody .sale-contact-btn{padding-inline:14px!important}}
 @media(max-width:360px){#pageBody{padding:13px}#pageBody .sale-fields{gap:7px}#pageBody .sale-item-card{padding:10px}}
 
 
@@ -1311,6 +1316,6 @@ header{background:linear-gradient(115deg,#050f20 0%,#0a1d38 60%,#10294a 100%)!im
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=37"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=38"></script><script defer src="./cloud.js?v=34"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
