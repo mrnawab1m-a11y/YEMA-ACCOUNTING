@@ -12,8 +12,18 @@ setInterval(updateKabulClock,30000);
 function updateHomeCart(){const node=el('homeCartSummary');if(!node)return;node.textContent=homeCart.length?'محصول انتخاب‌شده: '+homeCart[0]:'سبد فروش خالی است';const clear=el('clearHomeCart');if(clear)clear.disabled=homeCart.length===0;document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.classList.toggle('selected',homeCart[0]===b.dataset.product));}
 async function updateTopRate(){const node=el('usdRateTop');if(!node)return;try{const rate=await fetchKabulRate();node.textContent='دالر: '+fmt(rate.sell)+' افغانی';}catch{node.textContent='نرخ دالر: ناموجود';}}
 
+function updateHomeDashboard(){
+ const sales=read('sales'),expenses=read('expenses');
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kabul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const todays=sales.filter(x=>String(x.date||'').slice(0,10)===today);
+ const todaysExpenses=expenses.filter(x=>String(x.date||x.expenseDate||'').slice(0,10)===today);
+ const salesTotal=sum(todays,'total'),profitTotal=sum(todays,'profit'),expenseTotal=sum(todaysExpenses,'amount');
+ const set=(id,value)=>{const node=el(id);if(node)node.textContent=fmt(value);};
+ set('dashSalesToday',salesTotal);set('dashProfitToday',profitTotal);set('dashExpensesToday',expenseTotal);set('dashBillsToday',todays.length);
+ const dateNode=el('dashToday');if(dateNode)dateNode.textContent=new Intl.DateTimeFormat('fa-AF-u-ca-persian-nu-arab',{timeZone:'Asia/Kabul',dateStyle:'full'}).format(new Date());
+}
 function refresh(){
- updateKabulClock();updateHomeCart();updateTopRate();
+ updateKabulClock();updateHomeCart();updateTopRate();updateHomeDashboard();
  document.querySelectorAll('#productButtons [data-product]').forEach(b=>b.onclick=()=>{homeCart=[b.dataset.product];updateHomeCart();});
 }
 async function fetchKabulRate(){const response=await fetch('https://pxjsplptibleojdhhjqrqm.supabase.co/functions/v1/usd-rate',{method:'GET',headers:{'Accept':'application/json'},cache:'no-store'});const data=await response.json();if(!response.ok||!Number.isFinite(Number(data.buy))||!Number.isFinite(Number(data.sell)))throw new Error(data.error||'نرخ معتبر از کانال دریافت نشد');return data;}
