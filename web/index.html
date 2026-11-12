@@ -864,6 +864,130 @@ header:before{content:"";position:absolute;left:13px;top:14px;width:46px;height:
 #homeCartBar #clearHomeCart:disabled{opacity:.38;}
 @media(max-width:390px){#homeCartBar #clearHomeCart{width:42px;height:41px;min-width:42px;font-size:27px;padding:0}}
 
+
+/* Latest home refresh: larger illustrated product tiles and a brighter, airier canvas */
+:root{--bg:#f7f9fc!important;--ink:#203650!important;--muted:#718096!important;--line:#e6ebf2!important}
+body{
+ background:
+  radial-gradient(ellipse at 8% 3%,#e7f1ff 0,transparent 34%),
+  radial-gradient(ellipse at 95% 25%,#fff2d9 0,transparent 30%),
+  linear-gradient(180deg,#f9fbfe 0%,#f2f6fb 100%)!important;
+ color:#203650!important;
+}
+header{
+ background:linear-gradient(120deg,#163b67 0%,#245783 58%,#173c66 100%)!important;
+ border-bottom:2px solid #dfbd70!important;
+ box-shadow:0 7px 22px #17365a20!important;
+}
+.wrap{max-width:1050px!important;padding:20px 14px 112px!important}
+#home{padding:12px 0 4px!important}
+#productButtons.products{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ width:min(100%,760px)!important;
+ max-width:760px!important;
+ gap:13px!important;
+ margin:14px auto 110px!important;
+}
+#productButtons.products button,
+#productButtons.products button:last-child{
+ position:relative!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ height:auto!important;
+ aspect-ratio:1/1!important;
+ grid-column:auto!important;
+ justify-self:stretch!important;
+ gap:12px!important;
+ padding:14px 9px!important;
+ overflow:hidden!important;
+ border:1px solid #d9e3ee!important;
+ border-radius:23px!important;
+ color:#173653!important;
+ box-shadow:0 9px 24px #24476b12,inset 0 1px #ffffff!important;
+ transition:transform .16s ease,box-shadow .16s ease!important;
+}
+#productButtons.products button:nth-child(1){background:linear-gradient(145deg,#fffaf0 0%,#f7e9c8 100%)!important;border-color:#e8d19b!important}
+#productButtons.products button:nth-child(2){background:linear-gradient(145deg,#f4fbff 0%,#dceefa 100%)!important;border-color:#c5dfef!important}
+#productButtons.products button:nth-child(3){background:linear-gradient(145deg,#f4fcf8 0%,#dcefe5 100%)!important;border-color:#c6e2d2!important}
+#productButtons.products button:nth-child(4){background:linear-gradient(145deg,#f7f9fd 0%,#e3eaf3 100%)!important;border-color:#d0dbe8!important}
+#productButtons.products button:nth-child(5){background:linear-gradient(145deg,#fff8f1 0%,#f8e3d1 100%)!important;border-color:#edcfb5!important}
+#productButtons.products button:before{
+ content:""!important;position:absolute!important;inset:8px!important;
+ border:1px solid #ffffffb8!important;border-radius:16px!important;
+ background:none!important;pointer-events:none!important;
+}
+#productButtons.products button:after{
+ content:""!important;position:absolute!important;
+ width:120px!important;height:120px!important;top:-58px!important;right:-42px!important;
+ border-radius:50%!important;background:#ffffff75!important;pointer-events:none!important;
+}
+#productButtons.products button .product-symbol{
+ display:grid!important;place-items:center!important;
+ width:68px!important;height:68px!important;flex:0 0 68px!important;
+ border:1px solid #ffffffd9!important;border-radius:21px!important;
+ background:linear-gradient(145deg,#ffffffc9,#ffffff72)!important;
+ box-shadow:0 7px 17px #24476b12,inset 0 1px #fff!important;
+}
+#productButtons.products button .product-symbol svg{
+ display:block!important;width:53px!important;height:53px!important;
+ filter:drop-shadow(0 2px 2px #18324b12)!important;
+}
+#productButtons.products button .product-name{
+ display:block!important;position:relative!important;z-index:1!important;
+ color:#183653!important;font-size:16px!important;font-weight:900!important;
+ text-align:center!important;white-space:normal!important;line-height:1.5!important;
+ text-shadow:0 1px #ffffffa8!important;
+}
+#productButtons.products button:active,
+#productButtons.products button.selected{
+ transform:translateY(-2px) scale(.985)!important;
+ box-shadow:0 0 0 3px #d8b46a35,0 12px 25px #24476b20!important;
+}
+#productButtons.products button:last-child{
+ grid-column:1/-1!important;width:calc(50% - 6.5px)!important;
+ justify-self:center!important;
+}
+#homeCartBar{
+ background:linear-gradient(115deg,#173b64,#245783 70%,#173b64)!important;
+ border-top:2px solid #dfbd70!important;
+ box-shadow:0 -7px 22px #17365a18!important;
+}
+#homeCartSummary{color:#fff4d8!important}
+#page{background:#fff!important;box-shadow:0 12px 32px #24476b0d!important}
+@media(max-width:520px){
+ .wrap{padding:13px 10px 106px!important}
+ #home{padding-top:8px!important}
+ #productButtons.products{gap:10px!important;width:100%!important;margin:12px auto 104px!important}
+ #productButtons.products button,#productButtons.products button:last-child{
+  border-radius:19px!important;gap:9px!important;padding:10px 6px!important;
+ }
+ #productButtons.products button:before{inset:6px!important;border-radius:14px!important}
+ #productButtons.products button .product-symbol{
+  width:58px!important;height:58px!important;flex-basis:58px!important;border-radius:17px!important;
+ }
+ #productButtons.products button .product-symbol svg{width:46px!important;height:46px!important}
+ #productButtons.products button .product-name{font-size:13px!important}
+}
+@media(max-width:360px){
+ #productButtons.products{gap:8px!important}
+ #productButtons.products button .product-symbol{width:51px!important;height:51px!important;flex-basis:51px!important}
+ #productButtons.products button .product-symbol svg{width:41px!important;height:41px!important}
+ #productButtons.products button .product-name{font-size:12px!important}
+}
+@media(min-width:650px){
+ #productButtons.products{grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;max-width:1000px!important;gap:14px!important}
+ #productButtons.products button,#productButtons.products button:last-child{grid-column:auto!important;width:100%!important;min-height:0!important;aspect-ratio:1/1!important}
+ #productButtons.products button .product-symbol{width:68px!important;height:68px!important;flex-basis:68px!important}
+ #productButtons.products button .product-symbol svg{width:53px!important;height:53px!important}
+ #productButtons.products button .product-name{font-size:14px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
