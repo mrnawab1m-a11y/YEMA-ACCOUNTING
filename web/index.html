@@ -445,6 +445,42 @@ button,input,select,textarea{touch-action:manipulation}
  .wrap{max-width:620px!important}
 }
 
+
+/* v67 precise mobile correction: remove duplicated header lettering and center all five product tiles */
+header{height:330px!important;min-height:330px!important;max-height:330px!important;padding:0!important;overflow:hidden!important;background-size:100% 100%!important;background-position:center top!important;background-repeat:no-repeat!important}
+header:before,header:after{display:none!important;content:none!important;background:none!important}
+.header-info{left:12px!important;right:12px!important;bottom:12px!important;grid-template-rows:92px!important;gap:7px!important}
+.header-info #openMenu{top:8px!important;right:8px!important;left:auto!important;width:44px!important;height:44px!important;display:flex!important;flex-direction:column!important;justify-content:space-around!important;align-items:center!important;border:1px solid #e4b95d!important;border-radius:12px!important;background:#061326cc!important;padding:8px!important}
+.header-info #openMenu span{display:block!important;width:25px!important;height:3px!important;border-radius:3px!important;background:#ffdf94!important;box-shadow:0 0 7px #e7b64d!important}
+.header-info #kabulClock span,.header-info>#usdRateTop{height:92px!important;min-height:92px!important}
+#home .dash-welcome,#home .dash-date-strip,#home .dash-section-title:not(.dash-products-title),#home .dash-stats,#home .dash-home-note,#home .dash-footer{display:none!important}
+#home .dash-products-title{margin:8px 3px 13px!important}
+#home .products{display:grid!important;direction:ltr!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(136px,auto))!important;gap:11px!important;width:100%!important;margin:10px auto 16px!important}
+#home .products button{grid-column:auto!important;grid-row:auto!important;min-width:0!important;width:100%!important;min-height:136px!important;height:100%!important;padding:10px 4px!important;border:2px solid #c28f36!important;border-radius:27px!important;background:linear-gradient(145deg,#17375c 0%,#0c203a 68%,#061326 100%)!important;box-shadow:0 7px 0 #9a6a27,0 10px 22px #0009,inset 0 0 0 5px #0a1b30,inset 0 0 0 7px #bda06a88!important}
+#home .products button:before{inset:8px!important;border:2px solid #c5a66c99!important;border-radius:22px!important}
+#home .products button:after{top:10%!important;right:15%!important;width:70%!important;height:55%!important;background:radial-gradient(circle,#eac86b30,transparent 72%)!important}
+#home .products button .product-symbol{width:clamp(60px,17vw,78px)!important;height:clamp(60px,17vw,78px)!important;border:0!important;border-radius:50%!important;background:radial-gradient(circle,#e9d08a44,transparent 72%)!important;font-size:52px!important;filter:drop-shadow(0 0 9px #f5d878aa)!important}
+#home .products button .product-symbol svg{width:100%!important;height:100%!important;padding:0!important;filter:brightness(1.18) sepia(.35) saturate(1.35) drop-shadow(0 0 5px #f3d27b88)!important}
+#home .products button .product-name{font-size:clamp(13px,4vw,17px)!important;line-height:1.4!important;white-space:normal!important;text-align:center!important;overflow-wrap:anywhere!important}
+#home .products button:nth-child(1){grid-column:4/span 2!important;grid-row:2!important}
+#home .products button:nth-child(2){grid-column:5/span 2!important;grid-row:1!important}
+#home .products button:nth-child(3){grid-column:3/span 2!important;grid-row:1!important}
+#home .products button:nth-child(4){grid-column:1/span 2!important;grid-row:1!important}
+#home .products button:nth-child(5){grid-column:2/span 2!important;grid-row:2!important}
+#homeCartBar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-areas:"summary summary" "submit clear"!important;gap:10px!important;min-height:160px!important;margin:20px 0 10px!important;padding:14px!important;border:2px solid #c28f36!important;border-radius:28px!important;background:linear-gradient(145deg,#142f50,#07172c)!important;box-shadow:0 10px 25px #000a,inset 0 0 0 5px #0a1b30,inset 0 0 0 7px #bda06a66!important}
+#homeCartSummary{grid-area:summary!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:55px!important;text-align:center!important;font-size:15px!important;color:#f8e5bd!important}
+#openHomeCart{grid-area:submit!important;min-width:0!important;min-height:56px!important;border:2px solid #ffe5a5!important;border-radius:19px!important;background:linear-gradient(120deg,#ffe7a6,#d5a348 62%,#9c6924)!important;color:#17243a!important;font-size:15px!important}
+#clearHomeCart{grid-area:clear!important;min-width:0!important;min-height:56px!important;border:2px solid #c99b4c!important;border-radius:19px!important;font-size:14px!important}
+@media(max-width:390px){
+ header{height:310px!important;min-height:310px!important;max-height:310px!important}
+ .header-info{grid-template-rows:84px!important;gap:5px!important}
+ .header-info #kabulClock span,.header-info>#usdRateTop{height:84px!important;min-height:84px!important;padding:5px 2px!important;font-size:10px!important}
+ #home .products{grid-template-rows:repeat(2,minmax(124px,auto))!important;gap:8px!important}
+ #home .products button{min-height:124px!important;border-radius:23px!important}
+ #home .products button .product-symbol{width:56px!important;height:56px!important}
+ #home .products button .product-name{font-size:12px!important}
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
@@ -489,6 +525,6 @@ button,input,select,textarea{touch-action:manipulation}
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=66"></script><script defer src="./cloud.js?v=37"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=67"></script><script defer src="./cloud.js?v=37"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
