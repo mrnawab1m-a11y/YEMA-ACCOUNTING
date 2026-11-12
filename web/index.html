@@ -129,59 +129,50 @@ body.auth-locked>#authGate .auth-card{width:min(100%,440px)!important;max-height
 body.auth-locked>#authGate .hidden{display:none!important}
 
 
-/* YEMA reference visual refresh — appearance only; preserve all page content and behavior */
-:root{--navy:#020916;--navy2:#071a33;--navy3:#10294a;--gold:#dca843;--gold2:#ffe3a0;--cream:#f7edda;--line:#c18d37;--shadow:0 12px 32px #000b}
-body{background:
- radial-gradient(ellipse at 88% 12%,#17345b55 0,transparent 32%),
- radial-gradient(ellipse at 10% 78%,#8c5c1d22 0,transparent 30%),
- linear-gradient(160deg,#010712 0%,#06152a 52%,#020812 100%)!important}
-header{position:relative;isolation:isolate;min-height:330px!important;padding:12px 14px 16px!important;overflow:hidden;border:0!important;border-bottom:2px solid #e8bd62!important;border-radius:0 0 42px 42px;background:
- radial-gradient(ellipse at 78% 72%,#e7a93655 0,transparent 22%),
- radial-gradient(ellipse at 70% 76%,#0b396a 0,transparent 42%),
- linear-gradient(150deg,#010713 0%,#061a35 60%,#020916 100%)!important;
- box-shadow:0 12px 35px #000b,inset 0 -1px #ffe7a655!important}
-header:before{display:block!important;content:"♛  YEMA\A      Petroleum Accounting";white-space:pre;position:absolute;left:20px;top:45px;width:245px;height:92px;padding:8px 0 0 76px;background:
- radial-gradient(circle at 34px 36px,#ffe6a3 0 25px,#c58b2d 27px,#5c3b10 30px,transparent 32px);
- color:#f6cb70;font-size:27px;font-weight:950;letter-spacing:1px;line-height:1.4;text-shadow:0 2px 12px #e9ad3d66}
-header:after{content:"";position:absolute;z-index:-1;right:8%;top:112px;width:132px;height:172px;border:3px solid #e9b94e;border-radius:65% 35% 62% 38% / 65% 35% 65% 35%;transform:rotate(45deg);background:
- radial-gradient(ellipse at 35% 28%,#fff0b9 0,#f5c75c 13%,#a96716 34%,#06162d 68%);
- box-shadow:0 0 14px #ffc64d,0 0 38px #d88b25aa,inset 0 0 18px #fff2b866}
-.header-info{position:absolute!important;left:12px!important;right:12px!important;bottom:15px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:0!important;align-items:stretch!important}
-.header-info #kabulClock{display:contents!important}
-.header-info span,.header-info #kabulClock span,.header-info>#usdRateTop{display:flex!important;min-width:0!important;width:100%!important;min-height:92px;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:10px 5px!important;border:1px solid #d5a94e!important;border-radius:20px!important;background:linear-gradient(145deg,#122947eF,#061326f5)!important;color:#ffdfa0!important;font-size:12px!important;font-weight:900;line-height:1.5;box-shadow:0 7px 20px #0009,inset 0 1px #fff3,inset 0 -3px 0 #b67d26!important;text-align:center}
-#openMenu{top:18px!important;right:16px!important;width:42px!important;height:42px!important;border:0!important;background:transparent!important}
-#openMenu span{height:3px!important;width:26px!important;background:linear-gradient(90deg,#ffe9ad,#c58a2b)!important;box-shadow:0 0 7px #e9b84d}
-.wrap{max-width:760px!important;padding:18px 14px 34px!important}
-#home{padding-top:10px!important}
-#home .products{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:12px auto 18px!important}
-#home .products button{min-height:142px!important;padding:12px 5px!important;border:1px solid #d6a548!important;border-radius:24px!important;background:
- radial-gradient(ellipse at 50% 110%,#e3a83e55,transparent 42%),
- linear-gradient(145deg,#18375b 0%,#0a1d36 54%,#020b18 100%)!important;
- box-shadow:0 8px 22px #000b,0 0 12px #d79c3540,inset 0 2px 7px #ffffff30,inset 0 -3px 0 #9b6a25!important}
+
+/* Reference-matched YEMA home appearance. Existing content and actions remain unchanged. */
+:root{--gold:#e6b653;--gold2:#ffe4a0;--cream:#f4e7ca}
+html,body{background:#020a16!important}
+body{background:radial-gradient(ellipse at 78% 20%,#12335a66,transparent 36%),linear-gradient(155deg,#010713,#06172c 58%,#010813)!important}
+header{position:relative!important;top:auto!important;min-height:318px!important;height:318px!important;padding:0!important;overflow:hidden!important;border:0!important;border-bottom:2px solid #d9aa4c!important;border-radius:0 0 38px 38px!important;background:
+ radial-gradient(ellipse at 82% 84%,#e9a62f88 0,transparent 18%),
+ radial-gradient(ellipse at 76% 83%,#164574 0,transparent 39%),
+ linear-gradient(155deg,#010713 0%,#071a34 62%,#020916 100%)!important;
+ box-shadow:0 12px 28px #000b,inset 0 -1px #ffe6a0!important}
+header:before{content:"♛   YEMA\A      Petroleum Accounting";white-space:pre;position:absolute;left:22px;top:30px;width:260px;height:110px;padding:12px 0 0 72px;background:radial-gradient(circle at 35px 43px,#ffe9ae 0 28px,#d7a33d 30px,#80531b 34px,transparent 36px);color:#f5c96e;font-size:25px;font-weight:950;line-height:1.35;text-shadow:0 2px 10px #e7ae45aa}
+header:after{content:"";position:absolute;right:11%;top:142px;width:76px;height:112px;border:3px solid #e6b653;border-radius:65% 35% 62% 38%/65% 35% 65% 35%;transform:rotate(45deg);background:radial-gradient(ellipse at 35% 28%,#fff0b9 0,#f5c75c 14%,#a96716 38%,#06162d 72%);box-shadow:0 0 14px #ffc64d,0 0 36px #d88b25aa,inset 0 0 16px #fff2b866}
+.header-info{position:absolute!important;left:12px!important;right:12px!important;bottom:12px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:0!important;align-items:stretch!important}
+.header-info #openMenu{position:absolute!important;top:-245px!important;right:8px!important;width:42px!important;height:42px!important;border:0!important;border-radius:0!important;background:transparent!important}
+#openMenu span{width:27px!important;height:3px!important;background:linear-gradient(90deg,#ffe9ad,#c58a2b)!important;box-shadow:0 0 7px #e9b84d}
+.header-info #kabulClock{display:grid!important;grid-template-rows:1fr 1fr!important;align-items:center!important;justify-items:center!important;gap:3px!important;width:100%!important;min-width:0!important;padding:10px 3px!important;border:1px solid #c89b4c!important;border-radius:19px!important;background:linear-gradient(145deg,#102945f2,#061326f5)!important;box-shadow:0 7px 18px #0009,inset 0 1px #fff3,inset 0 -3px #9f702b!important;color:#ffe0a0!important;text-align:center!important}
+.header-info #kabulClock span{display:block!important;width:100%!important;max-width:100%!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;color:#ffe4a0!important;font-size:11px!important;font-weight:900!important;line-height:1.5!important;text-align:center!important;white-space:normal!important}
+.header-info>#usdRateTop{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:96px!important;padding:8px 4px!important;border:1px solid #c89b4c!important;border-radius:19px!important;background:linear-gradient(145deg,#102945f2,#061326f5)!important;box-shadow:0 7px 18px #0009,inset 0 1px #fff3,inset 0 -3px #9f702b!important;color:#ffe4a0!important;font-size:12px!important;font-weight:900!important;text-align:center!important;white-space:normal!important}
+.wrap{max-width:620px!important;padding:18px 14px 28px!important}
+#home{padding-top:2px!important}
+#home .dash-welcome,#home .dash-date-strip,#home .dash-section-title:not(.dash-products-title),#home .dash-stats,#home .dash-home-note,#home .dash-footer{display:none!important}
+#home .dash-products-title{display:flex!important;align-items:center!important;justify-content:flex-start!important;margin:5px 4px 12px!important}
+#home .dash-products-title>div{display:flex!important;align-items:center!important;gap:9px!important}
+#home .dash-products-title>div>span{display:none!important}
+#home .dash-products-title h3{margin:0!important;color:#f5c96e!important;font-size:18px!important}
+#home .dash-products-title:after{content:"";height:2px;flex:1;margin-right:8px;background:linear-gradient(90deg,#d5a144,transparent);border-radius:50%}
+#home .dash-products-title>small{display:none!important}
+#home .products{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px!important;margin:12px auto 18px!important;max-width:100%!important}
+#home .products button{grid-column:span 2!important;min-width:0!important;min-height:130px!important;padding:12px 4px!important;border:1px solid #d6a548!important;border-radius:23px!important;background:radial-gradient(ellipse at 50% 110%,#e3a83e55,transparent 42%),linear-gradient(145deg,#18375b,#0a1d36 54%,#020b18)!important;box-shadow:0 8px 22px #000b,0 0 12px #d79c3540,inset 0 2px 7px #ffffff30,inset 0 -3px 0 #9b6a25!important}
 #home .products button:before{inset:5px!important;border:1px solid #f5d58c88!important;border-radius:18px!important;box-shadow:inset 0 0 16px #d9a34220!important}
 #home .products button:after{top:auto!important;bottom:-24px!important;right:0!important;left:0!important;width:100%!important;height:32px!important;border-radius:50%!important;background:radial-gradient(ellipse,#ffd36a99 0,transparent 70%)!important;filter:blur(5px)}
 #home .products button .product-symbol{width:58px!important;height:58px!important;border:0!important;border-radius:50%!important;background:radial-gradient(circle at 35% 25%,#ffe8ad44,#b8791a16 68%,transparent)!important;color:#ffdc8b!important;font-size:36px!important;filter:drop-shadow(0 3px 5px #d28e2b88)}
 #home .products button .product-symbol svg{filter:sepia(.45) saturate(1.35) drop-shadow(0 2px 4px #d28e2b88)}
 #home .products button .product-name{color:#f9e9c9!important;font-size:14px!important;text-shadow:0 2px 6px #000}
-#home .products button:last-child{grid-column:auto!important;width:auto!important}
-#homeCartBar{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-areas:"summary summary" "clear submit"!important;gap:10px!important;min-height:158px!important;margin:20px 0 8px!important;padding:16px!important;border:1px solid #d5a449!important;border-radius:28px!important;background:
- radial-gradient(ellipse at 50% 110%,#b8792b35,transparent 46%),
- linear-gradient(145deg,#112b4c,#06152a 72%,#020a16)!important;
- box-shadow:0 12px 28px #000b,0 0 16px #d49a3d35,inset 0 1px #fff3!important}
-#homeCartSummary{grid-area:summary!important;display:flex;align-items:center;justify-content:center;min-height:48px;padding:8px;color:#f9e4b6!important;text-align:center}
+#home .products button:nth-child(1){grid-column:4/span 2!important}
+#home .products button:nth-child(2){grid-column:5/span 2!important;grid-row:1!important}
+#home .products button:nth-child(3){grid-column:3/span 2!important;grid-row:1!important}
+#home .products button:nth-child(4){grid-column:1/span 2!important;grid-row:1!important}
+#home .products button:nth-child(5){grid-column:2/span 2!important;grid-row:2!important}
+#homeCartBar{position:relative!important;inset:auto!important;z-index:1!important;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-areas:"summary summary" "submit clear"!important;gap:10px!important;min-height:150px!important;margin:18px 0 8px!important;padding:15px!important;border:1px solid #d5a449!important;border-radius:27px!important;background:radial-gradient(ellipse at 50% 110%,#b8792b35,transparent 46%),linear-gradient(145deg,#112b4c,#06152a 72%,#020a16)!important;box-shadow:0 12px 28px #000b,0 0 16px #d49a3d35,inset 0 1px #fff3!important}
+#homeCartSummary{grid-area:summary!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:45px!important;padding:8px!important;color:#f9e4b6!important;text-align:center!important}
 #clearHomeCart{grid-area:clear!important;min-height:54px!important;border:1px solid #d5a449!important;border-radius:17px!important;background:linear-gradient(145deg,#132b47,#08172a)!important;color:#f9e4b6!important}
 #openHomeCart{grid-area:submit!important;min-height:54px!important;border:1px solid #ffedbd!important;border-radius:17px!important;background:linear-gradient(120deg,#ffe7a6,#d5a348 62%,#9c6924)!important;color:#17243a!important;box-shadow:0 5px 18px #d8ad5844!important}
-@media(max-width:390px){
- header{min-height:310px!important}
- header:before{top:48px!important;left:15px!important;font-size:23px!important}
- header:after{top:115px!important;right:7%!important;width:108px!important;height:145px!important}
- .header-info{gap:6px!important;left:9px!important;right:9px!important}
- .header-info span,.header-info #kabulClock span,.header-info>#usdRateTop{min-height:84px!important;font-size:10px!important;padding:7px 3px!important}
- #home .products{gap:8px!important}
- #home .products button{min-height:125px!important;border-radius:19px!important}
- #home .products button .product-symbol{width:48px!important;height:48px!important}
- #home .products button .product-name{font-size:12px!important}
-}
+@media(max-width:390px){header{height:300px!important;min-height:300px!important}header:before{left:12px!important;top:25px!important;font-size:22px!important}header:after{top:130px!important;right:8%!important;width:68px!important;height:96px!important}.header-info{left:8px!important;right:8px!important;gap:6px!important}.header-info #kabulClock span{font-size:9px!important}.header-info>#usdRateTop{font-size:10px!important;min-height:88px!important}#home .products{gap:8px!important}#home .products button{min-height:118px!important;border-radius:19px!important}#home .products button .product-symbol{width:49px!important;height:49px!important}#home .products button .product-name{font-size:12px!important}}
 
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
@@ -227,6 +218,6 @@ header:after{content:"";position:absolute;z-index:-1;right:8%;top:112px;width:13
 <div id="homeCartBar"><div id="homeCartSummary">سبد فروش خالی است</div><button id="clearHomeCart" type="button" aria-label="پاک کردن محصول از سبد" title="پاک کردن محصول">⌫</button><button id="openHomeCart" type="button">ثبت فروش</button></div>
 <section id="page" class="panel hidden"><div class="row"><h3 id="pageTitle"></h3><button id="back">بازگشت</button></div><div id="pageBody"></div></section></main>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="./app.js?v=58"></script><script defer src="./cloud.js?v=35"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
+<script defer src="./app.js?v=59"></script><script defer src="./cloud.js?v=35"></script><script>if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}</script>
 <script>document.addEventListener("DOMContentLoaded",()=>{const s=document.getElementById("brandSplash");if(s){s.classList.add("done");setTimeout(()=>s.remove(),180)}});</script></body></html>
 <!-- deployment retry 2026-11-11 -->
