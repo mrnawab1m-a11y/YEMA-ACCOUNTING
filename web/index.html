@@ -776,6 +776,51 @@ header:before,header:after{display:none!important;content:none!important}
  #productButtons.products>button{height:132px!important;min-height:132px!important}
 }
 
+
+/* Five separate product cards, stacked vertically on the home screen */
+#productButtons.products{
+ display:flex!important;
+ flex-direction:column!important;
+ flex-wrap:nowrap!important;
+ align-items:stretch!important;
+ justify-content:flex-start!important;
+ gap:9px!important;
+ width:100%!important;
+ max-width:100%!important;
+ margin:12px auto 16px!important;
+ padding:0!important;
+ direction:rtl!important;
+}
+#productButtons.products>button{
+ display:flex!important;
+ flex-direction:row!important;
+ align-items:center!important;
+ justify-content:flex-start!important;
+ gap:14px!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ height:76px!important;
+ min-height:76px!important;
+ margin:0!important;
+ padding:10px 16px!important;
+ border-radius:17px!important;
+}
+#productButtons.products>button .product-symbol{
+ width:48px!important;
+ height:48px!important;
+ flex:0 0 48px!important;
+}
+#productButtons.products>button .product-name{
+ display:block!important;
+ flex:1 1 auto!important;
+ min-width:0!important;
+ text-align:right!important;
+ font-size:clamp(14px,4vw,17px)!important;
+ line-height:1.35!important;
+ overflow-wrap:anywhere!important;
+}
+
 </style></head>
 <body class="auth-locked"><div id="brandSplash" class="brand-splash" aria-label="حسابداری یما"><img src="./splash.svg" alt="حسابداری یما"></div><section id="authGate" class="auth-gate"><div class="auth-card"><h2>ورود امن به حسابداری یما</h2><p id="authMessage">برای باز کردن برنامه، ایمیل تأییدشده و کد امنیتی لازم است.</p><div id="authEmailBox"><label for="authEmail">ایمیل جیمیل</label><input id="authEmail" type="email" autocomplete="username" placeholder="ایمیل حساب"><label for="authPassword">رمز عبور حساب</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button id="authLogin" class="primary">ورود با ایمیل</button><button id="authResend">ارسال دوباره ایمیل تأیید</button></div><div id="authPinBox" class="hidden"><label for="authPin">کد امنیتی ۶ رقمی</label><input id="authPin" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="۶ رقم کد امنیتی"><button id="authPinSubmit" class="primary">تأیید کد و باز کردن برنامه</button><button id="authLogout">خروج از حساب</button></div><p id="authStatus" role="status"></p></div></section><header><div class="agency-brand"><span class="agency-crown">♛</span><div><b>YEMA</b><small>Petroleum Accounting</small><strong>نمایندگی تیل‌فروشی حاجی نواب پروانی</strong></div></div><div class="header-info"><button id="openMenu" type="button" aria-label="باز کردن منو" title="منو"><span></span><span></span><span></span></button><span id="kabulClock">تاریخ و ساعت افغانستان…</span><span id="usdRateTop">نرخ دالر: در حال دریافت…</span></div></header>
 <main class="wrap">
