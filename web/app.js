@@ -243,18 +243,10 @@ async function restoreCloudDataToLocal(){
    return {id:p.id,supplier:p.supplier_name,supplierPhone:p.supplier_phone||'',product,qty:Number(first.entered_quantity||0),enteredUnit:first.entered_unit==='ton'?'تن':(first.entered_unit||'تن'),stockQty:Number(first.stock_quantity||0),unit:first.stock_unit==='kg'?'کیلوگرام':'لیتر',conversionFactor:Number(first.entered_quantity?Number(first.stock_quantity||0)/Number(first.entered_quantity):0),usd:Number(p.total_usd||0)/(Number(first.entered_quantity)||1),totalUsd:Number(p.total_usd??p.total??0),paidUsd:Number(p.paid_usd??p.paid??0),remainingUsd:Number(p.remaining_usd??p.remaining??0),rate:Number(p.exchange_rate||0),total:Number(p.total||0),paid:Number(p.paid||0),date:dateKabul(p.purchase_date),cloudSynced:true};
   });
   const restoredExpenses=(expensesR.data||[]).map(x=>({id:x.id,title:x.title,amount:Number(x.amount||0),currency:x.currency,exchangeRate:x.exchange_rate==null?null:Number(x.exchange_rate),amountAFN:Number(x.amount_afn??(x.currency==='AFN'?x.amount:0)),cashAccountId:x.cash_account_id||null,date:dateKabul(x.expense_date),notes:x.notes||'',cloudSynced:true}));
-  const merge=(current,incoming,keyName)=>{
-   const map=new Map();
-   (Array.isArray(current)?current:[]).forEach(x=>{const key=x?.id!=null?'id:'+x.id:(x?.[keyName]!=null?keyName+':'+x[keyName]:'local:'+JSON.stringify(x));map.set(key,x);});
-   incoming.forEach(x=>{const key=x?.id!=null?'id:'+x.id:(x?.[keyName]!=null?keyName+':'+x[keyName]:'remote:'+JSON.stringify(x));map.set(key,{...(map.get(key)||{}),...x});});
-   return [...map.values()];
-  };
-  const merged={
-   sales:merge(read('sales'),restoredSales,'bill'),
-   purchases:merge(read('purchases'),restoredPurchases,'id'),
-   expenses:merge(read('expenses'),restoredExpenses,'id')
-  };
-  write('sales',merged.sales);write('purchases',merged.purchases);write('expenses',merged.expenses);
+  // Cloud data is authoritative: replace local lists so deleted/test records cannot reappear after reset.
+  write('sales',restoredSales);
+  write('purchases',restoredPurchases);
+  write('expenses',restoredExpenses);
   localStorage.setItem(ownerKey,user.id);
   refresh();
   window.dispatchEvent(new CustomEvent('yema:cloud-restored',{detail:{sales:restoredSales.length,purchases:restoredPurchases.length,expenses:restoredExpenses.length}}));
