@@ -103,13 +103,13 @@ function show(name,selectedProduct){
  const addRow=(chosen='')=>{
   const id=++rowSeq,wrap=document.createElement('div');wrap.className='sale-item-card';wrap.dataset.row=id;
   wrap.innerHTML='<div class="sale-item-top"><b>محصول '+fmt(id)+'</b><button type="button" class="sale-remove" aria-label="حذف محصول">حذف</button></div><label>نوع محصول</label><select class="sale-product">'+productOptions+'</select><div class="sale-fields"><div><label>مقدار <span class="sale-unit">لیتر</span></label><input class="sale-qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مقدار"></div><div><label>قیمت فی <span class="sale-price-unit">لیتر</span> (افغانی)</label><input class="sale-price" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت"></div></div><div class="sale-line-total">مجموع این قلم: <b>۰ افغانی</b></div>';
-  host.appendChild(wrap);const sel=wrap.querySelector('.sale-product');if(chosen&&PRODUCTS.includes(chosen))sel.value=chosen;
+  host.appendChild(wrap);const removeButton=wrap.querySelector('.sale-remove');removeButton.onclick=event=>{event.preventDefault();event.stopPropagation();if(host.querySelectorAll('.sale-item-card').length<=1){alert('حداقل یک محصول باید در سبد باقی بماند');return false;}wrap.remove();updateTotals();return false;};const sel=wrap.querySelector('.sale-product');if(chosen&&PRODUCTS.includes(chosen))sel.value=chosen;
   const update=()=>{const gas=sel.value==='گاز';wrap.querySelector('.sale-unit').textContent=gas?'کیلوگرام':'لیتر';wrap.querySelector('.sale-price-unit').textContent=gas?'کیلوگرام':'لیتر';const q=Number(wrap.querySelector('.sale-qty').value||0),p=Number(wrap.querySelector('.sale-price').value||0);wrap.querySelector('.sale-line-total b').textContent=fmt(q*p)+' افغانی';updateTotals();};
   sel.addEventListener('change',update);wrap.querySelector('.sale-qty').addEventListener('input',update);wrap.querySelector('.sale-price').addEventListener('input',update);
   /* حذف قلم فروش با مدیریت لمس در سطح سبد */
   update();return wrap;
  };
- host.addEventListener('click',event=>{const button=event.target.closest('.sale-remove');if(!button||!host.contains(button))return;event.preventDefault();event.stopPropagation();const card=button.closest('.sale-item-card');if(!card)return;if(host.querySelectorAll('.sale-item-card').length<=1){alert('حداقل یک محصول باید در سبد باقی بماند');return;}card.remove();updateTotals();},true);
+ 
  const updateTotals=()=>{let total=0,count=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);if(q>0&&p>=0){total+=q*p;count++;}});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.children.length)+' قلم';};
  addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();paidField.addEventListener('input',updateTotals);
 
