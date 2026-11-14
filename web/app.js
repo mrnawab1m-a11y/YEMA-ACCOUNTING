@@ -101,6 +101,7 @@ function show(name,selectedProduct){
   finally{vcardInput.value='';}
  };
  const productOptions=PRODUCTS.map(p=>'<option value="'+p+'">'+p+'</option>').join('');
+ let updateTotals=()=>{};
  let rowSeq=0;
  const addRow=(chosen='')=>{
   const id=++rowSeq,wrap=document.createElement('div');wrap.className='sale-item-card';wrap.dataset.row=id;
@@ -112,11 +113,11 @@ function show(name,selectedProduct){
   update();return wrap;
  };
  
- const updateTotals=()=>{let total=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);const line=q>0&&p>=0?q*p:0;total+=line;const lineNode=card.querySelector('.sale-line-total b');if(lineNode)lineNode.textContent=fmt(line)+' افغانی';});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.querySelectorAll('.sale-item-card').length)+' قلم';};
+ updateTotals=()=>{let total=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);const line=Number.isFinite(q)&&Number.isFinite(p)&&q>0&&p>=0?q*p:0;total+=line;const lineNode=card.querySelector('.sale-line-total b');if(lineNode)lineNode.textContent=fmt(line)+' افغانی';});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.querySelectorAll('.sale-item-card').length)+' قلم';};
  addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();
  /* Recalculate from the whole cart on every edit event; this also covers mobile keyboards. */
  ['input','change','keyup'].forEach(type=>host.addEventListener(type,event=>{if(event.target.matches('.sale-qty,.sale-price,.sale-product'))updateTotals();}));
- paidField.addEventListener('input',updateTotals);paidField.addEventListener('change',updateTotals);
+ paidField.addEventListener('input',updateTotals);paidField.addEventListener('change',updateTotals);updateTotals();
 
  let saleSubmitting=false;
  const saleSaveButton=body.querySelector('#save');
