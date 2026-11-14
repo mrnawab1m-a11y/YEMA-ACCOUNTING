@@ -112,31 +112,35 @@ function show(name,selectedProduct){
   update();return wrap;
  };
  
- const updateTotals=()=>{let total=0,count=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);if(q>0&&p>=0){total+=q*p;count++;}});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.children.length)+' قلم';};
- addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();paidField.addEventListener('input',updateTotals);
+ const updateTotals=()=>{let total=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);const line=q>0&&p>=0?q*p:0;total+=line;const lineNode=card.querySelector('.sale-line-total b');if(lineNode)lineNode.textContent=fmt(line)+' افغانی';});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.querySelectorAll('.sale-item-card').length)+' قلم';};
+ addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();
+ /* Recalculate from the whole cart on every edit event; this also covers mobile keyboards. */
+ ['input','change','keyup'].forEach(type=>host.addEventListener(type,event=>{if(event.target.matches('.sale-qty,.sale-price,.sale-product'))updateTotals();}));
+ paidField.addEventListener('input',updateTotals);paidField.addEventListener('change',updateTotals);
 
  let saleSubmitting=false;
+ const saleSaveButton=body.querySelector('#save');
  body.querySelector('#save').onclick=async()=>{
   if(saleSubmitting)return;
+  saleSubmitting=true;saleSaveButton.disabled=true;saleSaveButton.textContent='در حال جلوگیری از ثبت تکراری...';
   const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),address=body.querySelector('[name=address]').value.trim();
   const items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
   if(!customer)return alert('نام مشتری را وارد کنید');
   if(!items.length||items.some(x=>!Number.isFinite(x.quantity)||x.quantity<=0||!Number.isFinite(x.unit_price)||x.unit_price<0||cardValueMissing(x)))return alert('مقدار و قیمت هر محصول را بررسی کنید');
   const total=items.reduce((s,x)=>s+x.quantity*x.unit_price,0);
   if(!Number.isFinite(paid)||paid<0||paid>total)return alert('مبلغ پرداخت‌شده نباید از مجموع بل بیشتر باشد');
-  saleSubmitting=true;
-  const cloud=window.yemaCloud?.client;if(!cloud){saleSubmitting=false;return alert('اتصال ابری آماده نیست؛ فروش ثبت نشد');}
-  const {data:sessionData,error:sessionError}=await cloud.auth.getSession();if(sessionError||!sessionData.session){saleSubmitting=false;return alert('ابتدا وارد حساب ابری شوید؛ فروش ثبت نشد');}
+  const cloud=window.yemaCloud?.client;if(!cloud){saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('اتصال ابری آماده نیست؛ فروش ثبت نشد');}
+  const {data:sessionData,error:sessionError}=await cloud.auth.getSession();if(sessionError||!sessionData.session){saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ابتدا وارد حساب ابری شوید؛ فروش ثبت نشد');}
   const now=new Date();
   const saleGregorian=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kabul',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
   const saleDate=now.toISOString();
   const {data:cashAccounts,error:cashAccountsError}=await cloud.from('cash_accounts').select('id').eq('active',true).eq('currency','AFN').order('account_type').order('name').limit(1);
-  if(cashAccountsError||!cashAccounts?.length){saleSubmitting=false;return alert('برای ثبت فروش، حداقل یک حساب افغانی فعال در بخش حساب‌ها لازم است.');}
+  if(cashAccountsError||!cashAccounts?.length){saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('برای ثبت فروش، حداقل یک حساب افغانی فعال در بخش حساب‌ها لازم است.');}
   const cashAccountId=cashAccounts[0].id;
-  const saveButton=body.querySelector('#save');saveButton.disabled=true;saveButton.textContent='در حال ثبت بل...';
+  saleSaveButton.textContent='در حال ثبت بل...';
   const requestId=yemaRequestId('sale');
   const {data:remote,error:remoteError}=await cloud.rpc('create_yema_sale_once',{p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId});
-  if(remoteError){console.error(remoteError);saleSubmitting=false;saveButton.disabled=false;saveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
+  if(remoteError){console.error(remoteError);saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
   clearYemaRequestId('sale');
   let phoneSaveWarning='';
   if(phone){const {error:customerPhoneError}=await cloud.from('customers').update({phone}).eq('id',remote.customer_id);if(customerPhoneError){console.error(customerPhoneError);phoneSaveWarning='\nهشدار: بل ثبت شد، اما ذخیره شماره تماس در حساب مشتری ناموفق بود.';}}
