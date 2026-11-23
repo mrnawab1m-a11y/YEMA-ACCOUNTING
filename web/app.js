@@ -1,4 +1,4 @@
-const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز'];
+const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز','فروش پرچون'];
 const KEY='yema_v2_';
 function yemaRequestId(action){const key='yema_pending_'+action;let id=sessionStorage.getItem(key);if(!id){id=crypto.randomUUID();sessionStorage.setItem(key,id);}return id;}
 function clearYemaRequestId(action){sessionStorage.removeItem('yema_pending_'+action);}
