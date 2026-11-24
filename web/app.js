@@ -62,14 +62,14 @@ function show(name,selectedProduct){
  <small class="sale-contact-hint">در مخاطبین گوشی: اشتراک‌گذاری مخاطب ← ذخیره در فایل‌ها؛ سپس فایل VCF را اینجا انتخاب کنید.</small>
  </section>
  <section class="sale-section"><div class="sale-section-head"><h4>نوع تیل و مقدار</h4><span class="sale-count" id="saleCount">۱ قلم</span></div>
- <label for="saleMode">روش فروش</label><select id="saleMode"><option value="normal">فروش عادی</option><option value="mixed">تیل مکس (ترکیب ۹۲ و ۸۰)</option></select>
+ <label for="saleMode">روش فروش</label><select id="saleMode"><option value="normal">فروش عادی</option><option value="mixed">فروش پرچون</option></select>
  <div id="mixedSaleFields" class="sale-item-card hidden">
-  <div class="sale-item-top"><b>فروش تیل مکس</b><span>یک بل، دو برداشت از موجودی</span></div>
+  <div class="sale-item-top"><b>فروش پرچون</b><span>یک بل، دو برداشت از موجودی</span></div>
   <div class="sale-fields">
    <div><label>مقدار پطرول ۹۲ (لیتر)</label><input id="mixed92Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مثلاً ۴۰"></div>
    <div><label>مقدار پطرول ۸۰ (لیتر)</label><input id="mixed80Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مثلاً ۶۰"></div>
   </div>
-  <label>قیمت واحد تیل مکس (افغانی فی لیتر)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
+  <label>قیمت فی لیتر فروش پرچون (افغانی)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
   <div class="sale-line-total" id="mixedSaleSummary">مجموع: ۰ لیتر | مبلغ: ۰ افغانی</div>
  </div>
  <div id="saleItems"></div><button type="button" id="addSaleItem" class="sale-add">＋ افزودن محصول دیگر</button>
@@ -143,7 +143,7 @@ function show(name,selectedProduct){
   const paid=Number(paidField.value||0);
   body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';
   body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';
-  body.querySelector('#saleCount').textContent=modeField.value==='mixed'?'۱ فروش مکس':fmt(count)+' قلم';
+  body.querySelector('#saleCount').textContent=modeField.value==='mixed'?'فروش پرچون':fmt(count)+' قلم';
  };
  const updateSaleMode=()=>{
   const mixed=modeField.value==='mixed';
@@ -167,7 +167,7 @@ function show(name,selectedProduct){
   if(modeField.value==='mixed'){
    const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),price=Number(mixedUnitPrice.value);
    if(!Number.isFinite(q92)||!Number.isFinite(q80)||q92<0||q80<0||!Number.isFinite(price)||price<0)return alert('مقدار هر دو نوع تیل و قیمت واحد را درست وارد کنید.');
-   if(q92+q80<=0)return alert('برای فروش مکس، مقدار پطرول ۹۲ یا ۸۰ باید بیشتر از صفر باشد.');
+   if(q92+q80<=0)return alert('برای فروش پرچون، مقدار پطرول ۹۲ یا ۸۰ باید بیشتر از صفر باشد.');
    if(q92>0)items.push({product:'پطرول ۹۲',quantity:q92,unit_price:price});
    if(q80>0)items.push({product:'پطرول ۸۰',quantity:q80,unit_price:price});
   }else{
@@ -194,7 +194,7 @@ function show(name,selectedProduct){
   let phoneSaveWarning='';
   if(phone){const {error:customerPhoneError}=await cloud.from('customers').update({phone}).eq('id',remote.customer_id);if(customerPhoneError){console.error(customerPhoneError);phoneSaveWarning='\nهشدار: بل ثبت شد، اما ذخیره شماره تماس در حساب مشتری ناموفق بود.';}}
   const a=read('sales'),localItems=items.map(x=>({...x,unit:unit(x.product),line_total:x.quantity*x.unit_price}));
-  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,product:items.length===1?items[0].product:'چند محصول',items:remote.items||localItems,qty:items.length===1?items[0].quantity:null,unit:items.length===1?unit(items[0].product):'—',price:items.length===1?items[0].unit_price:null,paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
+  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,saleType:modeField.value==='mixed'?'retail':null,product:modeField.value==='mixed'?'فروش پرچون':(items.length===1?items[0].product:'چند محصول'),items:remote.items||localItems,qty:modeField.value==='mixed'?items.reduce((n,x)=>n+x.quantity,0):(items.length===1?items[0].quantity:null),unit:modeField.value==='mixed'?'لیتر':(items.length===1?unit(items[0].product):'—'),price:modeField.value==='mixed'?items[0].unit_price:(items.length===1?items[0].unit_price:null),paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
  };
  function cardValueMissing(item){return !Number.isFinite(item.quantity)||!Number.isFinite(item.unit_price)||item.quantity<=0;}
  });
@@ -378,7 +378,7 @@ async function restoreCloudDataToLocal(){
    const first=lines[0]||{};
    const customer=customers.find(c=>c.id===s.customer_id)||{};
    const cost=movements.filter(m=>m.reference_id===s.id).reduce((n,m)=>n+Number(m.quantity_out||0)*Number(m.unit_cost||0),0);
-   return {id:s.id,bill:Number(s.bill_number),customer:s.customer_name,phone:customer.phone||'',address:customer.address||s.notes||'',product:lines.length>1?'چند محصول':(first.product||'—'),items:lines,qty:lines.length===1?first.quantity:null,unit:lines.length===1?first.unit:'—',price:lines.length===1?first.unit_price:null,total:Number(s.total||0),paid:Number(s.paid||0),date:dateKabul(s.sale_date),cost,profit:Number(s.total||0)-cost,cloudSynced:true};
+   return {id:s.id,bill:Number(s.bill_number),customer:s.customer_name,phone:customer.phone||'',address:customer.address||s.notes||'',product:isRetailMixSale({items:lines})?'فروش پرچون':(lines.length>1?'چند محصول':(first.product||'—')),saleType:isRetailMixSale({items:lines})?'retail':null,items:lines,qty:lines.length===1?first.quantity:null,unit:lines.length===1?first.unit:'—',price:lines.length===1?first.unit_price:null,total:Number(s.total||0),paid:Number(s.paid||0),date:dateKabul(s.sale_date),cost,profit:Number(s.total||0)-cost,cloudSynced:true};
   });
   const restoredPurchases=(purchasesR.data||[]).map(p=>{
    const lines=(purchaseItemsR.data||[]).filter(it=>it.purchase_id===p.id);
@@ -402,6 +402,7 @@ async function restoreCloudDataToLocal(){
 window.addEventListener('yema:app-unlocked',()=>{restoreCloudDataToLocal();});
 
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function isRetailMixSale(sale){if(sale?.saleType==='retail')return true;const lines=Array.isArray(sale?.items)?sale.items:[];const p92=lines.find(x=>x.product==='پطرول ۹۲'),p80=lines.find(x=>x.product==='پطرول ۸۰');return !!(p92&&p80&&Number(p92.price??p92.unit_price)===Number(p80.price??p80.unit_price)&&lines.length===2);}
 function printReceipt(bill){
  const x=read('sales').find(z=>z.bill===bill);if(!x)return;
  const receiptDate=new Date((x.date||new Date().toISOString().slice(0,10))+'T12:00:00+04:30');
