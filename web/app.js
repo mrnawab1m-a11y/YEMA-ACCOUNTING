@@ -152,7 +152,7 @@ function show(name,selectedProduct){
   saleSaveButton.textContent='در حال ثبت بل...';
   const requestId=yemaRequestId('sale');
   const rpcArgs={p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId};
-  const {data:remote,error:remoteError}=await cloud.rpc(rpcName,rpcArgs);
+  const {data:remote,error:remoteError}=await cloud.rpc('create_yema_sale_once',rpcArgs);
   if(remoteError){console.error(remoteError);saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
   clearYemaRequestId('sale');
   let phoneSaveWarning='';
