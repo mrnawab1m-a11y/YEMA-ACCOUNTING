@@ -420,6 +420,7 @@ function home(){const host=el('cloudPanelHost');if(host&&el('cloudPanel')&&!host
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));
 el('openMenu')?.addEventListener('click',()=>{pageBackTarget='home';show('menu')});
 el('quickSale')?.addEventListener('click',()=>show('sale'));
+el('openRetailSale')?.addEventListener('click',()=>{show('sale');const mode=el('pageBody')?.querySelector('#saleMode');if(mode){mode.value='mixed';mode.dispatchEvent(new Event('change',{bubbles:true}));}});
 el('openHomeCart').onclick=()=>{const selected=homeCart[0]||null;show('sale',selected||undefined);};
 el('clearHomeCart')?.addEventListener('click',()=>{if(!homeCart.length)return;homeCart=[];updateHomeCart();triggerHomeShake(el('homeCartBar'));});
 el('back').onclick=()=>{if(pageBackTarget==='menu'){pageBackTarget='home';show('menu')}else home()};
