@@ -167,7 +167,7 @@ function show(name,selectedProduct){
   if(modeField.value==='mixed'){
    const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),price=Number(mixedUnitPrice.value);
    if(!Number.isFinite(q92)||!Number.isFinite(q80)||q92<0||q80<0||!Number.isFinite(price)||price<0)return alert('مقدار هر دو نوع تیل و قیمت واحد را درست وارد کنید.');
-   if(q92+q80<=0)return alert('برای فروش پرچون، مقدار پطرول ۹۲ یا ۸۰ باید بیشتر از صفر باشد.');
+   if(q92<=0||q80<=0)return alert('برای ثبت فروش پرچون، مقدار هر دو نوع پطرول ۹۲ و ۸۰ را وارد کنید.');
    if(q92>0)items.push({product:'پطرول ۹۲',quantity:q92,unit_price:price});
    if(q80>0)items.push({product:'پطرول ۸۰',quantity:q80,unit_price:price});
   }else{
