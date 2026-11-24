@@ -156,7 +156,7 @@ function show(name,selectedProduct){
  [mixed92Qty,mixed80Qty,mixedUnitPrice].forEach(input=>input.addEventListener('input',updateTotals));
  updateSaleMode();
  if(modeField.value==='mixed'){
-  (async()=>{const cloud=window.yemaCloud?.client;if(!cloud)return;const {data:auth}=await cloud.auth.getSession();if(!auth.session)return;const {data:p}=await cloud.from('products').select('id').eq('name','فروش پرچون').maybeSingle();if(!p)return;const {data:batches,error}=await cloud.from('stock_batches').select('remaining_quantity').eq('product_id',p.id).eq('unit','liter').gt('remaining_quantity',0);if(error)return;const qty=(batches||[]).reduce((s,b)=>s+Number(b.remaining_quantity||0),0);body.querySelector('#retailAvailableStock').textContent='موجودی آماده فروش: '+fmt(qty)+' لیتر';})();
+  (async()=>{const cloud=window.yemaCloud?.client;if(!cloud)return;const {data:auth}=await cloud.auth.getSession();if(!auth.session)return;const ids=await cloud.from('products').select('id,name').in('name',['پطرول ۹۲','پطرول ۸۰']);if(ids.error)return;const lines=[];for(const p of ids.data||[]){const {data:batches,error}=await cloud.from('stock_batches').select('remaining_quantity').eq('product_id',p.id).eq('unit','liter').gt('remaining_quantity',0);if(error)return;const qty=(batches||[]).reduce((sum,b)=>sum+Number(b.remaining_quantity||0),0);lines.push(p.name+': '+fmt(qty)+' لیتر');}body.querySelector('#retailAvailableStock').textContent='موجودی قابل برداشت — '+lines.join(' | ');})();
  }
  /* Recalculate from the whole cart on every edit event; this also covers mobile keyboards. */
  ['input','change','keyup'].forEach(type=>host.addEventListener(type,event=>{if(event.target.matches('.sale-qty,.sale-price,.sale-product'))updateTotals();}));
@@ -203,40 +203,6 @@ function show(name,selectedProduct){
   a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,saleType:modeField.value==='mixed'?'retail':null,product:modeField.value==='mixed'?'فروش پرچون':(items.length===1?items[0].product:'چند محصول'),items:remote.items||localItems,qty:modeField.value==='mixed'?Number(remote.retail_total_liters||items.reduce((n,x)=>n+x.quantity,0)):(items.length===1?items[0].quantity:null),unit:modeField.value==='mixed'?'لیتر':(items.length===1?unit(items[0].product):'—'),price:modeField.value==='mixed'?items[0].unit_price:(items.length===1?items[0].unit_price:null),paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),retailCost:Number(remote.retail_cost_total||remote.cost_total||0),retail92Liters:Number(remote.retail_92_liters||0),retail80Liters:Number(remote.retail_80_liters||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
  };
  function cardValueMissing(item){return !Number.isFinite(item.quantity)||!Number.isFinite(item.unit_price)||item.quantity<=0;}
- });
- else if(name==='retailPrepare')page(name,'آماده‌سازی فروش پرچون',`
- <div class="sale-intro"><b>انتقال موجودی به فروش پرچون</b><small>مقدارهای وزن و لیتر را دقیقاً از روی محموله وارد کنید؛ سیستم تبدیل خودکار انجام نمی‌دهد.</small></div>
- <section class="sale-section"><h4>پطرول ۹۲</h4>
- <label>وزن (کیلوگرام)</label><input id="retail92Kg" type="number" min="0" step="any" inputmode="decimal">
- <label>حجم (لیتر)</label><input id="retail92Liters" type="number" min="0" step="any" inputmode="decimal">
- </section>
- <section class="sale-section"><h4>پطرول ۸۰</h4>
- <label>وزن (کیلوگرام)</label><input id="retail80Kg" type="number" min="0" step="any" inputmode="decimal">
- <label>حجم (لیتر)</label><input id="retail80Liters" type="number" min="0" step="any" inputmode="decimal">
- </section>
- <div class="sale-total-card"><div>مجموع حجم آماده: <b id="retailPrepTotal">۰ لیتر</b></div><div id="retailPrepCost">بهای تمام‌شده پس از ثبت محاسبه می‌شود.</div></div>
- <label>توضیحات (اختیاری)</label><input id="retailPrepNotes" type="text">
- <button class="primary" id="saveRetailBatch">ثبت آماده‌سازی و انتقال موجودی</button>
- <div id="retailPrepResult"></div>
- `,body=>{
- const q92=body.querySelector('#retail92Liters'),q80=body.querySelector('#retail80Liters'),k92=body.querySelector('#retail92Kg'),k80=body.querySelector('#retail80Kg'),total=body.querySelector('#retailPrepTotal');
- const update=()=>{total.textContent=fmt(Number(q92.value||0)+Number(q80.value||0))+' لیتر';};
- [q92,q80,k92,k80].forEach(x=>x.addEventListener('input',update));update();
- let saving=false;body.querySelector('#saveRetailBatch').onclick=async()=>{
-  if(saving)return;
-  const values={kg92:Number(k92.value||0),l92:Number(q92.value||0),kg80:Number(k80.value||0),l80:Number(q80.value||0)};
-  if(Object.values(values).some(x=>!Number.isFinite(x)||x<0)||values.l92+values.l80<=0)return alert('وزن و لیتر هر نوع تیل را درست وارد کنید؛ مجموع لیتر باید بیشتر از صفر باشد.');
-  if((values.l92>0)!==(values.kg92>0)||(values.l80>0)!==(values.kg80>0))return alert('برای هر نوع تیل، وزن و لیتر را هر دو وارد کنید.');
-  const cloud=window.yemaCloud?.client;if(!cloud)return alert('اتصال ابری موجود نیست.');
-  const {data:auth,error:authError}=await cloud.auth.getSession();if(authError||!auth.session)return alert('ابتدا وارد حساب ابری شوید.');
-  saving=true;const btn=body.querySelector('#saveRetailBatch');btn.disabled=true;btn.textContent='در حال محاسبه FIFO و انتقال موجودی...';
-  const requestId=yemaRequestId('retail_batch');
-  const {data,error}=await cloud.rpc('record_yema_retail_batch_once',{p_request_id:requestId,p_92_kg:values.kg92,p_92_liters:values.l92,p_80_kg:values.kg80,p_80_liters:values.l80,p_batch_date:new Date().toISOString(),p_notes:body.querySelector('#retailPrepNotes').value.trim()||null});
-  if(error){saving=false;btn.disabled=false;btn.textContent='ثبت آماده‌سازی و انتقال موجودی';return alert('آماده‌سازی ثبت نشد: '+error.message);}
-  clearYemaRequestId('retail_batch');
-  body.querySelector('#retailPrepResult').innerHTML='<div class="listitem"><b>آماده‌سازی ثبت شد</b><div>موجودی اضافه‌شده: '+fmt(data.total_liters)+' لیتر</div><div>بهای کل: '+fmt(data.total_cost_afn)+' افغانی</div><div><b>نرخ تمام‌شده هر لیتر: '+fmt(data.unit_cost_afn)+' افغانی</b></div><div>موجودی باقی ۹۲: '+fmt(data.petrol_92_stock_after)+' لیتر</div><div>موجودی باقی ۸۰: '+fmt(data.petrol_80_stock_after)+' لیتر</div></div>';
-  btn.textContent='آماده‌سازی ثبت شد';alert('موجودی فروش پرچون با موفقیت آماده شد.');
- };
  });
  else if(name==='purchase')page(name,'خرید عمده',
     field('نام تأمین‌کننده','supplier')+
