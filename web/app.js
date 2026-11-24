@@ -270,12 +270,12 @@ function show(name,selectedProduct){
  '<p>مقدار برداشت از هر مخزن را جداگانه وارد کنید. سیستم بهای هر لیتر را از خریدهای ثبت‌شده و به روش FIFO محاسبه می‌کند.</p>'+
  '<div class="listitem" id="retailSourceBalances">در حال دریافت موجودی مخزن‌ها...</div>'+
  '<section class="sale-section"><h4>برداشت از پطرول ۹۲</h4>'+
- '<label>وزن (کیلوگرام)</label><input id="rc92kg" type="number" min="0" step="any" inputmode="decimal" placeholder="وزن دقیق ۹۲">'+
- '<label>مقدار (لیتر)</label><input id="rc92liters" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۹۲">'+
+ '<label>مقدار انتقال (لیتر)</label><input id="rc92liters" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۹۲">'+
+ '<div class="listitem" id="rc92weight">وزن محاسبه‌شده: —</div>'+
  '<div class="listitem" id="rc92cost">بهای FIFO: —</div></section>'+
  '<section class="sale-section"><h4>برداشت از پطرول ۸۰</h4>'+
- '<label>وزن (کیلوگرام)</label><input id="rc80kg" type="number" min="0" step="any" inputmode="decimal" placeholder="وزن دقیق ۸۰">'+
- '<label>مقدار (لیتر)</label><input id="rc80liters" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۸۰">'+
+ '<label>مقدار انتقال (لیتر)</label><input id="rc80liters" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۸۰">'+
+ '<div class="listitem" id="rc80weight">وزن محاسبه‌شده: —</div>'+
  '<div class="listitem" id="rc80cost">بهای FIFO: —</div></section>'+
  '<section class="sale-total-card"><div class="listitem">مجموع مقدار انتقال: <b id="rcTotalLiters">۰ لیتر</b></div>'+
  '<div class="listitem">مجموع بهای تمام‌شده: <b id="rcTotalCost">۰ افغانی</b></div>'+
@@ -287,7 +287,7 @@ function show(name,selectedProduct){
   if(!cloud){body.innerHTML='اتصال ابری موجود نیست؛ انتقال موجودی انجام نمی‌شود.';return;}
   const {data:auth,error:authError}=await cloud.auth.getSession();
   if(authError||!auth.session){body.innerHTML='ابتدا وارد حساب ابری شوید.';return;}
-  const fields={kg92:body.querySelector('#rc92kg'),l92:body.querySelector('#rc92liters'),kg80:body.querySelector('#rc80kg'),l80:body.querySelector('#rc80liters')};
+  const fields={l92:body.querySelector('#rc92liters'),l80:body.querySelector('#rc80liters')};
   const button=body.querySelector('#rcTransfer');
   let products={},batches={92:[],80:[]},available={92:0,80:0},loading=false;
   const fifoCost=(rows,qty)=>{
@@ -301,7 +301,7 @@ function show(name,selectedProduct){
    for(const p of ps||[])products[p.name]=p.id;
    if(!products['پطرول ۹۲']||!products['پطرول ۸۰']||!products['فروش پرچون'])throw new Error('محصولات پطرول ۹۲، پطرول ۸۰ و فروش پرچون باید در سیستم موجود باشند.');
    for(const [grade,name] of [['92','پطرول ۹۲'],['80','پطرول ۸۰']]){
-    const {data,error}=await cloud.from('stock_batches').select('remaining_quantity,unit_cost,batch_date,created_at').eq('product_id',products[name]).eq('unit','liter').gt('remaining_quantity',0).order('batch_date',{ascending:true}).order('created_at',{ascending:true});
+    const {data,error}=await cloud.from('stock_batches').select('remaining_quantity,unit_cost,batch_date,created_at,purchase_item_id,purchase_items(entered_quantity,entered_unit,stock_quantity,stock_unit)').eq('product_id',products[name]).eq('unit','liter').gt('remaining_quantity',0).order('batch_date',{ascending:true}).order('created_at',{ascending:true});
     if(error)throw error;
     batches[grade]=data||[];
     available[grade]=batches[grade].reduce((n,x)=>n+Number(x.remaining_quantity||0),0);
@@ -312,26 +312,45 @@ function show(name,selectedProduct){
    body.querySelector('#retailSourceBalances').textContent='موجودی فعلی — ۹۲: '+fmt(available['92'])+' لیتر | ۸۰: '+fmt(available['80'])+' لیتر | فروش پرچون: '+fmt(retailQty)+' لیتر';
    renderPreview();
   };
+  const fifoDetails=(rows,qty)=>{
+   let left=qty,cost=0,weightKg=0,weightKnown=true;
+   for(const batch of rows){
+    if(left<=0)break;
+    const availableQty=Number(batch.remaining_quantity||0),take=Math.min(left,availableQty);
+    cost+=take*Number(batch.unit_cost||0);
+    const item=batch.purchase_items;
+    const entered=Number(item?.entered_quantity||0),stock=Number(item?.stock_quantity||0);
+    if(!item||item.stock_unit!=='liter'||stock<=0||entered<=0){weightKnown=false;}
+    else weightKg+=take*(entered*(item.entered_unit==='ton'?1000:1)/stock);
+    left-=take;
+   }
+   return {cost,left,weightKg,weightKnown};
+  };
   const renderPreview=()=>{
    const q92=Number(fields.l92.value||0),q80=Number(fields.l80.value||0),total=q92+q80;
-   const c92=fifoCost(batches['92'],q92),c80=fifoCost(batches['80'],q80),cost=c92.cost+c80.cost;
+   const c92=fifoDetails(batches['92'],q92),c80=fifoDetails(batches['80'],q80),cost=c92.cost+c80.cost;
    const enough=c92.left<=0.0000001&&c80.left<=0.0000001;
+   const weightKnown=(q92<=0||c92.weightKnown)&&(q80<=0||c80.weightKnown);
+   body.querySelector('#rc92weight').textContent='وزن محاسبه‌شده از خرید FIFO: '+(q92>0&&c92.weightKnown?fmt(c92.weightKg)+' کیلوگرام':'—');
+   body.querySelector('#rc80weight').textContent='وزن محاسبه‌شده از خرید FIFO: '+(q80>0&&c80.weightKnown?fmt(c80.weightKg)+' کیلوگرام':'—');
    body.querySelector('#rc92cost').textContent='بهای ۹۲ بر اساس FIFO: '+fmt(c92.cost)+' افغانی | نرخ فی لیتر: '+(q92>0?fmt(c92.cost/q92):'—')+' افغانی';
    body.querySelector('#rc80cost').textContent='بهای ۸۰ بر اساس FIFO: '+fmt(c80.cost)+' افغانی | نرخ فی لیتر: '+(q80>0?fmt(c80.cost/q80):'—')+' افغانی';
    body.querySelector('#rcTotalLiters').textContent=fmt(total)+' لیتر';
    body.querySelector('#rcTotalCost').textContent=fmt(cost)+' افغانی';
    body.querySelector('#rcAverageCost').textContent=total>0?fmt(cost/total)+' افغانی':'۰ افغانی';
-   button.disabled=loading||total<=0||!enough||((q92>0&&Number(fields.kg92.value||0)<=0)||(q80>0&&Number(fields.kg80.value||0)<=0));
+   button.disabled=loading||total<=0||!enough||!weightKnown;
+   return {c92,c80,weightKnown};
   };
   Object.values(fields).forEach(input=>input.addEventListener('input',renderPreview));
   try{await refreshSource();}catch(e){body.querySelector('#retailSourceBalances').textContent='دریافت موجودی ناموفق شد: '+e.message;button.disabled=true;return;}
   button.onclick=async()=>{
    if(loading)return;
-   const q92=Number(fields.l92.value||0),q80=Number(fields.l80.value||0),kg92=Number(fields.kg92.value||0),kg80=Number(fields.kg80.value||0),total=q92+q80;
+   const q92=Number(fields.l92.value||0),q80=Number(fields.l80.value||0),total=q92+q80;
    if(total<=0)return alert('مقدار لیتر را وارد کنید.');
-   if((q92>0&&kg92<=0)||(q80>0&&kg80<=0))return alert('برای هر مخزنی که لیتر وارد می‌کنید، وزن دقیق همان مخزن را نیز وارد کنید.');
-   const c92=fifoCost(batches['92'],q92),c80=fifoCost(batches['80'],q80);
+   const details=renderPreview(),c92=details.c92,c80=details.c80;
    if(c92.left>0.0000001||c80.left>0.0000001)return alert('موجودی یکی از مخزن‌ها کافی نیست؛ مقدار انتقال اصلاح شود.');
+   if(!details.weightKnown)return alert('برای یکی از محموله‌های موجود، اطلاعات وزن خرید ثبت نشده است؛ انتقال انجام نمی‌شود.');
+   const kg92=c92.weightKg,kg80=c80.weightKg;
    const avg=(c92.cost+c80.cost)/total;
    const confirmText='انتقال داخلی تأیید شود؟\nپطرول ۹۲: '+fmt(q92)+' لیتر\nپطرول ۸۰: '+fmt(q80)+' لیتر\nمجموع: '+fmt(total)+' لیتر\nبهای میانگین FIFO: '+fmt(avg)+' افغانی فی لیتر\n\nپس از تأیید، از موجودی اصلی هر محصول کم و به موجودی فروش پرچون اضافه می‌شود.';
    if(!confirm(confirmText))return;
