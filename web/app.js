@@ -71,7 +71,8 @@ function show(name,selectedProduct){
   </div>
   <label>قیمت فی لیتر فروش پرچون (افغانی)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
   <div class="sale-line-total" id="retailAvailableStock">در حال دریافت موجودی آماده...</div>
-  <div class="sale-line-total" id="mixedSaleSummary">مجموع: ۰ لیتر | مبلغ: ۰ افغانی</div>
+  <div class="sale-line-total" id="mixedSaleSummary">سبد فروش پرچون خالی است</div>
+  <button type="button" id="addRetailToCart" class="sale-add">＋ اضافه به سبد</button>
  </div>
  <div id="saleItems"></div><button type="button" id="addSaleItem" class="sale-add">＋ افزودن محصول دیگر</button>
  </section>
@@ -86,6 +87,7 @@ function show(name,selectedProduct){
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone');
  const modeField=body.querySelector('#saleMode'),mixedFields=body.querySelector('#mixedSaleFields'),addSaleItemButton=body.querySelector('#addSaleItem');
  const mixed92Qty=body.querySelector('#mixed92Qty'),mixed80Qty=body.querySelector('#mixed80Qty'),mixedUnitPrice=body.querySelector('#mixedUnitPrice');
+ let retailCartItem=null;
  const saleDateTime=body.querySelector('#saleDateTime');
  const updateSaleDateTime=()=>{const now=new Date();const d=formatAfghanDate(now,true);const t=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);saleDateTime.textContent='تاریخ: '+d+'　 |　 ساعت: '+t;};
  updateSaleDateTime();
@@ -130,9 +132,8 @@ function show(name,selectedProduct){
   let total=0,count=0;
   if(modeField.value==='mixed'){
    const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),qty=q92+q80,price=Number(mixedUnitPrice.value||0);
-   total=Number.isFinite(qty)&&Number.isFinite(price)&&qty>0&&price>=0?qty*price:0;
-   count=qty>0?1:0;
-   body.querySelector('#mixedSaleSummary').textContent='۹۲: '+fmt(q92)+' لیتر | ۸۰: '+fmt(q80)+' لیتر | مجموع: '+fmt(qty)+' لیتر | مبلغ: '+fmt(total)+' افغانی';
+   if(retailCartItem){total=retailCartItem.quantity*retailCartItem.unit_price;count=1;body.querySelector('#mixedSaleSummary').textContent='در سبد: ۹۲ '+fmt(retailCartItem.q92)+' لیتر + ۸۰ '+fmt(retailCartItem.q80)+' لیتر = '+fmt(retailCartItem.quantity)+' لیتر | مبلغ: '+fmt(total)+' افغانی';}
+   else{total=0;count=0;body.querySelector('#mixedSaleSummary').textContent='برای افزودن به سبد: ۹۲ '+fmt(q92)+' لیتر + ۸۰ '+fmt(q80)+' لیتر | مبلغ: '+fmt(qty*price)+' افغانی';}
   }else{
    host.querySelectorAll('.sale-item-card').forEach(card=>{
     const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);
@@ -163,7 +164,14 @@ function show(name,selectedProduct){
  };
  addRow(typeof selectedProduct==='string'?selectedProduct:'');addSaleItemButton.onclick=()=>addRow();
  modeField.addEventListener('change',updateSaleMode);
- [mixed92Qty,mixed80Qty,mixedUnitPrice].forEach(input=>input.addEventListener('input',updateTotals));
+ [mixed92Qty,mixed80Qty,mixedUnitPrice].forEach(input=>input.addEventListener('input',()=>{retailCartItem=null;body.querySelector('#addRetailToCart').textContent='＋ اضافه به سبد';updateTotals();}));
+ body.querySelector('#addRetailToCart').onclick=()=>{
+  const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),price=Number(mixedUnitPrice.value);
+  if(!Number.isFinite(q92)||q92<0||!Number.isFinite(q80)||q80<0||q92+q80<=0||!Number.isFinite(price)||price<0)return alert('مقدار لیتر ۹۲ و ۸۰ و قیمت فروش پرچون را درست وارد کنید.');
+  retailCartItem={q92,q80,quantity:q92+q80,unit_price:price};
+  body.querySelector('#addRetailToCart').textContent='✓ در سبد اضافه شد';
+  updateTotals();
+ };
  updateSaleMode();
  /* Recalculate from the whole cart on every edit event; this also covers mobile keyboards. */
  ['input','change','keyup'].forEach(type=>host.addEventListener(type,event=>{if(event.target.matches('.sale-qty,.sale-price,.sale-product'))updateTotals();}));
@@ -176,9 +184,8 @@ function show(name,selectedProduct){
   const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),address=body.querySelector('[name=address]').value.trim();
   let items=[];
   if(modeField.value==='mixed'){
-   const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),qty=q92+q80,price=Number(mixedUnitPrice.value);
-   if(!Number.isFinite(q92)||q92<0||!Number.isFinite(q80)||q80<0||qty<=0||!Number.isFinite(price)||price<0)return alert('مقدار لیتر ۹۲ و ۸۰ و قیمت فروش پرچون را درست وارد کنید.');
-   items.push({product:'فروش پرچون',quantity:qty,unit_price:price});
+   if(!retailCartItem)return alert('ابتدا فروش پرچون را به سبد اضافه کنید.');
+   items.push({product:'فروش پرچون',quantity:retailCartItem.quantity,unit_price:retailCartItem.unit_price});
   }else{
    items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
   }
@@ -199,7 +206,7 @@ function show(name,selectedProduct){
   const requestId=yemaRequestId('sale');
   const rpcName=modeField.value==='mixed'?'create_yema_retail_sale_once':'create_yema_sale_once';
   const rpcArgs=modeField.value==='mixed'
-   ?{p_request_id:requestId,p_customer_name:customer,p_92_liters:Number(mixed92Qty.value||0),p_80_liters:Number(mixed80Qty.value||0),p_unit_price:Number(mixedUnitPrice.value),p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId}
+   ?{p_request_id:requestId,p_customer_name:customer,p_92_liters:retailCartItem.q92,p_80_liters:retailCartItem.q80,p_unit_price:retailCartItem.unit_price,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId}
    :{p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId};
   const {data:remote,error:remoteError}=await cloud.rpc(rpcName,rpcArgs);
   if(remoteError){console.error(remoteError);saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
