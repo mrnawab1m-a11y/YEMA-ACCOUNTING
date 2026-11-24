@@ -70,7 +70,7 @@ function show(name,selectedProduct){
    <div><label>مقدار پطرول ۸۰ (لیتر)</label><input id="mixed80Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۸۰"></div>
   </div>
   <label>قیمت فی لیتر فروش پرچون (افغانی)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
-  <div class="sale-line-total" id="retailAvailableStock">در حال دریافت موجودی آماده...</div>
+  <div class="sale-line-total" id="retailAvailableStock">در حال دریافت موجودی مخزن‌های ۹۲ و ۸۰...</div>
   <div class="sale-line-total" id="mixedSaleSummary">سبد فروش پرچون خالی است</div>
   <button type="button" id="addRetailToCart" class="sale-add">＋ اضافه به سبد</button>
  </div>
@@ -145,7 +145,7 @@ function show(name,selectedProduct){
   const paid=Number(paidField.value||0);
   body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';
   body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';
-  body.querySelector('#saleCount').textContent=modeField.value==='mixed'?'فروش پرچون':fmt(count)+' قلم';
+  body.querySelector('#saleCount').textContent=modeField.value==='mixed'?(retailCartItem?'فروش پرچون در سبد':'سبد خالی'):fmt(count)+' قلم';
  };
  const updateRetailSourceStock=async()=>{
   const node=body.querySelector('#retailAvailableStock');if(!node)return;
