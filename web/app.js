@@ -1,4 +1,4 @@
-const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز','فروش پرچون'];
+const PRODUCTS=['پطرول ۹۲','پطرول ۸۰','دیزل شیشه‌ای','دیزل ۰۱','گاز'];
 const KEY='yema_v2_';
 function yemaRequestId(action){const key='yema_pending_'+action;let id=sessionStorage.getItem(key);if(!id){id=crypto.randomUUID();sessionStorage.setItem(key,id);}return id;}
 function clearYemaRequestId(action){sessionStorage.removeItem('yema_pending_'+action);}
@@ -62,6 +62,16 @@ function show(name,selectedProduct){
  <small class="sale-contact-hint">در مخاطبین گوشی: اشتراک‌گذاری مخاطب ← ذخیره در فایل‌ها؛ سپس فایل VCF را اینجا انتخاب کنید.</small>
  </section>
  <section class="sale-section"><div class="sale-section-head"><h4>نوع تیل و مقدار</h4><span class="sale-count" id="saleCount">۱ قلم</span></div>
+ <label for="saleMode">روش فروش</label><select id="saleMode"><option value="normal">فروش عادی</option><option value="mixed">تیل مکس (ترکیب ۹۲ و ۸۰)</option></select>
+ <div id="mixedSaleFields" class="sale-item-card hidden">
+  <div class="sale-item-top"><b>فروش تیل مکس</b><span>یک بل، دو برداشت از موجودی</span></div>
+  <div class="sale-fields">
+   <div><label>مقدار پطرول ۹۲ (لیتر)</label><input id="mixed92Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مثلاً ۴۰"></div>
+   <div><label>مقدار پطرول ۸۰ (لیتر)</label><input id="mixed80Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مثلاً ۶۰"></div>
+  </div>
+  <label>قیمت واحد تیل مکس (افغانی فی لیتر)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
+  <div class="sale-line-total" id="mixedSaleSummary">مجموع: ۰ لیتر | مبلغ: ۰ افغانی</div>
+ </div>
  <div id="saleItems"></div><button type="button" id="addSaleItem" class="sale-add">＋ افزودن محصول دیگر</button>
  </section>
  <section class="sale-total-card"><div><span>مجموع کل</span><b id="saleGrandTotal">۰ افغانی</b></div>
@@ -73,6 +83,8 @@ function show(name,selectedProduct){
  <p class="sale-thanks">با تشکر و سپاس از خرید شما؛ به امید دیدار مجدد</p>
  `,body=>{
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone');
+ const modeField=body.querySelector('#saleMode'),mixedFields=body.querySelector('#mixedSaleFields'),addSaleItemButton=body.querySelector('#addSaleItem');
+ const mixed92Qty=body.querySelector('#mixed92Qty'),mixed80Qty=body.querySelector('#mixed80Qty'),mixedUnitPrice=body.querySelector('#mixedUnitPrice');
  const saleDateTime=body.querySelector('#saleDateTime');
  const updateSaleDateTime=()=>{const now=new Date();const d=formatAfghanDate(now,true);const t=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);saleDateTime.textContent='تاریخ: '+d+'　 |　 ساعت: '+t;};
  updateSaleDateTime();
@@ -113,8 +125,35 @@ function show(name,selectedProduct){
   update();return wrap;
  };
  
- updateTotals=()=>{let total=0;host.querySelectorAll('.sale-item-card').forEach(card=>{const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);const line=Number.isFinite(q)&&Number.isFinite(p)&&q>0&&p>=0?q*p:0;total+=line;const lineNode=card.querySelector('.sale-line-total b');if(lineNode)lineNode.textContent=fmt(line)+' افغانی';});const paid=Number(paidField.value||0);body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';body.querySelector('#saleCount').textContent=fmt(host.querySelectorAll('.sale-item-card').length)+' قلم';};
- addRow(typeof selectedProduct==='string'?selectedProduct:'');body.querySelector('#addSaleItem').onclick=()=>addRow();
+ updateTotals=()=>{
+  let total=0,count=0;
+  if(modeField.value==='mixed'){
+   const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),price=Number(mixedUnitPrice.value||0),qty=q92+q80;
+   total=Number.isFinite(qty)&&Number.isFinite(price)&&qty>0&&price>=0?qty*price:0;
+   count=qty>0?1:0;
+   body.querySelector('#mixedSaleSummary').textContent='مجموع: '+fmt(qty)+' لیتر | مبلغ: '+fmt(total)+' افغانی';
+  }else{
+   host.querySelectorAll('.sale-item-card').forEach(card=>{
+    const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);
+    const line=Number.isFinite(q)&&Number.isFinite(p)&&q>0&&p>=0?q*p:0;total+=line;
+    const lineNode=card.querySelector('.sale-line-total b');if(lineNode)lineNode.textContent=fmt(line)+' افغانی';
+   });
+   count=host.querySelectorAll('.sale-item-card').length;
+  }
+  const paid=Number(paidField.value||0);
+  body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';
+  body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,total-paid))+' افغانی';
+  body.querySelector('#saleCount').textContent=modeField.value==='mixed'?'۱ فروش مکس':fmt(count)+' قلم';
+ };
+ const updateSaleMode=()=>{
+  const mixed=modeField.value==='mixed';
+  mixedFields.classList.toggle('hidden',!mixed);host.classList.toggle('hidden',mixed);addSaleItemButton.classList.toggle('hidden',mixed);
+  updateTotals();
+ };
+ addRow(typeof selectedProduct==='string'?selectedProduct:'');addSaleItemButton.onclick=()=>addRow();
+ modeField.addEventListener('change',updateSaleMode);
+ [mixed92Qty,mixed80Qty,mixedUnitPrice].forEach(input=>input.addEventListener('input',updateTotals));
+ updateSaleMode();
  /* Recalculate from the whole cart on every edit event; this also covers mobile keyboards. */
  ['input','change','keyup'].forEach(type=>host.addEventListener(type,event=>{if(event.target.matches('.sale-qty,.sale-price,.sale-product'))updateTotals();}));
  paidField.addEventListener('input',updateTotals);paidField.addEventListener('change',updateTotals);updateTotals();
@@ -123,13 +162,22 @@ function show(name,selectedProduct){
  const saleSaveButton=body.querySelector('#save');
  body.querySelector('#save').onclick=async()=>{
   if(saleSubmitting)return;
-  saleSubmitting=true;saleSaveButton.disabled=true;saleSaveButton.textContent='در حال جلوگیری از ثبت تکراری...';
   const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),address=body.querySelector('[name=address]').value.trim();
-  const items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
+  let items=[];
+  if(modeField.value==='mixed'){
+   const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),price=Number(mixedUnitPrice.value);
+   if(!Number.isFinite(q92)||!Number.isFinite(q80)||q92<0||q80<0||!Number.isFinite(price)||price<0)return alert('مقدار هر دو نوع تیل و قیمت واحد را درست وارد کنید.');
+   if(q92+q80<=0)return alert('برای فروش مکس، مقدار پطرول ۹۲ یا ۸۰ باید بیشتر از صفر باشد.');
+   if(q92>0)items.push({product:'پطرول ۹۲',quantity:q92,unit_price:price});
+   if(q80>0)items.push({product:'پطرول ۸۰',quantity:q80,unit_price:price});
+  }else{
+   items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
+  }
   if(!customer)return alert('نام مشتری را وارد کنید');
   if(!items.length||items.some(x=>!Number.isFinite(x.quantity)||x.quantity<=0||!Number.isFinite(x.unit_price)||x.unit_price<0||cardValueMissing(x)))return alert('مقدار و قیمت هر محصول را بررسی کنید');
   const total=items.reduce((s,x)=>s+x.quantity*x.unit_price,0);
   if(!Number.isFinite(paid)||paid<0||paid>total)return alert('مبلغ پرداخت‌شده نباید از مجموع بل بیشتر باشد');
+  saleSubmitting=true;saleSaveButton.disabled=true;saleSaveButton.textContent='در حال جلوگیری از ثبت تکراری...';
   const cloud=window.yemaCloud?.client;if(!cloud){saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('اتصال ابری آماده نیست؛ فروش ثبت نشد');}
   const {data:sessionData,error:sessionError}=await cloud.auth.getSession();if(sessionError||!sessionData.session){saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ابتدا وارد حساب ابری شوید؛ فروش ثبت نشد');}
   const now=new Date();
@@ -150,80 +198,6 @@ function show(name,selectedProduct){
  };
  function cardValueMissing(item){return !Number.isFinite(item.quantity)||!Number.isFinite(item.unit_price)||item.quantity<=0;}
  });
-  else if(name==='blend')page(name,'ورود تیل به مخزن فروش پرچون',
-  '<div class="listitem"><b>ثبت ترکیب واقعی مخزن</b><div>وزن و لیتر هر نوع تیل را خودت وارد کن؛ هیچ تبدیلی خودکار انجام نمی‌شود.</div></div>'+
-  '<h3>پطرول ۹۲</h3>'+
-  field('وزن پطرول ۹۲ (کیلوگرام)','kg92','number')+
-  field('حجم پطرول ۹۲ (لیتر)','liters92','number')+
-  '<h3>پطرول ۸۰</h3>'+
-  field('وزن پطرول ۸۰ (کیلوگرام)','kg80','number')+
-  field('حجم پطرول ۸۰ (لیتر)','liters80','number')+
-  '<div class="listitem" id="blendPreview">مجموع وزن: ۰ کیلوگرام | مجموع حجم: ۰ لیتر</div>'+
-  '<div class="listitem" id="blendRatio">نسبت واقعی: ۹۲: ۰٪ | ۸۰: ۰٪</div>'+
-  field('تاریخ ورود به مخزن','blendDate','date')+
-  field('یادداشت (اختیاری)','blendNotes')+
-  '<div class="listitem">بهای تمام‌شده از بهای خرید واقعی و FIFO موجودی ۹۲ و ۸۰ محاسبه می‌شود. اگر موجودی کافی نباشد، ثبت انجام نمی‌شود.</div>'+
-  '<button class="primary" id="saveBlend" type="button">ثبت ورود مخلوط به مخزن</button>'+
-  '<h3>تاریخچه ترکیب‌ها</h3><div id="blendHistory">در حال دریافت تاریخچه...</div>',
-  body=>{
-    const kg92=body.querySelector('[name=kg92]'),liters92=body.querySelector('[name=liters92]');
-    const kg80=body.querySelector('[name=kg80]'),liters80=body.querySelector('[name=liters80]');
-    const date=body.querySelector('[name=blendDate]'),preview=body.querySelector('#blendPreview');
-    const ratio=body.querySelector('#blendRatio'),save=body.querySelector('#saveBlend');
-    date.value=new Date().toISOString().slice(0,10);
-    const update=()=>{
-      const a=Number(liters92.value||0),b=Number(liters80.value||0),kg=Number(kg92.value||0)+Number(kg80.value||0),lit=a+b;
-      preview.textContent='مجموع وزن: '+fmt(kg)+' کیلوگرام | مجموع حجم: '+fmt(lit)+' لیتر';
-      ratio.textContent='نسبت واقعی بر اساس لیتر: ۹۲: '+(lit?fmt(a/lit*100):'۰')+'٪ | ۸۰: '+(lit?fmt(b/lit*100):'۰')+'٪';
-    };
-    [kg92,liters92,kg80,liters80].forEach(x=>x.addEventListener('input',update));
-    update();
-    const cloud=window.yemaCloud?.client;
-    const renderHistory=async()=>{
-      const host=body.querySelector('#blendHistory');
-      if(!cloud){host.textContent='اتصال ابری موجود نیست.';return;}
-      const {data:auth}=await cloud.auth.getSession();
-      if(!auth.session){host.textContent='ابتدا وارد حساب ابری شوید.';return;}
-      const {data:rows,error}=await cloud.from('yema_blend_batches')
-        .select('blend_date,petrol_92_kg,petrol_92_liters,petrol_80_kg,petrol_80_liters,total_kg,total_liters,petrol_92_cost_afn,petrol_80_cost_afn,total_cost_afn,unit_cost_afn')
-        .order('blend_date',{ascending:false}).limit(30);
-      if(error){host.textContent='دریافت تاریخچه ناموفق شد: '+error.message;return;}
-      host.innerHTML=(rows||[]).map(x=>'<div class="listitem"><b>مخلوط مورخ '+escapeHtml(formatAfghanDate(x.blend_date))+'</b>'+
-        '<div>۹۲: '+fmt(x.petrol_92_kg)+' کیلوگرام | '+fmt(x.petrol_92_liters)+' لیتر</div>'+
-        '<div>۸۰: '+fmt(x.petrol_80_kg)+' کیلوگرام | '+fmt(x.petrol_80_liters)+' لیتر</div>'+
-        '<div>مجموع: '+fmt(x.total_kg)+' کیلوگرام | '+fmt(x.total_liters)+' لیتر</div>'+
-        '<div>بهای تمام‌شده کل: '+fmt(x.total_cost_afn)+' افغانی</div>'+
-        '<div><b>بهای تمام‌شده هر لیتر: '+fmt(x.unit_cost_afn)+' افغانی</b></div></div>').join('')||'هنوز ترکیبی ثبت نشده است';
-    };
-    renderHistory();
-    let submitting=false;
-    save.onclick=async()=>{
-      if(submitting)return;
-      const values92=[Number(kg92.value||0),Number(liters92.value||0),Number(kg80.value||0),Number(liters80.value||0)];
-      if(values92.some(x=>!Number.isFinite(x)||x<0)||
-        ((values92[0]===0)!==(values92[1]===0))||
-        ((values92[2]===0)!==(values92[3]===0))||
-        values92[1]+values92[3]<=0)
-        return alert('برای هر نوع تیل وزن و لیتر را باهم وارد کن؛ حداقل یک نوع تیل باید مقدار داشته باشد.');
-      if(!date.value)return alert('تاریخ ورود را وارد کن.');
-      if(!cloud)return alert('اتصال ابری آماده نیست؛ ثبت انجام نشد.');
-      const {data:auth,error:authError}=await cloud.auth.getSession();
-      if(authError||!auth.session)return alert('ابتدا وارد حساب ابری شوید.');
-      submitting=true;save.disabled=true;save.textContent='در حال ثبت و محاسبه FIFO...';
-      const requestId=yemaRequestId('blend');
-      const {data:remote,error}=await cloud.rpc('record_yema_blend_batch',{
-        p_request_id:requestId,p_92_kg:values92[0],p_92_liters:values92[1],
-        p_80_kg:values92[2],p_80_liters:values92[3],
-        p_blend_date:new Date(date.value+'T12:00:00+04:30').toISOString(),
-        p_notes:body.querySelector('[name=blendNotes]').value.trim()||null
-      });
-      if(error){console.error(error);submitting=false;save.disabled=false;save.textContent='ثبت ورود مخلوط به مخزن';return alert('ثبت مخلوط انجام نشد: '+error.message);}
-      clearYemaRequestId('blend');
-      alert('مخلوط ثبت شد. مجموع: '+fmt(remote.total_liters)+' لیتر؛ نسبت ۹۲: '+fmt(remote.petrol_92_percent)+'٪ و ۸۰: '+fmt(remote.petrol_80_percent)+'٪؛ بهای هر لیتر: '+fmt(remote.unit_cost_afn)+' افغانی.');
-      renderHistory();submitting=false;save.disabled=false;save.textContent='ثبت ورود مخلوط به مخزن';
-      kg92.value='';liters92.value='';kg80.value='';liters80.value='';update();
-    };
-  });
  else if(name==='purchase')page(name,'خرید عمده',
     field('نام تأمین‌کننده','supplier')+
     field('شماره تماس تأمین‌کننده','supplierPhone','tel')+
@@ -356,7 +330,7 @@ function show(name,selectedProduct){
  else if(name==='expenseHistory'){page(name,'تاریخچه مصارف','<p>در حال دریافت مصارف...</p>',async body=>{const cloud=window.yemaCloud?.client;if(!cloud){body.innerHTML='اتصال ابری موجود نیست.';return;}const {data:auth}=await cloud.auth.getSession();if(!auth.session){body.innerHTML='ابتدا وارد حساب ابری شوید.';return;}const {data:rows,error}=await fetchAllRows(cloud.from('expenses').select('title,amount,currency,expense_date,notes').order('expense_date',{ascending:false}));if(error){body.innerHTML='خطا در دریافت مصارف: '+error.message;return;}body.innerHTML=(rows||[]).map(x=>'<div class="listitem"><b>'+escapeHtml(x.title)+'</b><div>مبلغ: '+fmt(x.amount)+' '+(x.currency==='USD'?'دالر':'افغانی')+'</div><div>تاریخ: '+(x.expense_date||'').slice(0,10)+'</div></div>').join('')||'هنوز مصرفی ثبت نشده است';});}
  else if(name==='cashbook'){page(name,'صندوق‌ها و گردش حساب','<p>در حال دریافت گردش حساب‌ها...</p>',async body=>{const cloud=window.yemaCloud?.client;if(!cloud){body.innerHTML='اتصال ابری موجود نیست';return;}const {data:auth,error:authError}=await cloud.auth.getSession();if(authError||!auth.session){body.innerHTML='ابتدا وارد حساب ابری شوید';return;}const fetchAll=async query=>{let out=[],from=0;while(true){const {data,error}=await query.range(from,from+999);if(error)return {data:null,error};out=out.concat(data||[]);if(!data||data.length<1000)break;from+=1000;}return {data:out,error:null};};const [ar,tr]=await Promise.all([cloud.from('cash_accounts').select('id,name,account_type,currency,opening_balance,active').order('currency').order('name'),fetchAll(cloud.from('cash_transactions').select('id,cash_account_id,transaction_type,amount,currency,reference_type,transaction_date,notes').order('transaction_date',{ascending:false}))]);if(ar.error||tr.error){body.innerHTML='خطا در دریافت گردش حساب: '+(ar.error||tr.error).message;return;}const rows=ar.data||[],tx=tr.data||[];const totals={AFN:{cash:0,bank:0},USD:{cash:0,bank:0}};rows.forEach(a=>{const own=tx.filter(t=>t.cash_account_id===a.id),inc=own.filter(t=>t.transaction_type==='income').reduce((v,t)=>v+Number(t.amount||0),0),out=own.filter(t=>t.transaction_type==='expense').reduce((v,t)=>v+Number(t.amount||0),0),bal=Number(a.opening_balance||0)+inc-out,cur=totals[a.currency]||(totals[a.currency]={cash:0,bank:0});cur[a.account_type==='bank'?'bank':'cash']+=bal;});const totalCards='<div class="listitem"><b>صندوق کل — مجموع حساب‌ها</b><div>مجموع نقدی: '+fmt(totals.AFN.cash)+' افغانی | مجموع بانکی: '+fmt(totals.AFN.bank)+' افغانی</div><div><b>مجموع کل افغانی: '+fmt(totals.AFN.cash+totals.AFN.bank)+' افغانی</b></div><hr><div>مجموع نقدی: '+fmt(totals.USD.cash)+' دالر | مجموع بانکی: '+fmt(totals.USD.bank)+' دالر</div><div><b>مجموع کل دالر: '+fmt(totals.USD.cash+totals.USD.bank)+' دالر</b></div></div>';body.innerHTML=totalCards+rows.map(a=>{const own=tx.filter(t=>t.cash_account_id===a.id),income=own.filter(t=>t.transaction_type==='income').reduce((v,t)=>v+Number(t.amount||0),0),out=own.filter(t=>t.transaction_type==='expense').reduce((v,t)=>v+Number(t.amount||0),0),balance=Number(a.opening_balance||0)+income-out;return '<div class="listitem"><b>'+escapeHtml(a.name)+'</b><div>نوع: '+(a.account_type==='bank'?'بانک':'صندوق نقدی')+' | ارز: '+a.currency+'</div><div>افتتاحیه: '+fmt(a.opening_balance)+' | دریافت: '+fmt(income)+' | پرداخت: '+fmt(out)+'</div><div><b>موجودی فعلی: '+fmt(balance)+' '+a.currency+'</b></div></div>';}).join('')+'<h4>آخرین گردش‌ها</h4>'+tx.map(t=>{const a=rows.find(x=>x.id===t.cash_account_id);return '<div class="listitem">'+(t.transaction_type==='income'?'دریافت':'پرداخت')+' | '+escapeHtml(a?.name||'حساب')+' | '+fmt(t.amount)+' '+t.currency+'<div class="muted">'+formatAfghanDate(t.transaction_date)+' | '+new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(t.transaction_date))+' | '+escapeHtml(t.notes||t.reference_type)+'</div></div>';}).join('')||'هنوز گردش حساب ثبت نشده است';});}
  else if(name==='reports'){page(name,'گزارش‌های روزانه و ماهانه','<label>دوره گزارش</label><select id="period"><option value="day">امروز</option><option value="month">این ماه</option><option value="all">تمام دوره</option></select><div id="reportBody">در حال دریافت گزارش...</div>',async body=>{const cloud=window.yemaCloud?.client;if(!cloud){body.querySelector('#reportBody').textContent='اتصال ابری موجود نیست';return;}const {data:auth}=await cloud.auth.getSession();if(!auth.session){body.querySelector('#reportBody').textContent='ابتدا وارد حساب ابری شوید';return;}const fetchAll=async query=>{let rows=[],from=0;while(true){const {data,error}=await query.range(from,from+999);if(error)return {data:null,error};rows=rows.concat(data||[]);if(!data||data.length<1000)break;from+=1000;}return {data:rows,error:null};};const [sr,pr,er,mr]=await Promise.all([fetchAll(cloud.from('sales').select('id,bill_number,customer_name,total,paid,remaining,sale_date')),fetchAll(cloud.from('purchases').select('total,paid,remaining,purchase_date')),fetchAll(cloud.from('expenses').select('amount,currency,exchange_rate,amount_afn,expense_date')),fetchAll(cloud.from('inventory_movements').select('quantity_out,unit_cost,reference_id').eq('movement_type','sale'))]);const error=sr.error||pr.error||er.error||mr.error;if(error){body.querySelector('#reportBody').textContent='خطا در گزارش: '+error.message;return;}const sales=sr.data||[],purchases=pr.data||[],expenses=er.data||[],movements=mr.data||[];const kabulParts=date=>{const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kabul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(date));const o={};for(const p of parts)o[p.type]=p.value;return o;};const now=kabulParts(new Date());const key=x=>{const p=kabulParts(x);return p.year+'-'+p.month+'-'+p.day;};const month=now.year+'-'+now.month;const period=body.querySelector('#period');const filter=(arr,field)=>arr.filter(x=>{if(period.value==='all')return true;const k=key(x[field]);return period.value==='day'?k===now.year+'-'+now.month+'-'+now.day:k.startsWith(month);});const render=()=>{const ss=filter(sales,'sale_date'),pp=filter(purchases,'purchase_date'),ee=filter(expenses,'expense_date'),ids=new Set(ss.map(x=>x.id));const revenue=ss.reduce((a,x)=>a+Number(x.total||0),0),paid=ss.reduce((a,x)=>a+Number(x.paid||0),0),remaining=ss.reduce((a,x)=>a+Number(x.remaining||0),0),cost=movements.filter(x=>ids.has(x.reference_id)).reduce((a,x)=>a+Number(x.quantity_out||0)*Number(x.unit_cost||0),0),expenseAFN=ee.reduce((a,x)=>a+Number((x.amount_afn??(x.currency==='AFN'?x.amount:(Number(x.amount||0)*Number(x.exchange_rate||0))))||0),0),expenseUSD=ee.filter(x=>x.currency==='USD'&&x.amount_afn==null).reduce((a,x)=>a+Number(x.amount||0),0),gross=revenue-cost,net=gross-expenseAFN;const billRows=ss.map(x=>{const billCost=movements.filter(m=>m.reference_id===x.id).reduce((a,m)=>a+Number(m.quantity_out||0)*Number(m.unit_cost||0),0);const billProfit=Number(x.total||0)-billCost;return '<div class="listitem"><b>بل شماره '+fmt(x.bill_number)+'</b><div>مشتری: '+escapeHtml(x.customer_name||'—')+'</div><div>مجموع بل: '+fmt(x.total)+' افغانی</div><div>بهای تمام‌شده FIFO: '+fmt(billCost)+' افغانی</div><div><b>مفاد این بل: '+fmt(billProfit)+' افغانی</b></div></div>';}).join('')||'<div class="listitem">در این دوره بل فروشی ثبت نشده است.</div>';body.querySelector('#reportBody').innerHTML='<div class="listitem">تعداد بل‌ها: '+fmt(ss.length)+'</div><div class="listitem">مجموع فروش: '+fmt(revenue)+' افغانی</div><div class="listitem">پرداخت مشتریان: '+fmt(paid)+' افغانی</div><div class="listitem">باقی مشتریان: '+fmt(remaining)+' افغانی</div><div class="listitem">بهای تمام‌شده FIFO: '+fmt(cost)+' افغانی</div><div class="listitem">مفاد ناخالص: '+fmt(gross)+' افغانی</div><div class="listitem">مصارف افغانی: '+fmt(expenseAFN)+' افغانی</div><div class="listitem">مصارف دالری بدون نرخ تبدیل: '+fmt(expenseUSD)+' دالر</div><div class="listitem"><b>مفاد خالص پس از کسر مصارف: '+fmt(net)+' افغانی</b></div><div class="listitem">مجموع خرید: '+fmt(pp.reduce((a,x)=>a+Number(x.total||0),0))+' افغانی</div><h3>مفاد جداگانهٔ هر بل</h3>'+billRows;};period.onchange=render;render();});}
- else if(name==='menu')page(name,'بخش‌های برنامه','<div class="menu-today-stats"><article><small>فروش امروز</small><b id="menuSalesToday">۰</b><em>افغانی</em></article><article><small>مفاد امروز</small><b id="menuProfitToday">۰</b><em>افغانی</em></article><article><small>مصارف امروز</small><b id="menuExpensesToday">۰</b><em>افغانی</em></article></div><div class="menu-grid">'+[['sale','ثبت فروش جدید'],['blend','ورود تیل به مخزن فروش پرچون'],['purchase','خرید عمده'],['purchaseHistory','تاریخچه خرید'],['customers','حساب مشتریان'],['history','بل‌های فروش'],['inventory','موجودی محصولات'],['expenses','ثبت مصارف'],['expenseHistory','تاریخچه مصارف'],['reports','گزارش‌ها'],['cashbook','صندوق‌ها و گردش حساب'],['settings','تنظیمات و پشتیبان'],['cloud','اتصال حساب ابری']].map(([key,label])=>'<button type="button" class="menu-link" data-menu-page="'+key+'">'+label+'</button>').join('')+'</div>',body=>{updateHomeDashboard();body.querySelectorAll('[data-menu-page]').forEach(b=>b.onclick=()=>{pageBackTarget='menu';show(b.dataset.menuPage)})});
+ else if(name==='menu')page(name,'بخش‌های برنامه','<div class="menu-today-stats"><article><small>فروش امروز</small><b id="menuSalesToday">۰</b><em>افغانی</em></article><article><small>مفاد امروز</small><b id="menuProfitToday">۰</b><em>افغانی</em></article><article><small>مصارف امروز</small><b id="menuExpensesToday">۰</b><em>افغانی</em></article></div><div class="menu-grid">'+[['sale','ثبت فروش جدید'],['purchase','خرید عمده'],['purchaseHistory','تاریخچه خرید'],['customers','حساب مشتریان'],['history','بل‌های فروش'],['inventory','موجودی محصولات'],['expenses','ثبت مصارف'],['expenseHistory','تاریخچه مصارف'],['reports','گزارش‌ها'],['cashbook','صندوق‌ها و گردش حساب'],['settings','تنظیمات و پشتیبان'],['cloud','اتصال حساب ابری']].map(([key,label])=>'<button type="button" class="menu-link" data-menu-page="'+key+'">'+label+'</button>').join('')+'</div>',body=>{updateHomeDashboard();body.querySelectorAll('[data-menu-page]').forEach(b=>b.onclick=()=>{pageBackTarget='menu';show(b.dataset.menuPage)})});
  else if(name==='cloud')page(name,'اتصال حساب ابری','',body=>body.appendChild(el('cloudPanel')));
  else if(name==='settings')page(name,'تنظیمات و نرخ ارز','<p>نمایندگی تیل فروشی حاجی نواب پروانی</p><p>ارز اصلی: افغانی | ارز دوم: دالر | منطقه زمانی: افغانستان</p><div id="rates">در حال دریافت نرخ‌های ذخیره‌شده...</div><button type="button" id="refreshOnlineRates">دریافت نرخ آنلاین کابل</button><div id="onlineRateStatus">منبع اصلی: کانال تلگرام کابل نرخ دالر</div>'+field('نرخ خرید دالر (افغانی)','buyRate','number')+field('نرخ فروش دالر (افغانی)','sellRate','number')+'<button class="primary" id="saveRates">ذخیره نرخ‌ها</button><hr><button id="export">گرفتن پشتیبان کامل اطلاعات محلی</button><button type="button" id="cloudExport">گرفتن پشتیبان دیتابیس ابری</button><button type="button" id="restore">بازیابی از فایل پشتیبان</button><input id="backupFile" type="file" accept="application/json,.json" hidden><div class="listitem"><b>انتقال به گوشی جدید</b><ol><li>در گوشی جدید همین برنامه را باز کنید.</li><li>با همان ایمیل و رمز حساب قبلی وارد شوید.</li><li>یک کد امنیتی شش‌رقمی تازه برای همان گوشی بسازید.</li><li>فروش‌ها، خریدها، مشتریان، موجودی و حساب‌ها از دیتابیس ابری بارگذاری می‌شوند.</li><li>برای نگهداری یک فایل پشتیبان، در گوشی قبلی «گرفتن پشتیبان دیتابیس ابری» را بزنید و فایل را در Files یا iCloud Drive نگه دارید.</li></ol><small>کد امنیتی به فایل پشتیبان منتقل نمی‌شود. بازیابی فایل، فقط اطلاعات محلی را ادغام می‌کند؛ اطلاعات ابری با ورود به همان حساب در دسترس است.</small></div>',body=>{const cloud=window.yemaCloud?.client;if(!cloud){body.querySelector('#rates').textContent='اتصال ابری موجود نیست';return;} (async()=>{const {data:auth}=await cloud.auth.getSession();if(!auth.session){body.querySelector('#rates').textContent='ابتدا وارد حساب ابری شوید';return;}const {data:row,error}=await cloud.from('business_settings').select('id,business_name,usd_buy_rate,usd_sell_rate,timezone').maybeSingle();if(error){body.querySelector('#rates').textContent='خطا: '+error.message;return;}body.querySelector('#rates').textContent='نام تجارت: '+(row?.business_name||'—')+' | منطقه زمانی: '+(row?.timezone||'Asia/Kabul');body.querySelector('[name=buyRate]').value=row?.usd_buy_rate??'';body.querySelector('[name=sellRate]').value=row?.usd_sell_rate??'';const refreshOnline=async()=>{const status=body.querySelector('#onlineRateStatus');status.textContent='در حال دریافت نرخ از کانال کابل...';try{const rate=await fetchKabulRate();body.querySelector('[name=buyRate]').value=rate.buy;body.querySelector('[name=sellRate]').value=rate.sell;status.textContent='خرید: '+fmt(rate.buy)+' افغانی | فروش: '+fmt(rate.sell)+' افغانی | منبع: کابل نرخ دالر | '+(rate.updatedAt||rate.fetchedAt);}catch(e){status.textContent='دریافت خودکار ناکام شد؛ نرخ را دستی وارد کنید.';}};body.querySelector('#refreshOnlineRates').onclick=refreshOnline;refreshOnline();body.querySelector('#saveRates').onclick=async()=>{const buy=Number(body.querySelector('[name=buyRate]').value),sell=Number(body.querySelector('[name=sellRate]').value);if(!Number.isFinite(buy)||buy<=0||!Number.isFinite(sell)||sell<=0)return alert('هر دو نرخ را درست وارد کنید');const {error:e}=await cloud.from('business_settings').update({usd_buy_rate:buy,usd_sell_rate:sell,updated_at:new Date().toISOString()}).eq('id',row.id);if(e)return alert('ذخیره نرخ ناموفق شد: '+e.message);alert('نرخ خرید و فروش دالر ذخیره شد');};})();const backupKeys=()=>Object.keys(localStorage).filter(k=>k.startsWith('yema_v2_')).sort();
 const makeBackup=()=>{const local={};for(const k of backupKeys())local[k]=localStorage.getItem(k);return {app:'YEMA_ACCOUNTING',formatVersion:1,backupType:'browser-local',createdAt:new Date().toISOString(),localStorage:local};};
