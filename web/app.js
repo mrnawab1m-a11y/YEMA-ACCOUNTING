@@ -66,7 +66,8 @@ function show(name,selectedProduct){
  <div id="mixedSaleFields" class="sale-item-card hidden">
   <div class="sale-item-top"><b>فروش پرچون</b><span>یک بل، دو برداشت از موجودی</span></div>
   <div class="sale-fields">
-   <div><label>مقدار فروش پرچون (لیتر)</label><input id="mixedRetailQty" type="number" min="0" step="any" inputmode="decimal" placeholder="مقدار لیتر"></div>
+   <div><label>مقدار پطرول ۹۲ (لیتر)</label><input id="mixed92Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۹۲"></div>
+   <div><label>مقدار پطرول ۸۰ (لیتر)</label><input id="mixed80Qty" type="number" min="0" step="any" inputmode="decimal" placeholder="لیتر ۸۰"></div>
   </div>
   <label>قیمت فی لیتر فروش پرچون (افغانی)</label><input id="mixedUnitPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت فی لیتر">
   <div class="sale-line-total" id="retailAvailableStock">در حال دریافت موجودی آماده...</div>
@@ -84,7 +85,7 @@ function show(name,selectedProduct){
  `,body=>{
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone');
  const modeField=body.querySelector('#saleMode'),mixedFields=body.querySelector('#mixedSaleFields'),addSaleItemButton=body.querySelector('#addSaleItem');
- const mixedRetailQty=body.querySelector('#mixedRetailQty'),mixedUnitPrice=body.querySelector('#mixedUnitPrice');
+ const mixed92Qty=body.querySelector('#mixed92Qty'),mixed80Qty=body.querySelector('#mixed80Qty'),mixedUnitPrice=body.querySelector('#mixedUnitPrice');
  const saleDateTime=body.querySelector('#saleDateTime');
  const updateSaleDateTime=()=>{const now=new Date();const d=formatAfghanDate(now,true);const t=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);saleDateTime.textContent='تاریخ: '+d+'　 |　 ساعت: '+t;};
  updateSaleDateTime();
@@ -128,10 +129,10 @@ function show(name,selectedProduct){
  updateTotals=()=>{
   let total=0,count=0;
   if(modeField.value==='mixed'){
-   const qty=Number(mixedRetailQty.value||0),price=Number(mixedUnitPrice.value||0);
+   const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),qty=q92+q80,price=Number(mixedUnitPrice.value||0);
    total=Number.isFinite(qty)&&Number.isFinite(price)&&qty>0&&price>=0?qty*price:0;
    count=qty>0?1:0;
-   body.querySelector('#mixedSaleSummary').textContent='مجموع: '+fmt(qty)+' لیتر | مبلغ: '+fmt(total)+' افغانی';
+   body.querySelector('#mixedSaleSummary').textContent='۹۲: '+fmt(q92)+' لیتر | ۸۰: '+fmt(q80)+' لیتر | مجموع: '+fmt(qty)+' لیتر | مبلغ: '+fmt(total)+' افغانی';
   }else{
    host.querySelectorAll('.sale-item-card').forEach(card=>{
     const q=Number(card.querySelector('.sale-qty').value||0),p=Number(card.querySelector('.sale-price').value||0);
@@ -152,7 +153,7 @@ function show(name,selectedProduct){
  };
  addRow(typeof selectedProduct==='string'?selectedProduct:'');addSaleItemButton.onclick=()=>addRow();
  modeField.addEventListener('change',updateSaleMode);
- [mixedRetailQty,mixedUnitPrice].forEach(input=>input.addEventListener('input',updateTotals));
+ [mixed92Qty,mixed80Qty,mixedUnitPrice].forEach(input=>input.addEventListener('input',updateTotals));
  updateSaleMode();
  if(modeField.value==='mixed'){
   (async()=>{const cloud=window.yemaCloud?.client;if(!cloud)return;const {data:auth}=await cloud.auth.getSession();if(!auth.session)return;const {data:p}=await cloud.from('products').select('id').eq('name','فروش پرچون').maybeSingle();if(!p)return;const {data:batches,error}=await cloud.from('stock_batches').select('remaining_quantity').eq('product_id',p.id).eq('unit','liter').gt('remaining_quantity',0);if(error)return;const qty=(batches||[]).reduce((s,b)=>s+Number(b.remaining_quantity||0),0);body.querySelector('#retailAvailableStock').textContent='موجودی آماده فروش: '+fmt(qty)+' لیتر';})();
@@ -168,8 +169,8 @@ function show(name,selectedProduct){
   const customer=body.querySelector('[name=customer]').value.trim(),phone=phoneField.value.trim(),paid=Number(paidField.value||0),address=body.querySelector('[name=address]').value.trim();
   let items=[];
   if(modeField.value==='mixed'){
-   const qty=Number(mixedRetailQty.value||0),price=Number(mixedUnitPrice.value);
-   if(!Number.isFinite(qty)||qty<=0||!Number.isFinite(price)||price<0)return alert('مقدار لیتر و قیمت فروش پرچون را درست وارد کنید.');
+   const q92=Number(mixed92Qty.value||0),q80=Number(mixed80Qty.value||0),qty=q92+q80,price=Number(mixedUnitPrice.value);
+   if(!Number.isFinite(q92)||q92<0||!Number.isFinite(q80)||q80<0||qty<=0||!Number.isFinite(price)||price<0)return alert('مقدار لیتر ۹۲ و ۸۰ و قیمت فروش پرچون را درست وارد کنید.');
    items.push({product:'فروش پرچون',quantity:qty,unit_price:price});
   }else{
    items=[...host.querySelectorAll('.sale-item-card')].map(card=>({product:card.querySelector('.sale-product').value,quantity:Number(card.querySelector('.sale-qty').value),unit_price:Number(card.querySelector('.sale-price').value)}));
@@ -189,13 +190,17 @@ function show(name,selectedProduct){
   const cashAccountId=cashAccounts[0].id;
   saleSaveButton.textContent='در حال ثبت بل...';
   const requestId=yemaRequestId('sale');
-  const {data:remote,error:remoteError}=await cloud.rpc('create_yema_sale_once',{p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId});
+  const rpcName=modeField.value==='mixed'?'create_yema_retail_sale_once':'create_yema_sale_once';
+  const rpcArgs=modeField.value==='mixed'
+   ?{p_request_id:requestId,p_customer_name:customer,p_92_liters:Number(mixed92Qty.value||0),p_80_liters:Number(mixed80Qty.value||0),p_unit_price:Number(mixedUnitPrice.value),p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId}
+   :{p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId};
+  const {data:remote,error:remoteError}=await cloud.rpc(rpcName,rpcArgs);
   if(remoteError){console.error(remoteError);saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
   clearYemaRequestId('sale');
   let phoneSaveWarning='';
   if(phone){const {error:customerPhoneError}=await cloud.from('customers').update({phone}).eq('id',remote.customer_id);if(customerPhoneError){console.error(customerPhoneError);phoneSaveWarning='\nهشدار: بل ثبت شد، اما ذخیره شماره تماس در حساب مشتری ناموفق بود.';}}
   const a=read('sales'),localItems=items.map(x=>({...x,unit:unit(x.product),line_total:x.quantity*x.unit_price}));
-  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,saleType:modeField.value==='mixed'?'retail':null,product:modeField.value==='mixed'?'فروش پرچون':(items.length===1?items[0].product:'چند محصول'),items:remote.items||localItems,qty:modeField.value==='mixed'?items.reduce((n,x)=>n+x.quantity,0):(items.length===1?items[0].quantity:null),unit:modeField.value==='mixed'?'لیتر':(items.length===1?unit(items[0].product):'—'),price:modeField.value==='mixed'?items[0].unit_price:(items.length===1?items[0].unit_price:null),paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
+  a.push({id:remote.sale_id,bill:Number(remote.bill_number),customer,phone,address,saleType:modeField.value==='mixed'?'retail':null,product:modeField.value==='mixed'?'فروش پرچون':(items.length===1?items[0].product:'چند محصول'),items:remote.items||localItems,qty:modeField.value==='mixed'?Number(remote.retail_total_liters||items.reduce((n,x)=>n+x.quantity,0)):(items.length===1?items[0].quantity:null),unit:modeField.value==='mixed'?'لیتر':(items.length===1?unit(items[0].product):'—'),price:modeField.value==='mixed'?items[0].unit_price:(items.length===1?items[0].unit_price:null),paid,total:Number(remote.total),date:saleGregorian,cost:Number(remote.cost_total||0),profit:Number(remote.gross_profit||0),retailCost:Number(remote.retail_cost_total||remote.cost_total||0),retail92Liters:Number(remote.retail_92_liters||0),retail80Liters:Number(remote.retail_80_liters||0),cloudSynced:true});write('sales',a);homeCart=[];alert('بل شماره '+fmt(remote.bill_number)+' با موفقیت ثبت شد'+phoneSaveWarning);refresh();show('history');
  };
  function cardValueMissing(item){return !Number.isFinite(item.quantity)||!Number.isFinite(item.unit_price)||item.quantity<=0;}
  });
