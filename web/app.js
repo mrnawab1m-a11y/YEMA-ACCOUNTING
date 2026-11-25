@@ -66,7 +66,7 @@ function show(name,selectedProduct){
  </section>
  <section class="sale-total-card">
  <div><span>خرید جدید</span><b id="saleGrandTotal">۰ افغانی</b></div>
- <div><span>باقی‌داری قبلی مشتری</span><b id="salePreviousBalance">۰ افغانی</b></div>
+ <div><label for="salePreviousBalance">باقی‌داری قبلی مشتری (افغانی)</label><input name="previousBalance" id="salePreviousBalance" type="number" min="0" step="any" inputmode="decimal" placeholder="مبلغ باقی‌داری را خودت وارد کن" value=""></div>
  <div><span>مجموع بدهکاری</span><b id="saleTotalDue">۰ افغانی</b></div>
  <label>مبلغ پرداخت‌شده فعلی (افغانی)</label><input name="paid" id="salePaid" type="number" inputmode="decimal" min="0" step="any" placeholder="۰">
  <div class="sale-balance"><span>باقی‌مانده نهایی مشتری</span><b id="saleRemaining">۰ افغانی</b></div></section>
@@ -76,19 +76,12 @@ function show(name,selectedProduct){
  <p class="sale-thanks">با تشکر و سپاس از خرید شما؛ به امید دیدار مجدد</p>
  `,body=>{
  const host=body.querySelector('#saleItems'),paidField=body.querySelector('#salePaid'),phoneField=body.querySelector('#salePhone'),customerField=body.querySelector('[name=customer]');
-  let previousBalance=0, balanceLookupToken=0;
-  const refreshPreviousBalance=async()=>{
-   const token=++balanceLookupToken, customerName=customerField.value.trim(), cloud=window.yemaCloud?.client;
-   previousBalance=0;
-   if(!customerName||!cloud){updateTotals();return;}
-   const {data:customers,error}=await cloud.from('customers').select('id').eq('name',customerName).limit(1);
-   if(error||!customers?.length){updateTotals();return;}
-   const {data:rows,error:salesError}=await cloud.from('sales').select('remaining').eq('customer_id',customers[0].id).gt('remaining',0);
-   if(token!==balanceLookupToken)return;
-   if(!salesError)previousBalance=(rows||[]).reduce((n,x)=>n+Number(x.remaining||0),0);
+  const previousBalanceField=body.querySelector('#salePreviousBalance');
+  let previousBalance=0;
+  previousBalanceField.addEventListener('input',()=>{
+   previousBalance=Math.max(0,Number(previousBalanceField.value||0));
    updateTotals();
-  };
-  customerField.addEventListener('blur',refreshPreviousBalance);
+  });
  const addSaleItemButton=body.querySelector('#addSaleItem');
  const saleDateTime=body.querySelector('#saleDateTime');
  const updateSaleDateTime=()=>{const now=new Date();const d=formatAfghanDate(now,true);const t=new Intl.DateTimeFormat('fa-AF-u-nu-arab',{timeZone:'Asia/Kabul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(now);saleDateTime.textContent='تاریخ: '+d+'　 |　 ساعت: '+t;};
@@ -157,7 +150,7 @@ function show(name,selectedProduct){
   const count=host.querySelectorAll('.sale-item-card').length;
   const paid=Number(paidField.value||0),totalDue=previousBalance+total;
   body.querySelector('#saleGrandTotal').textContent=fmt(total)+' افغانی';
-  body.querySelector('#salePreviousBalance').textContent=fmt(previousBalance)+' افغانی';
+  previousBalance=Math.max(0,Number(previousBalanceField.value||0));
   body.querySelector('#saleTotalDue').textContent=fmt(totalDue)+' افغانی';
   body.querySelector('#saleRemaining').textContent=fmt(Math.max(0,totalDue-paid))+' افغانی';
   body.querySelector('#saleCount').textContent=fmt(count)+' قلم';
@@ -196,7 +189,7 @@ function show(name,selectedProduct){
   const cashAccountId=cashAccounts[0].id;
   saleSaveButton.textContent='در حال ثبت بل...';
   const requestId=yemaRequestId('sale_with_balance');
-  const rpcArgs={p_request_id:requestId,p_customer_name:customer,p_items:items,p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId};
+  const rpcArgs={p_request_id:requestId,p_customer_name:customer,p_items:items,p_previous_balance:Math.max(0,Number(previousBalanceField.value||0)),p_paid:paid,p_sale_date:saleDate,p_notes:address||null,p_cash_account_id:cashAccountId};
   const {data:remote,error:remoteError}=await cloud.rpc('create_yema_sale_with_balance_once',rpcArgs);
   if(remoteError){console.error(remoteError);saleSubmitting=false;saleSaveButton.disabled=false;saleSaveButton.textContent='ثبت بل فروش';return alert('ثبت فروش ناموفق یا نامشخص است؛ برای جلوگیری از بل تکراری، همین ثبت را دوباره امتحان کنید. خطا: '+remoteError.message);}
   clearYemaRequestId('sale_with_balance');
