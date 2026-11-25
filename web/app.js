@@ -102,6 +102,33 @@ function show(name,selectedProduct){
   finally{vcardInput.value='';}
  };
  const productOptions=PRODUCTS.concat(['فروش پرچون']).map(p=>'<option value="'+p+'">'+p+'</option>').join('');
+ const addRow=(initialProduct='')=>{
+  const card=document.createElement('div');
+  card.className='sale-item-card';
+  card.innerHTML=`
+   <div class="sale-item-head"><strong>قلم فروش</strong><button type="button" class="sale-remove" aria-label="حذف این قلم">حذف</button></div>
+   <label>نوع محصول</label>
+   <select class="sale-product">${productOptions}</select>
+   <div class="sale-fields">
+    <div><label class="sale-qty-label">مقدار (لیتر)</label><input class="sale-qty" type="number" min="0" step="any" inputmode="decimal" placeholder="مقدار"></div>
+    <div><label class="sale-price-label">قیمت فی لیتر (افغانی)</label><input class="sale-price" type="number" min="0" step="any" inputmode="decimal" placeholder="قیمت"></div>
+   </div>
+   <div class="sale-line-total"><span>جمع این قلم</span><b>۰ افغانی</b></div>
+  `;
+  const productSelect=card.querySelector('.sale-product');
+  if(initialProduct && [...productSelect.options].some(option=>option.value===initialProduct))productSelect.value=initialProduct;
+  const syncUnitLabels=()=>{
+   const isGas=productSelect.value==='گاز';
+   card.querySelector('.sale-qty-label').textContent=isGas?'مقدار (کیلوگرام)':'مقدار (لیتر)';
+   card.querySelector('.sale-price-label').textContent=isGas?'قیمت فی کیلوگرام (افغانی)':'قیمت فی لیتر (افغانی)';
+   card.querySelector('.sale-qty').placeholder=isGas?'کیلوگرام':'لیتر';
+  };
+  productSelect.addEventListener('change',()=>{syncUnitLabels();updateTotals();});
+  card.querySelector('.sale-remove').addEventListener('click',()=>{card.remove();updateTotals();});
+  syncUnitLabels();
+  host.appendChild(card);
+  updateTotals();
+ };
  let updateTotals=()=>{
   let total=0;
   host.querySelectorAll('.sale-item-card').forEach(card=>{
